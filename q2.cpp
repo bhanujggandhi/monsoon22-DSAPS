@@ -38,7 +38,7 @@ public:
 
     void push_back(const T val)
     {
-        if (curr_size == max_size)
+        if (curr_size == max_size or _rear = _front + 1)
         {
             // Double the size and copy
             T *oldarr = arr;
@@ -58,7 +58,7 @@ public:
 
     void pop_back()
     {
-        if (curr_size >= 0)
+        if (_rear != max_size + 1)
         {
             _rear++;
             curr_size--;
@@ -158,18 +158,13 @@ int main()
 {
     Deque<int> dq;
 
-    // cout << dq.capacity() << endl;
+    dq.push_back(3);
+    dq.push_back(4);
+    cout << dq.capacity() << endl;
     cout << dq.size() << endl;
-    dq.push_front(2);
+    dq.push_back(4);
+    cout << dq.capacity() << endl;
     cout << dq.size() << endl;
-    dq.pop_front();
-    dq.pop_front();
-    cout << dq.size() << endl;
-    dq.pop_front();
-    // dq.push_back(3);
-    // dq.push_back(4);
-    // cout << dq.capacity() << endl;
-    // cout << dq.size() << endl;
 
     // dq.pop_back();
     // dq.pop_back();
