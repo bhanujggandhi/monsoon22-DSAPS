@@ -291,6 +291,36 @@ public:
             }
             else
             {
+                for (int i = 0; i < newsize; i++)
+                {
+                    arr[i] = data;
+                }
+                int k = 0;
+                int i = _front;
+                int count = 0;
+
+                for (; i <= oldms - 1; i++)
+                {
+                    if (count == oldsize)
+                        break;
+                    arr[k++] = oldarr[i];
+                    count++;
+                }
+                _front = 0;
+                if (count == oldsize)
+                    _rear = newsize - 1;
+                else
+                {
+                    i = 0;
+                    for (; i <= _rear; i++)
+                    {
+                        if (count == newsize)
+                            break;
+                        arr[k++] = oldarr[i];
+                        count++;
+                    }
+                    _rear = newsize - 1;
+                }
             }
         }
 
@@ -364,7 +394,7 @@ int main()
     cout << "FRONT ELEMENT: " << dq.front() << endl;
     cout << "REAR ELEMENT: " << dq.back() << endl;
 
-    dq.resize(3, 2);
+    dq.resize(2, 100);
 
     for (int i = 0; i < dq.size(); i++)
     {
