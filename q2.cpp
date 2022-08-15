@@ -7,7 +7,6 @@ template <typename T>
 class Deque
 {
     T *arr;
-    int curr_size;
     int max_size;
     int _front;
     int _rear;
@@ -15,7 +14,6 @@ class Deque
 public:
     Deque()
     {
-        curr_size = 0;
         max_size = 2;
         _front = -1;
         _rear = 3;
@@ -24,10 +22,9 @@ public:
 
     Deque(const int n, const T x)
     {
-        curr_size = n;
         max_size = n;
-        _front = n / 2;
-        _rear = n / 2 + 1;
+        _front = 0;
+        _rear = n - 1;
         arr = new T[max_size];
 
         for (int i = 0; i < n; i++)
@@ -267,8 +264,8 @@ public:
     void clear()
     {
         int *oldarr = arr;
-        curr_size = 0;
-        max_size = 1;
+        _front = _rear = -1;
+        max_size = 2;
         delete[] oldarr;
         arr = new int[max_size];
     }
@@ -294,23 +291,22 @@ int main()
     }
     cout << endl;
 
-    Deque<int> dq2;
+    Deque<int> dq2(5, 5);
 
     dq2.push_back(1);
     dq2.push_back(2);
     dq2.push_back(3);
     dq2.push_back(4);
     dq2.push_back(5);
-    dq2.pop_back();
-    dq2.pop_back();
-    dq2.pop_front();
-    dq2.pop_front();
-    dq2.pop_front();
 
     cout << "SIZE: " << dq2.size() << endl;
 
     cout << "FRONT ELEMENT: " << dq2.front() << endl;
     cout << "REAR ELEMENT: " << dq2.back() << endl;
+
+    cout << dq2.empty() << endl;
+    dq2.clear();
+    cout << dq2.empty() << endl;
 
     for (int i = 0; i < dq2.size(); i++)
     {
