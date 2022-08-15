@@ -259,24 +259,52 @@ public:
         }
     }
 
-    void resize(int x, T d)
+    void resize(int newsize, T data)
     {
-        int curr = size();
-        cout << size() << endl;
+        int oldsize = size();
 
         int *oldarr = arr;
-        arr = new int[x];
-        if (curr >= x)
+        arr = new int[newsize];
+        max_size = newsize;
+
+        // newsize > oldsize
+        if (newsize > oldsize)
         {
             if (_rear > _front)
             {
-                for (int i = _front; i < x; i++)
+                int temp = 0;
+                for (int i = _front; i <= _rear; i++)
                 {
-                    arr[i] = oldarr[i];
+                    arr[temp++] = oldarr[i];
                 }
-                delete[] oldarr;
+                cout << temp << "    " << newsize << endl;
+
+                while (temp < newsize)
+                {
+                    arr[temp] = data;
+                    temp++;
+                }
+
                 _front = 0;
-                _rear = x - 1;
+                _rear = newsize - 1;
+            }
+            else
+            {
+            }
+        }
+
+        // newsize < oldsize
+        else
+        {
+            if (_rear > _front)
+            {
+                int k = 0;
+                for (int i = _front; i < newsize; i++)
+                {
+                    arr[k++] = oldarr[i];
+                }
+                _front = 0;
+                _rear = newsize - 1;
             }
             else
             {
@@ -286,20 +314,20 @@ public:
 
                 for (; i <= max_size - 1; i++)
                 {
-                    if (count == x)
+                    if (count == newsize)
                         break;
                     arr[k++] = oldarr[i];
                     count++;
                 }
                 _front = 0;
-                if (count == x)
+                if (count == newsize)
                     _rear = k - 1;
                 else
                 {
                     i = 0;
                     for (; i <= _rear; i++)
                     {
-                        if (count == x)
+                        if (count == newsize)
                             break;
                         arr[k++] = oldarr[i];
                         count++;
@@ -308,9 +336,7 @@ public:
                 }
             }
         }
-        else
-        {
-        }
+        delete[] oldarr;
     }
 
     void clear()
@@ -325,44 +351,46 @@ public:
 
 int main()
 {
-    Deque<int> dq;
+    // Deque<int> dq;
 
-    dq.push_back(1);
-    dq.push_front(2);
-    dq.push_front(3);
-    dq.push_back(4);
-    dq.push_back(5);
+    // dq.push_back(1);
+    // dq.push_front(2);
+    // dq.push_front(3);
+    // dq.push_back(4);
+    // dq.push_back(5);
 
-    cout << "SIZE: " << dq.size() << endl;
-    cout << "FRONT ELEMENT: " << dq.front() << endl;
-    cout << "REAR ELEMENT: " << dq.back() << endl;
+    // cout << "SIZE: " << dq.size() << endl;
+    // cout << "FRONT ELEMENT: " << dq.front() << endl;
+    // cout << "REAR ELEMENT: " << dq.back() << endl;
 
-    dq.resize(3, 2);
+    // dq.resize(3, 2);
 
-    for (int i = 0; i < dq.size(); i++)
-    {
-        cout << dq[i] << "    ";
-    }
-    cout << endl;
-    cout << "FRONT ELEMENT: " << dq.front() << endl;
-    cout << "REAR ELEMENT: " << dq.back() << endl;
-
-    // Deque<int> dq2(5, 5);
-
-    // dq2.push_back(1);
-    // dq2.push_back(2);
-    // dq2.push_back(3);
-    // dq2.push_back(4);
-    // dq2.push_back(5);
-
-    // cout << "SIZE: " << dq2.size() << endl;
-
-    // cout << "FRONT ELEMENT: " << dq2.front() << endl;
-    // cout << "REAR ELEMENT: " << dq2.back() << endl;
-
-    // for (int i = 0; i < dq2.size(); i++)
+    // for (int i = 0; i < dq.size(); i++)
     // {
-    //     cout << dq2[i] << "    ";
+    //     cout << dq[i] << "    ";
     // }
     // cout << endl;
+    // cout << "FRONT ELEMENT: " << dq.front() << endl;
+    // cout << "REAR ELEMENT: " << dq.back() << endl;
+
+    Deque<int> dq2(5, 5);
+
+    dq2.push_back(1);
+    dq2.push_back(2);
+    dq2.push_back(3);
+    dq2.push_back(4);
+    dq2.push_back(5);
+
+    cout << "SIZE: " << dq2.size() << endl;
+
+    cout << "FRONT ELEMENT: " << dq2.front() << endl;
+    cout << "REAR ELEMENT: " << dq2.back() << endl;
+
+    dq2.resize(20, 100);
+
+    for (int i = 0; i < dq2.size(); i++)
+    {
+        cout << dq2[i] << "    ";
+    }
+    cout << endl;
 }
