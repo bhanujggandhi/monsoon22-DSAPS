@@ -44,10 +44,10 @@ public:
 
         if ((_rear + 1) % max_size == _front)
         {
-            int *oldarr = arr;
+            T *oldarr = arr;
             int oldms = max_size;
             max_size = max_size * 2;
-            arr = new int[max_size];
+            arr = new T[max_size];
 
             if (_rear < _front)
             {
@@ -120,10 +120,10 @@ public:
             flag = (_front - 1) % max_size == _rear;
         if (flag)
         {
-            int *oldarr = arr;
+            T *oldarr = arr;
             int oldms = max_size;
             max_size = max_size * 2;
-            arr = new int[max_size];
+            arr = new T[max_size];
 
             if (_rear < _front)
             {
@@ -190,7 +190,7 @@ public:
             return arr[_front];
         else
             cout << "Deque is empty" << endl;
-        return INT32_MAX;
+        // return INT32_MAX;
     }
 
     T back() const
@@ -199,7 +199,7 @@ public:
             return arr[_rear];
         else
             cout << "Deque is empty" << endl;
-        return INT32_MAX;
+        // return INT32_MAX;
     }
 
     T at(int i) const
@@ -263,8 +263,8 @@ public:
     {
         int oldsize = size();
 
-        int *oldarr = arr;
-        arr = new int[newsize];
+        T *oldarr = arr;
+        arr = new T[newsize];
         int oldms = max_size;
         max_size = newsize;
 
@@ -372,7 +372,7 @@ public:
 
     void clear()
     {
-        int *oldarr = arr;
+        T *oldarr = arr;
         _front = _rear = -1;
         max_size = 2;
         delete[] oldarr;
@@ -404,24 +404,24 @@ int main()
     cout << "FRONT ELEMENT: " << dq.front() << endl;
     cout << "REAR ELEMENT: " << dq.back() << endl;
 
-    // Deque<int> dq2(5, 5);
+    Deque<char> dq2(10, 'a');
 
-    // dq2.push_back(1);
-    // dq2.push_back(2);
-    // dq2.push_back(3);
-    // dq2.push_back(4);
-    // dq2.push_back(5);
+    dq2.push_back('b');
+    dq2.push_back('c');
+    dq2.push_back('d');
+    dq2.push_back('e');
+    dq2.push_back('f');
 
-    // cout << "SIZE: " << dq2.size() << endl;
+    cout << "SIZE: " << dq2.size() << endl;
 
-    // cout << "FRONT ELEMENT: " << dq2.front() << endl;
-    // cout << "REAR ELEMENT: " << dq2.back() << endl;
+    cout << "FRONT ELEMENT: " << dq2.front() << endl;
+    cout << "REAR ELEMENT: " << dq2.back() << endl;
 
-    // dq2.resize(20, 100);
+    dq2.resize(20, 'k');
 
-    // for (int i = 0; i < dq2.size(); i++)
-    // {
-    //     cout << dq2[i] << "    ";
-    // }
-    // cout << endl;
+    for (int i = 0; i < dq2.size(); i++)
+    {
+        cout << dq2[i] << "    ";
+    }
+    cout << endl;
 }
