@@ -38,41 +38,14 @@ public:
 
     void push_back(const T val)
     {
-        if (curr_size == max_size or _rear = _front + 1)
-        {
-            // Double the size and copy
-            T *oldarr = arr;
-            max_size = 2 * max_size;
-            arr = new T[max_size];
-
-            for (int i = 0; i < curr_size; i++)
-            {
-                arr[i] = oldarr[i];
-            }
-
-            delete[] oldarr;
-        }
-        arr[--_rear] = val;
-        curr_size++;
-    }
-
-    void pop_back()
-    {
-        if (_rear != max_size + 1)
-        {
-            _rear++;
-        }
-    }
-
-    void push_front(const T val)
-    {
-        if (_front == -1)
+        if (_rear == -1)
         {
             _front = _rear = 0;
-            arr[_front] = val;
+            arr[_rear] = val;
+            return;
         }
 
-        if ((_front - 1) % max_size == _rear)
+        if ((_rear + 1) % max_size == _front)
         {
             int *oldarr = arr;
             int oldms = max_size;
@@ -109,8 +82,78 @@ public:
             }
         }
 
-        _front = (_front + 1) % max_size;
-        arr[front] = val;
+        _rear = (_rear + 1) % max_size;
+        arr[_rear] = val;
+    }
+
+    void pop_back()
+    {
+        if (_rear != max_size + 1)
+        {
+            _rear--;
+        }
+    }
+
+    void push_front(const T val)
+    {
+        if (_front == -1)
+        {
+            _front = _rear = 0;
+            arr[_front] = val;
+            cout << "FRONT: " << _front << endl;
+            return;
+        }
+
+        bool flag = false;
+        if (_front - 1 < 0)
+        {
+            flag = ((_front - 1 + max_size) % max_size == _rear);
+        }
+        else
+            flag = (_front - 1) % max_size == _rear;
+        if (flag)
+        {
+            int *oldarr = arr;
+            int oldms = max_size;
+            max_size = max_size * 2;
+            arr = new int[max_size];
+
+            if (_rear < _front)
+            {
+                int i = 0;
+
+                for (i = 0; i <= _rear; i++)
+                {
+                    arr[i] = oldarr[i];
+                }
+                _rear = i - 1;
+                i = oldms - 1;
+                int k = max_size - 1;
+
+                for (; i >= _front; i--)
+                {
+                    arr[k--] = oldarr[i];
+                }
+                _front = k + 1;
+            }
+            else
+            {
+                int k = 0;
+                for (int i = _front; i <= _rear; i++)
+                {
+                    arr[k++] = oldarr[i];
+                }
+                _front = 0;
+                _rear = k - 1;
+            }
+        }
+
+        if (_front - 1 < 0)
+            _front = (_front + max_size - 1) % max_size;
+        else
+            _front = (_front - 1) % max_size;
+        arr[_front] = val;
+        cout << "FRONT: " << _front << endl;
     }
 
     void pop_front()
@@ -164,10 +207,10 @@ public:
 
     T operator[](const int i) const
     {
-        if (i >= 0 and i < curr_size)
-            return arr[i];
-        else
-            throw out_of_range("Index is out of bounds");
+        // if (i >= 0 and i < curr_size)
+        return arr[i];
+        // else
+        //     throw out_of_range("Index is out of bounds");
     }
 
     void resize(int x, T d) {}
@@ -186,18 +229,25 @@ int main()
 {
     Deque<int> dq;
 
-    dq.push_back(3);
-    dq.push_back(4);
-    cout << dq.capacity() << endl;
-    cout << dq.size() << endl;
-    dq.push_back(4);
-    cout << dq.capacity() << endl;
-    cout << dq.size() << endl;
-
-    // dq.pop_back();
-    // dq.pop_back();
+    dq.push_front(2);
+    // cout << dq.back() << endl;
+    dq.push_front(4);
+    // cout << dq.front() << endl;
+    dq.push_front(5);
     // cout << dq.front() << endl;
     // cout << dq.back() << endl;
+    dq.push_front(6);
+    dq.push_front(7);
+    dq.push_back(1);
+    dq.push_back(2);
+    dq.push_back(3);
+    dq.push_back(-1);
+    dq.pop_back();
+    cout << dq.back() << endl;
 
-    // cout << dq[3] << endl;
+    // for (int i = 0; i < 16; i++)
+    // {
+    //     cout << dq[i] << "    ";
+    // }
+    cout << endl;
 }
