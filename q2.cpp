@@ -88,9 +88,20 @@ public:
 
     void pop_back()
     {
-        if (_rear != max_size + 1)
+        if (_front == _rear and _rear != -1)
         {
-            _rear--;
+            _front = _rear = -1;
+        }
+        else if (_rear == -1)
+        {
+            throw underflow_error("Deque is empty");
+        }
+        else
+        {
+            if (_rear - 1 < 0)
+                _rear = (_rear + max_size - 1) % max_size;
+            else
+                _rear = (_rear - 1) % max_size;
         }
     }
 
@@ -153,12 +164,12 @@ public:
         else
             _front = (_front - 1) % max_size;
         arr[_front] = val;
-        cout << "FRONT: " << _front << endl;
+        // cout << "FRONT: " << _front << endl;
     }
 
     void pop_front()
     {
-        if (_front == _rear)
+        if (_front == _rear and _front != -1)
         {
             _front = _rear = -1;
         }
@@ -179,12 +190,19 @@ public:
 
     T front() const
     {
-        return arr[_front];
+        if (_front != -1)
+            return arr[_front];
+        else
+            throw underflow_error("Deque is empty");
     }
 
     T back() const
     {
-        return arr[_rear];
+        cout << "Back index: " << _rear << endl;
+        if (_rear != -1)
+            return arr[_rear];
+        else
+            throw underflow_error("Deque is empty");
     }
 
     T at(int i) const
@@ -242,12 +260,22 @@ int main()
     dq.push_back(2);
     dq.push_back(3);
     dq.push_back(-1);
-    dq.pop_back();
-    cout << dq.back() << endl;
+    dq.push_back(18);
+    dq.pop_front();
+    dq.pop_front();
+    dq.pop_front();
+    dq.pop_front();
+    dq.pop_front();
+    dq.pop_front();
+    dq.pop_front();
+    dq.pop_front();
+    dq.pop_front();
+    dq.pop_front();
+    cout << dq.front() << endl;
 
-    // for (int i = 0; i < 16; i++)
-    // {
-    //     cout << dq[i] << "    ";
-    // }
+    for (int i = 0; i < 16; i++)
+    {
+        cout << dq[i] << "    ";
+    }
     cout << endl;
 }

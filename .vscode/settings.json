@@ -6,6 +6,7 @@
     "string": "cpp",
     "vector": "cpp",
     "string_view": "cpp",
-    "ostream": "cpp"
+    "ostream": "cpp",
+    "stdexcept": "cpp"
   }
 }
