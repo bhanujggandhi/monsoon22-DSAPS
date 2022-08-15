@@ -25,9 +25,6 @@ string bigintadd(string num1, string num2)
     int size2 = num2.size();
     int i = 0, j = 0, carry = 0;
 
-    cout << size1 << endl;
-    cout << size2 << endl;
-
     while (i < size1 and j < size2)
     {
         int a = num1[i++] - '0';
@@ -36,8 +33,6 @@ string bigintadd(string num1, string num2)
         carry = (a + b + carry) / 10;
         ans.push_back(c + '0');
     }
-
-    cout << i << "    " << j << endl;
 
     while (i < size1)
     {
@@ -52,6 +47,56 @@ string bigintadd(string num1, string num2)
         int a = num2[j++] - '0';
         int c = (a + carry) % 10;
         carry = (a + carry) / 10;
+        ans.push_back(c + '0');
+    }
+
+    reverse_string(ans);
+    return ans;
+}
+
+string bigintsubtract(string num1, string num2)
+{
+    reverse_string(num1);
+    reverse_string(num2);
+    string ans;
+
+    int size1 = num1.size();
+    int size2 = num2.size();
+    int i = 0, j = 0, borrow = 0;
+
+    cout << size1 << endl;
+    cout << size2 << endl;
+
+    while (i < size1 and j < size2)
+    {
+        int a = num1[i++] - '0';
+        int b = num2[j++] - '0';
+        int c = a - b + borrow;
+        if (c < 0)
+        {
+            borrow = -1;
+            c = c + 10;
+        }
+        else
+        {
+            borrow = 0;
+        }
+        ans.push_back(c + '0');
+    }
+
+    while (i < size1)
+    {
+        int a = num1[i++] - '0';
+        int c = a + borrow;
+        if (c < 0)
+        {
+            borrow = -1;
+            c = c + 10;
+        }
+        else
+        {
+            borrow = 0;
+        }
         ans.push_back(c + '0');
     }
 
@@ -85,7 +130,7 @@ int main()
     //     break;
     // }
 
-    string ans = bigintadd("12345678910111213141516", "302928272625242322212019181716");
+    string ans = bigintsubtract("302928272625242322212019181716", "12345678910111213141516");
     cout << ans << endl;
 
     return 0;
