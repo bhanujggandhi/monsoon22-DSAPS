@@ -38,10 +38,10 @@ public:
 
     void push_back(const T val)
     {
-        if (_rear == -1)
+        if (_front == -1)
         {
             _front = _rear = 0;
-            arr[_rear] = val;
+            arr[_front] = val;
             return;
         }
 
@@ -111,7 +111,6 @@ public:
         {
             _front = _rear = 0;
             arr[_front] = val;
-            cout << "FRONT: " << _front << endl;
             return;
         }
 
@@ -198,7 +197,6 @@ public:
 
     T back() const
     {
-        cout << "Back index: " << _rear << endl;
         if (_rear != -1)
             return arr[_rear];
         else
@@ -247,33 +245,16 @@ int main()
 {
     Deque<int> dq;
 
-    dq.push_front(2);
-    // cout << dq.back() << endl;
-    dq.push_front(4);
-    // cout << dq.front() << endl;
-    dq.push_front(5);
-    // cout << dq.front() << endl;
-    // cout << dq.back() << endl;
-    dq.push_front(6);
-    dq.push_front(7);
     dq.push_back(1);
-    dq.push_back(2);
-    dq.push_back(3);
-    dq.push_back(-1);
-    dq.push_back(18);
-    dq.pop_front();
-    dq.pop_front();
-    dq.pop_front();
-    dq.pop_front();
-    dq.pop_front();
-    dq.pop_front();
-    dq.pop_front();
-    dq.pop_front();
-    dq.pop_front();
-    dq.pop_front();
-    cout << dq.front() << endl;
+    dq.push_front(2);
+    dq.push_front(3);
+    dq.push_back(4);
+    dq.push_back(5);
 
-    for (int i = 0; i < 16; i++)
+    cout << "FRONT ELEMENT: " << dq.front() << endl;
+    cout << "REAR ELEMENT: " << dq.back() << endl;
+
+    for (int i = 0; i < dq.capacity(); i++)
     {
         cout << dq[i] << "    ";
     }
