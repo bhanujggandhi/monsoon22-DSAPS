@@ -184,7 +184,7 @@ public:
 
     bool empty() const
     {
-        return curr_size == 0;
+        return _front == -1;
     }
 
     T front() const
@@ -192,7 +192,8 @@ public:
         if (_front != -1)
             return arr[_front];
         else
-            throw underflow_error("Deque is empty");
+            cout << "Deque is empty" << endl;
+        return INT32_MAX;
     }
 
     T back() const
@@ -200,7 +201,8 @@ public:
         if (_rear != -1)
             return arr[_rear];
         else
-            throw underflow_error("Deque is empty");
+            cout << "Deque is empty" << endl;
+        return INT32_MAX;
     }
 
     T at(int i) const
@@ -223,7 +225,18 @@ public:
 
     int size() const
     {
-        return curr_size;
+        if (_front == _rear and _front == -1)
+        {
+            return 0;
+        }
+        if (_front < _rear)
+            return (_rear - _front + 1);
+        else if (_front == _rear)
+        {
+            return 1;
+        }
+        else
+            return max_size - _front + _rear + 1;
     }
 
     int capacity() const
@@ -271,12 +284,11 @@ int main()
     dq.push_back(4);
     dq.push_back(5);
 
+    cout << "SIZE: " << dq.size() << endl;
     cout << "FRONT ELEMENT: " << dq.front() << endl;
     cout << "REAR ELEMENT: " << dq.back() << endl;
 
-    cout << dq[1] << endl;
-
-    for (int i = 0; i < dq.capacity(); i++)
+    for (int i = 0; i < dq.size(); i++)
     {
         cout << dq[i] << "    ";
     }
@@ -289,13 +301,18 @@ int main()
     dq2.push_back(3);
     dq2.push_back(4);
     dq2.push_back(5);
-    dq2.pop_front();
     dq2.pop_back();
+    dq2.pop_back();
+    dq2.pop_front();
+    dq2.pop_front();
+    dq2.pop_front();
+
+    cout << "SIZE: " << dq2.size() << endl;
 
     cout << "FRONT ELEMENT: " << dq2.front() << endl;
     cout << "REAR ELEMENT: " << dq2.back() << endl;
 
-    for (int i = 0; i < dq2.capacity(); i++)
+    for (int i = 0; i < dq2.size(); i++)
     {
         cout << dq2[i] << "    ";
     }
