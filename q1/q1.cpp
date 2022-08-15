@@ -50,6 +50,9 @@ string bigintadd(string num1, string num2)
         ans.push_back(c + '0');
     }
 
+    if (carry != 0)
+        ans.push_back(carry + '0');
+
     reverse_string(ans);
     return ans;
 }
@@ -104,6 +107,41 @@ string bigintsubtract(string num1, string num2)
     return ans;
 }
 
+string bigintmultiply(string num1, string num2)
+{
+    reverse_string(num1);
+    reverse_string(num2);
+    string ans = "0";
+
+    cout << num1 << "   " << num2 << endl;
+
+    int size1 = num1.size();
+    int size2 = num2.size();
+    int carry = 0;
+
+    for (int j = 0; j < size2; j++)
+    {
+        string temp;
+        for (int i = 0; i < size1; i++)
+        {
+            int a = num1[i] - '0';
+            int b = num2[j] - '0';
+            int c = ((a * b) + carry) % 10;
+            carry = ((a * b) + carry) / 10;
+            temp.push_back(c + '0');
+        }
+        reverse_string(temp);
+        for (int i = 0; i < j; i++)
+        {
+            temp.push_back('0');
+        }
+        cout << temp << "   " << ans << endl;
+        ans = bigintadd(temp, ans);
+    }
+
+    return ans;
+}
+
 int main()
 {
     int n;
@@ -130,7 +168,8 @@ int main()
     //     break;
     // }
 
-    string ans = bigintsubtract("302928272625242322212019181716", "12345678910111213141516");
+    string ans = bigintmultiply("12345678", "56781234");
+    // string ans = bigintadd("99", "1");
     cout << ans << endl;
 
     return 0;
