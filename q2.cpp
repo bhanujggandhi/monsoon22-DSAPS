@@ -259,7 +259,9 @@ public:
         }
     }
 
-    void resize(int x, T d) {}
+    void resize(int x, T d)
+    {
+    }
 
     void clear()
     {
@@ -293,11 +295,11 @@ int main()
 
     Deque<int> dq2(5, 5);
 
-    dq2.push_back(1);
-    dq2.push_back(2);
-    dq2.push_back(3);
-    dq2.push_back(4);
-    dq2.push_back(5);
+    // dq2.push_back(1);
+    // dq2.push_back(2);
+    // dq2.push_back(3);
+    // dq2.push_back(4);
+    // dq2.push_back(5);
 
     cout << "SIZE: " << dq2.size() << endl;
 
@@ -305,8 +307,8 @@ int main()
     cout << "REAR ELEMENT: " << dq2.back() << endl;
 
     cout << dq2.empty() << endl;
-    dq2.clear();
-    cout << dq2.empty() << endl;
+    // dq2.clear();
+    // cout << dq2.empty() << endl;
 
     for (int i = 0; i < dq2.size(); i++)
     {
