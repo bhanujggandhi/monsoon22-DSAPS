@@ -205,10 +205,20 @@ public:
 
     T at(int i) const
     {
-        if (i >= 0 and i < curr_size)
-            return arr[i];
+        if (_front == -1)
+        {
+            cout << "Out of bounds" << endl;
+            return -10;
+        }
+
+        if (_front + i >= max_size)
+        {
+            return arr[_front - max_size + i];
+        }
         else
-            throw out_of_range("Index is out of bounds");
+        {
+            return arr[_front + i];
+        }
     }
 
     int size() const
@@ -223,10 +233,20 @@ public:
 
     T operator[](const int i) const
     {
-        // if (i >= 0 and i < curr_size)
-        return arr[i];
-        // else
-        //     throw out_of_range("Index is out of bounds");
+        if (_front == -1)
+        {
+            cout << "Out of bounds" << endl;
+            return -10;
+        }
+
+        if (_front + i >= max_size)
+        {
+            return arr[_front - max_size + i];
+        }
+        else
+        {
+            return arr[_front + i];
+        }
     }
 
     void resize(int x, T d) {}
@@ -254,9 +274,30 @@ int main()
     cout << "FRONT ELEMENT: " << dq.front() << endl;
     cout << "REAR ELEMENT: " << dq.back() << endl;
 
+    cout << dq[1] << endl;
+
     for (int i = 0; i < dq.capacity(); i++)
     {
         cout << dq[i] << "    ";
+    }
+    cout << endl;
+
+    Deque<int> dq2;
+
+    dq2.push_back(1);
+    dq2.push_back(2);
+    dq2.push_back(3);
+    dq2.push_back(4);
+    dq2.push_back(5);
+    dq2.pop_front();
+    dq2.pop_back();
+
+    cout << "FRONT ELEMENT: " << dq2.front() << endl;
+    cout << "REAR ELEMENT: " << dq2.back() << endl;
+
+    for (int i = 0; i < dq2.capacity(); i++)
+    {
+        cout << dq2[i] << "    ";
     }
     cout << endl;
 }
