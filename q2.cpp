@@ -61,43 +61,71 @@ public:
         if (_rear != max_size + 1)
         {
             _rear++;
-            curr_size--;
         }
     }
 
     void push_front(const T val)
     {
-        if (curr_size == max_size)
+        if (_front == -1)
         {
-            // Double the size and copy
-            T *oldarr = arr;
-            max_size = 2 * max_size;
-            arr = new T[max_size];
-
-            for (int i = 0; i < curr_size; i++)
-            {
-                arr[i] = oldarr[i];
-            }
-
-            delete[] oldarr;
+            _front = _rear = 0;
+            arr[_front] = val;
         }
-        arr[++_front] = val;
-        curr_size++;
+
+        if ((_front - 1) % max_size == _rear)
+        {
+            int *oldarr = arr;
+            int oldms = max_size;
+            max_size = max_size * 2;
+            arr = new int[max_size];
+
+            if (_rear < _front)
+            {
+                int i = 0;
+
+                for (i = 0; i <= _rear; i++)
+                {
+                    arr[i] = oldarr[i];
+                }
+                _rear = i - 1;
+                i = oldms - 1;
+                int k = max_size - 1;
+
+                for (; i >= _front; i--)
+                {
+                    arr[k--] = oldarr[i];
+                }
+                _front = k + 1;
+            }
+            else
+            {
+                int k = 0;
+                for (int i = _front; i <= _rear; i++)
+                {
+                    arr[k++] = oldarr[i];
+                }
+                _front = 0;
+                _rear = k - 1;
+            }
+        }
+
+        _front = (_front + 1) % max_size;
+        arr[front] = val;
     }
 
     void pop_front()
     {
-        if (_front < 0)
+        if (_front == _rear)
         {
-            if (_front >= 0)
-            {
-                _front--;
-                curr_size--;
-            }
+            _front = _rear = -1;
+        }
+        else if (_front == -1)
+        {
+            throw underflow_error("Deque is empty");
         }
         else
         {
-            underflow_error("The Deque is empty");
+            _front = (_front + 1) % max_size;
         }
     }
 
