@@ -244,7 +244,30 @@ int main()
     int n;
     cin >> n;
     string inp;
-    cin >> inp;
+    string inp2;
+
+    if (n == 1)
+    {
+        cin >> inp;
+    }
+    else if (n == 2)
+    {
+        cin >> inp;
+        cin >> inp2;
+    }
+    else if (n == 3)
+    {
+        cin >> inp;
+        cin >> inp2;
+    }
+    else if (n == 4)
+    {
+        cin >> inp;
+    }
+    else
+    {
+        exit(0);
+    }
 
     switch (n)
     {
