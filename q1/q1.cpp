@@ -4,6 +4,102 @@
 using namespace std;
 
 // Utilities
+
+string normalize(string s)
+{
+    int k = 0;
+    for (int i = 0; i < s.size(); i++)
+    {
+        int a = s[i] - '0';
+        if (a > 0 and a <= 9)
+        {
+            k = i;
+            break;
+        }
+    }
+
+    string ans = s.substr(k);
+
+    return ans;
+}
+
+bool isGreater(string num1, string num2)
+{
+    num1 = normalize(num1);
+    num2 = normalize(num2);
+    int size1 = num1.size();
+    int size2 = num2.size();
+
+    if (size1 < size2)
+        return false;
+    else if (size1 > size2)
+        return true;
+    else
+    {
+        int i = 0;
+
+        while (i < size1)
+        {
+            int a = num1[i] - '0';
+            int b = num2[i] - '0';
+            if (a > b)
+                return true;
+            else if (b > a)
+                return false;
+            else
+                i++;
+        }
+        return false;
+    }
+}
+
+bool isZero(string num)
+{
+    num = normalize(num);
+    int n = num.size();
+
+    if (n == 0)
+        return true;
+
+    for (int i = 0; i < n; i++)
+    {
+        if (num[i] != '0')
+            return false;
+    }
+    return true;
+}
+
+bool isEqual(string num1, string num2)
+{
+    num1 = normalize(num1);
+    num2 = normalize(num2);
+
+    int size1 = num1.size();
+    int size2 = num2.size();
+
+    if (size1 < size2)
+        return false;
+    else if (size1 > size2)
+        return false;
+    else
+    {
+        int i = 0;
+
+        while (i < size1)
+        {
+            int a = num1[i] - '0';
+            int b = num2[i] - '0';
+            if (a > b)
+                return false;
+            else if (b > a)
+                return false;
+            else
+                i++;
+        }
+        return true;
+    }
+}
+
 void reverse_string(string &s)
 {
     int n = s.size();
@@ -102,7 +198,7 @@ string bigintsubtract(string num1, string num2)
     }
 
     reverse_string(ans);
-    return ans;
+    return normalize(ans);
 }
 
 string bigintmultiply(string num1, string num2)
@@ -252,7 +348,22 @@ string bigintexponent(string &base, long long power)
     }
 }
 
-// Factorial
+string bigintgcd(string num1, string num2)
+{
+    if (isZero(num1))
+        return num2;
+    if (isZero(num2))
+        return num1;
+
+    if (isEqual(num1, num2))
+        return num1;
+
+    if (isGreater(num1, num2))
+        return bigintgcd(bigintsubtract(num1, num2), num2);
+    return bigintgcd(num1, bigintsubtract(num2, num1));
+}
+
+// 4. Factorial
 void bigintfactorial(string &s)
 {
     string ans = "1";
@@ -305,7 +416,7 @@ int main()
         cout << bigintexponent(inp, power) << endl;
         break;
     case 3:
-        cout << "Called 3";
+        cout << normalize(bigintgcd(inp, inp2)) << endl;
         break;
     case 4:
         bigintfactorial(inp);
@@ -314,8 +425,6 @@ int main()
         cout << "Wrong input";
         break;
     }
-
-    // cout << bigintmultiply("99893271223", "9203232392") << endl;
 
     return 0;
 }
