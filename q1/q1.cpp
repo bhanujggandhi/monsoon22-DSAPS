@@ -234,15 +234,21 @@ void solveexpression(string &s)
     delete[] exprarr;
 }
 
-void bigintexponentiation(string &base, long long &power)
+string bigintexponent(string &base, long long power)
 {
-    string ans = "1";
-    for (int i = 0; i < power; i++)
-    {
-        ans = bigintmultiply(ans, base);
-    }
+    if (power == 0)
+        return "1";
 
-    cout << ans << endl;
+    if (power % 2 == 1)
+    {
+        string y = bigintexponent(base, power - 1);
+        return bigintmultiply(y, base);
+    }
+    else
+    {
+        string y = bigintexponent(base, power / 2);
+        return bigintmultiply(y, y);
+    }
 }
 
 // Factorial
@@ -295,7 +301,7 @@ int main()
         solveexpression(inp);
         break;
     case 2:
-        bigintexponentiation(inp, power);
+        cout << bigintexponent(inp, power) << endl;
         break;
     case 3:
         cout << "Called 3";
