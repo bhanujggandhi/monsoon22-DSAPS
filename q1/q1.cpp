@@ -148,7 +148,7 @@ string bigintmultiply(string num1, string num2)
 =================================================================================
 */
 
-// Expression Evaluation
+// 1. Expression Evaluation
 void solveexpression(string &s)
 {
     int n = s.size();
@@ -234,6 +234,7 @@ void solveexpression(string &s)
     delete[] exprarr;
 }
 
+// 2. Exponent
 string bigintexponent(string &base, long long power)
 {
     if (power == 0)
