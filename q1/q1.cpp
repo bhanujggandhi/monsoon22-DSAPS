@@ -3,6 +3,7 @@
 
 using namespace std;
 
+// Utilities
 void reverse_string(string &s)
 {
     int n = s.size();
@@ -143,6 +144,11 @@ string bigintmultiply(string num1, string num2)
     return ans;
 }
 
+/*
+=================================================================================
+*/
+
+// Expression Evaluation
 void solveexpression(string &s)
 {
     int n = s.size();
@@ -225,8 +231,10 @@ void solveexpression(string &s)
     }
 
     cout << exprarr[countx - 1] << endl;
+    delete[] exprarr;
 }
 
+// Factorial
 void bigintfactorial(string &s)
 {
     string ans = "1";
@@ -284,7 +292,7 @@ int main()
         bigintfactorial(inp);
         break;
     default:
-        cout << "Called default";
+        cout << "Wrong input";
         break;
     }
 
