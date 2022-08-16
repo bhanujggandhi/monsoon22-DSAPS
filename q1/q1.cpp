@@ -227,6 +227,18 @@ void solveexpression(string &s)
     cout << exprarr[countx - 1] << endl;
 }
 
+void bigintfactorial(string &s)
+{
+    string ans = "1";
+    long long n = stoi(s);
+    for (int i = 2; i <= n; i++)
+    {
+        ans = bigintmultiply(ans, to_string(i));
+    }
+
+    cout << ans << endl;
+}
+
 int main()
 {
     int n;
@@ -246,7 +258,7 @@ int main()
         cout << "Called 3";
         break;
     case 4:
-        cout << "Called 4";
+        bigintfactorial(inp);
         break;
     default:
         cout << "Called default";
