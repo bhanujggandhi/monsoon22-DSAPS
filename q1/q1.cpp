@@ -184,6 +184,7 @@ void solveexpression(string &s)
         }
     }
 
+    // Count how many numbers and operators are left
     int countx = 0;
     for (int i = 0; i < count; i++)
     {
@@ -192,6 +193,7 @@ void solveexpression(string &s)
         // cout << expressionarr[i] << endl;
     }
 
+    // Fill all the numbers and operators
     string *exprarr = new string[countx];
 
     idx = 0;
@@ -201,6 +203,7 @@ void solveexpression(string &s)
 
     delete[] expressionarr;
 
+    // Solve + and -
     for (int i = 0; i < countx; i++)
     {
         string temp;
