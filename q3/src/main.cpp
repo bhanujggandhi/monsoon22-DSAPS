@@ -33,27 +33,29 @@ void compute_energy(int ***rgb, double **energy, int H, int W)
 // 2. Seam Identification
 // Vertical Seam
 
-int vertical_seam(double **energy, int H, int W)
+int vertical_seam(double **energy, int H, int W, int **cost)
 {
-    double t[H][W];
-
     for (int i = 0; i < W; i++)
-        t[0][i] = energy[0][i];
+        cost[0][i] = energy[0][i];
 
     for (int i = 1; i < H; i++)
-        t[i][0] = energy[i][0] + t[i - 1][0];
+        cost[i][0] = energy[i][0] + cost[i - 1][0];
 
     for (int i = 1; i < H; i++)
         for (int j = 1; j < W; j++)
-            t[i][j] = energy[i][j] + min(min(t[i - 1][j], t[i - 1][j - 1]), j + 1 < W ? t[i - 1][j + 1] : INT64_MAX);
+        {
+            double a = min(cost[i - 1][j], cost[i - 1][j - 1]);
+            double b = j + 1 < W ? cost[i - 1][j + 1] : INT64_MAX;
+            cost[i][j] = energy[i][j] + min(a, b);
+        }
 
     double val = INT64_MAX;
     int idx = INT32_MAX;
     for (int i = 0; i < W; i++)
     {
-        if (t[H - 1][i] < val)
+        if (cost[H - 1][i] < val)
         {
-            val = t[H - 1][i];
+            val = cost[H - 1][i];
             idx = i;
         }
     }
@@ -108,7 +110,11 @@ void solve(int ***rgb, int H, int W, int C, int H_, int W_, int C_)
         cout << endl;
     }
 
-    cout << vertical_seam(energy, H, W) << endl;
+    int **cost = new int *[H];
+    for (int i = 0; i < H; i++)
+        cost[i] = new int[W];
+
+    int idx = vertical_seam(energy, H, W, cost);
     // cout << horizontal_seam(energy, H, W) << endl;
 }
 
