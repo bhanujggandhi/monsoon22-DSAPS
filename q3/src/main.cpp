@@ -31,6 +31,35 @@ void compute_energy(int ***rgb, double **energy, int H, int W)
 }
 
 // 2. Seam Identification
+// Vertical Seam
+
+int vertical_seam(double **energy, int H, int W)
+{
+    double t[H][W];
+
+    for (int i = 0; i < W; i++)
+        t[0][i] = energy[0][i];
+
+    for (int i = 1; i < H; i++)
+        t[i][0] = energy[i][0] + t[i - 1][0];
+
+    for (int i = 1; i < H; i++)
+        for (int j = 1; j < W; j++)
+            t[i][j] = energy[i][j] + min(min(t[i - 1][j], t[i - 1][j - 1]), t[i - 1][j + 1]);
+
+    double val = INT64_MAX;
+    int idx = INT32_MAX;
+    for (int i = 0; i < W; i++)
+    {
+        if (t[H - 1][i] < val)
+        {
+            val = t[H - 1][i];
+            idx = i;
+        }
+    }
+    cout << val << endl;
+    return idx;
+}
 
 // 3. Seam Removal
 
@@ -49,6 +78,8 @@ void solve(int ***rgb, int H, int W, int C, int H_, int W_, int C_)
             cout << energy[i][j] << "   ";
         cout << endl;
     }
+
+    cout << vertical_seam(energy, H, W) << endl;
 }
 
 int main()
