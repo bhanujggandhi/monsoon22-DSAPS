@@ -45,7 +45,7 @@ int vertical_seam(double **energy, int H, int W)
 
     for (int i = 1; i < H; i++)
         for (int j = 1; j < W; j++)
-            t[i][j] = energy[i][j] + min(min(t[i - 1][j], t[i - 1][j - 1]), t[i - 1][j + 1]);
+            t[i][j] = energy[i][j] + min(min(t[i - 1][j], t[i - 1][j - 1]), j + 1 < W ? t[i - 1][j + 1] : INT64_MAX);
 
     double val = INT64_MAX;
     int idx = INT32_MAX;
@@ -54,6 +54,35 @@ int vertical_seam(double **energy, int H, int W)
         if (t[H - 1][i] < val)
         {
             val = t[H - 1][i];
+            idx = i;
+        }
+    }
+    cout << val << endl;
+    return idx;
+}
+
+// Horizontal Seam
+int horizontal_seam(double **energy, int H, int W)
+{
+    double t[H][W];
+
+    for (int i = 0; i < H; i++)
+        t[i][0] = energy[i][0];
+
+    for (int i = 1; i < W; i++)
+        t[0][i] = energy[0][i] + t[0][i - 1];
+
+    for (int j = 1; j < W; j++)
+        for (int i = 1; i < H; i++)
+            t[i][j] = energy[i][j] + min(min(t[i][j - 1], t[i - 1][j - 1]), i + 1 < H ? t[i + 1][j - 1] : INT64_MAX);
+
+    double val = INT64_MAX;
+    int idx = INT32_MAX;
+    for (int i = 0; i < H; i++)
+    {
+        if (t[i][W - 1] < val)
+        {
+            val = t[i][W - 1];
             idx = i;
         }
     }
@@ -80,6 +109,7 @@ void solve(int ***rgb, int H, int W, int C, int H_, int W_, int C_)
     }
 
     cout << vertical_seam(energy, H, W) << endl;
+    // cout << horizontal_seam(energy, H, W) << endl;
 }
 
 int main()
