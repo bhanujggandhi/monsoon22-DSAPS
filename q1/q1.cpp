@@ -387,43 +387,28 @@ int main()
     if (n == 1)
     {
         cin >> inp;
+        solveexpression(inp);
     }
     else if (n == 2)
     {
         cin >> inp;
         cin >> power;
+        cout << bigintexponent(inp, power) << endl;
     }
     else if (n == 3)
     {
         cin >> inp;
         cin >> inp2;
+        cout << normalize(bigintgcd(inp, inp2)) << endl;
     }
     else if (n == 4)
     {
         cin >> inp;
+        bigintfactorial(inp);
     }
     else
     {
         exit(0);
-    }
-
-    switch (n)
-    {
-    case 1:
-        solveexpression(inp);
-        break;
-    case 2:
-        cout << bigintexponent(inp, power) << endl;
-        break;
-    case 3:
-        cout << normalize(bigintgcd(inp, inp2)) << endl;
-        break;
-    case 4:
-        bigintfactorial(inp);
-        break;
-    default:
-        cout << "Wrong input";
-        break;
     }
 
     return 0;
