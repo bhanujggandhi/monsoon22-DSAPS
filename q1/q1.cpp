@@ -240,6 +240,35 @@ string bigintmultiply(string num1, string num2)
     return ans;
 }
 
+// num1 % num2
+string remainder(string num1, string num2)
+{
+    if (isEqual(num1, num2))
+        return "0";
+
+    if (isGreater(num2, num1))
+        return num1;
+
+    while (isGreater(num1, num2))
+    {
+        string previous = "";
+        string current = num2;
+
+        while (isGreater(num1, current))
+        {
+            previous = current;
+            current = bigintmultiply(current, "2");
+        }
+
+        if (isGreater(num2, previous))
+            return previous;
+
+        num1 = bigintsubtract(num1, previous);
+    }
+
+    return num1;
+}
+
 /*
 =================================================================================
 */
@@ -348,6 +377,7 @@ string bigintexponent(string &base, long long power)
     }
 }
 
+// 3. GCD of BigInt
 string bigintgcd(string num1, string num2)
 {
     if (isZero(num1))
@@ -358,9 +388,7 @@ string bigintgcd(string num1, string num2)
     if (isEqual(num1, num2))
         return num1;
 
-    if (isGreater(num1, num2))
-        return bigintgcd(bigintsubtract(num1, num2), num2);
-    return bigintgcd(num1, bigintsubtract(num2, num1));
+    return bigintgcd(remainder(num2, num1), num1);
 }
 
 // 4. Factorial
@@ -399,7 +427,7 @@ int main()
     {
         cin >> inp;
         cin >> inp2;
-        cout << normalize(bigintgcd(inp, inp2)) << endl;
+        cout << bigintgcd(inp, inp2) << endl;
     }
     else if (n == 4)
     {
@@ -408,6 +436,7 @@ int main()
     }
     else
     {
+        cout << "Invalid Input" << endl;
         exit(0);
     }
 
