@@ -416,30 +416,45 @@ void bigintfactorial(string &s)
 int main()
 {
     int n;
-    cin >> n;
     string inp;
     string inp2;
     long long power;
 
+    cout << "--------------------------------------------------" << endl;
+    cout << "|  Choose an operation to perform                |" << endl;
+    cout << "|  1. Solve a infix expression                   |" << endl;
+    cout << "|  2. Evaluate exponent                          |" << endl;
+    cout << "|  3. Evaluate GCD of two Big Integers           |" << endl;
+    cout << "|  4. Evaluate factorial of a Big Integer        |" << endl;
+    cout << "--------------------------------------------------" << endl;
+
+    cout << "Enter an operation: ";
+    cin >> n;
     if (n == 1)
     {
+        cout << "Enter the expression" << endl;
         cin >> inp;
         solveexpression(inp);
     }
     else if (n == 2)
     {
+        cout << "Enter a Big Integer" << endl;
         cin >> inp;
+        cout << "Enter the exponent (<2^63)" << endl;
         cin >> power;
         cout << bigintexponent(inp, power) << endl;
     }
     else if (n == 3)
     {
+        cout << "Enter a Big Integer" << endl;
         cin >> inp;
+        cout << "Enter another Big Integer" << endl;
         cin >> inp2;
         cout << bigintgcd(inp, inp2) << endl;
     }
     else if (n == 4)
     {
+        cout << "Enter a Big Integer" << endl;
         cin >> inp;
         bigintfactorial(inp);
     }
