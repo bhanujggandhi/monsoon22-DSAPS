@@ -249,24 +249,33 @@ string remainder(string num1, string num2)
     if (isGreater(num2, num1))
         return num1;
 
-    while (isGreater(num1, num2))
+    string remain = "";
+    string quotient = "";
+    int sz = num2.size();
+
+    int ind = 0;
+    while (ind < num1.size())
     {
-        string previous = "";
-        string current = num2;
+        while (remain.size() != sz and ind < num1.size())
+            remain.push_back(num1[ind++]);
 
-        while (isGreater(num1, current))
+        if (isGreater(num2, remain))
         {
-            previous = current;
-            current = bigintmultiply(current, "2");
+            if (ind >= num1.size())
+                return normalize(remain);
+            remain += num1[ind++];
+            quotient += '0';
         }
-
-        if (isGreater(num2, previous))
-            return previous;
-
-        num1 = bigintsubtract(num1, previous);
+        int q = 0;
+        while (isGreater(remain, num2))
+        {
+            remain = normalize(bigintsubtract(remain, num2));
+            q++;
+        }
+        quotient += (q + '0');
     }
 
-    return num1;
+    return remain;
 }
 
 /*
