@@ -200,24 +200,6 @@ public:
             return T();
     }
 
-    T at(int i) const
-    {
-        if (_front == -1)
-        {
-            cout << "Out of bounds" << endl;
-            return -10;
-        }
-
-        if (_front + i >= max_size)
-        {
-            return arr[_front - max_size + i];
-        }
-        else
-        {
-            return arr[_front + i];
-        }
-    }
-
     int size() const
     {
         if (_front == _rear and _front == -1)
@@ -242,10 +224,10 @@ public:
     T operator[](const int i) const
     {
         if (_front == -1)
-        {
-            cout << "Out of bounds" << endl;
-            return -10;
-        }
+            return T();
+
+        if (i >= size())
+            return T();
 
         if (_front + i >= max_size)
         {
@@ -381,14 +363,13 @@ public:
 int main()
 {
     Deque<int> dq;
-    cout << dq.front() << endl;
-    cout << dq.back() << endl;
-
     dq.push_back(1);
     dq.push_front(2);
     dq.push_front(3);
     dq.push_back(4);
     dq.push_back(5);
+
+    cout << dq[0] << endl;
 
     cout << "SIZE: " << dq.size() << endl;
     cout << "FRONT ELEMENT: " << dq.front() << endl;
