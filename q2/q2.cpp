@@ -189,8 +189,7 @@ public:
         if (_front != -1)
             return arr[_front];
         else
-            cout << "Deque is empty" << endl;
-        // return INT32_MAX;
+            return T();
     }
 
     T back() const
@@ -198,8 +197,7 @@ public:
         if (_rear != -1)
             return arr[_rear];
         else
-            cout << "Deque is empty" << endl;
-        // return INT32_MAX;
+            return T();
     }
 
     T at(int i) const
@@ -383,6 +381,8 @@ public:
 int main()
 {
     Deque<int> dq;
+    cout << dq.front() << endl;
+    cout << dq.back() << endl;
 
     dq.push_back(1);
     dq.push_front(2);
@@ -405,6 +405,8 @@ int main()
     cout << "REAR ELEMENT: " << dq.back() << endl;
 
     Deque<char> dq2(10, 'a');
+    cout << dq.front() << endl;
+    cout << dq.back() << endl;
 
     dq2.push_back('b');
     dq2.push_back('c');
@@ -424,4 +426,12 @@ int main()
         cout << dq2[i] << "    ";
     }
     cout << endl;
+
+    Deque<string> d3;
+    d3.push_back("Hello");
+    cout << d3.front() << endl;
+    cout << d3.back() << endl;
+    d3.pop_front();
+    cout << d3.front() << endl;
+    cout << d3.back() << endl;
 }
