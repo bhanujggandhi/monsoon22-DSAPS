@@ -293,14 +293,15 @@ string solveexpression(string &s)
     int n = s.size();
     int count = 0;
 
+    // To count number of elements for the array
     for (int i = 0; i < n; i++)
         if (s[i] == '+' or s[i] == '-' or s[i] == 'x')
             count++;
 
     count = (2 * count) + 1;
-
     string *expressionarr = new string[count];
 
+    // Pushing numbers and operators in expressionarr
     int start = 0;
     int end = 0;
     int idx = 0;
