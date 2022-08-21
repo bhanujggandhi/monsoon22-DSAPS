@@ -5,6 +5,7 @@ using namespace std;
 
 // Utilities
 
+// Utility to remove leading zeroes
 string normalize(string s)
 {
     int k = 0;
@@ -23,6 +24,7 @@ string normalize(string s)
     return ans;
 }
 
+// Check if num1 > num2
 bool isGreater(string num1, string num2)
 {
     num1 = normalize(num1);
@@ -53,6 +55,7 @@ bool isGreater(string num1, string num2)
     }
 }
 
+// Check is num == 0
 bool isZero(string num)
 {
     num = normalize(num);
@@ -69,6 +72,7 @@ bool isZero(string num)
     return true;
 }
 
+// Check if num1 == num2
 bool isEqual(string num1, string num2)
 {
     num1 = normalize(num1);
@@ -100,6 +104,7 @@ bool isEqual(string num1, string num2)
     }
 }
 
+// Reverse string
 void reverse_string(string &s)
 {
     int n = s.size();
@@ -112,6 +117,7 @@ void reverse_string(string &s)
     return;
 }
 
+// Returns num1+num2
 string bigintadd(string num1, string num2)
 {
     reverse_string(num1);
@@ -154,6 +160,7 @@ string bigintadd(string num1, string num2)
     return ans;
 }
 
+// Returns num1-num2 (assumption num1 >= num2 always)
 string bigintsubtract(string num1, string num2)
 {
     reverse_string(num1);
@@ -201,12 +208,12 @@ string bigintsubtract(string num1, string num2)
     return normalize(ans);
 }
 
+// Returns num1 x num2
 string bigintmultiply(string num1, string num2)
 {
     reverse_string(num1);
     reverse_string(num2);
     string ans = "0";
-    // cout << num1 << "   " << num2 << endl;
 
     long long size1 = num1.size();
     long long size2 = num2.size();
@@ -222,7 +229,6 @@ string bigintmultiply(string num1, string num2)
             int c = ((a * b) + carry) % 10;
             carry = ((a * b) + carry) / 10;
 
-            // cout << c << "--->" << carry << endl;
             temp.push_back(c + '0');
         }
         if (carry != 0)
@@ -233,14 +239,13 @@ string bigintmultiply(string num1, string num2)
         {
             temp.push_back('0');
         }
-        // cout << temp << "        " << ans << endl;
         ans = bigintadd(temp, ans);
     }
 
     return ans;
 }
 
-// num1 % num2
+// Returns num1 % num2
 string remainder(string num1, string num2)
 {
     if (isEqual(num1, num2))
@@ -283,7 +288,7 @@ string remainder(string num1, string num2)
 */
 
 // 1. Expression Evaluation
-void solveexpression(string &s)
+string solveexpression(string &s)
 {
     int n = s.size();
     int count = 0;
@@ -330,7 +335,6 @@ void solveexpression(string &s)
     {
         if (expressionarr[i] != "$")
             countx++;
-        // cout << expressionarr[i] << endl;
     }
 
     // Fill all the numbers and operators
@@ -364,8 +368,9 @@ void solveexpression(string &s)
         }
     }
 
-    cout << exprarr[countx - 1] << endl;
+    string ans = exprarr[countx - 1];
     delete[] exprarr;
+    return ans;
 }
 
 // 2. Exponent
@@ -415,9 +420,9 @@ void bigintfactorial(string &s)
 
 int main()
 {
-    int n;
-    string inp;
-    string inp2;
+    int operation;
+    string num1;
+    string num2;
     long long power;
 
     cout << "--------------------------------------------------" << endl;
@@ -429,34 +434,34 @@ int main()
     cout << "--------------------------------------------------" << endl;
 
     cout << "Enter an operation: ";
-    cin >> n;
-    if (n == 1)
+    cin >> operation;
+    if (operation == 1)
     {
         cout << "Enter the expression" << endl;
-        cin >> inp;
-        solveexpression(inp);
+        cin >> num1;
+        cout << solveexpression(num1) << endl;
     }
-    else if (n == 2)
+    else if (operation == 2)
     {
         cout << "Enter a Big Integer" << endl;
-        cin >> inp;
+        cin >> num1;
         cout << "Enter the exponent (<2^63)" << endl;
         cin >> power;
-        cout << bigintexponent(inp, power) << endl;
+        cout << bigintexponent(num1, power) << endl;
     }
-    else if (n == 3)
+    else if (operation == 3)
     {
         cout << "Enter a Big Integer" << endl;
-        cin >> inp;
+        cin >> num1;
         cout << "Enter another Big Integer" << endl;
-        cin >> inp2;
-        cout << bigintgcd(inp, inp2) << endl;
+        cin >> num2;
+        cout << bigintgcd(num1, num2) << endl;
     }
-    else if (n == 4)
+    else if (operation == 4)
     {
         cout << "Enter a Big Integer" << endl;
-        cin >> inp;
-        bigintfactorial(inp);
+        cin >> num1;
+        bigintfactorial(num1);
     }
     else
     {
