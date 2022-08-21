@@ -31,8 +31,8 @@ void compute_energy(int ***rgb, double **energy, int H, int W)
 }
 
 // 2. Seam Identification
-// Vertical Seam
 
+// Vertical Seam
 int vertical_seam(double **energy, int H, int W, double **cost)
 {
     for (int i = 0; i < W; i++)
@@ -55,7 +55,6 @@ int vertical_seam(double **energy, int H, int W, double **cost)
             idx = i;
         }
     }
-    // cout << val << endl;
     return idx;
 }
 
@@ -82,7 +81,6 @@ int horizontal_seam(double **energy, int H, int W, double **cost)
             idx = i;
         }
     }
-    // cout << val << endl;
     return idx;
 }
 
@@ -154,6 +152,8 @@ void solve(int ***rgb, int H, int W, int C, int H_, int W_, int C_)
 {
     int initH = H;
     int initW = W;
+
+    // Loop to remove horizontal seams (To reduce height)
     while (H > H_)
     {
         double **energy = new double *[H];
@@ -181,6 +181,7 @@ void solve(int ***rgb, int H, int W, int C, int H_, int W_, int C_)
         H--;
     }
 
+    // Loop to remove vertical seams (To reduce width)
     H = initH;
     W = initW;
     while (W > W_)
