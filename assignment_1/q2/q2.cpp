@@ -362,8 +362,8 @@ public:
 
 int main()
 {
-    Deque<string> DQ; // or Deque<float> DQ;
-    string val;       // or float val;
+    Deque<char> DQ; // or Deque<float> DQ;
+    char val;       // or float val;
     // 0 - QUIT
     // 1 - deque()
     // 2 - deque(n, x)
