@@ -395,9 +395,13 @@ string bigintexponent(string &base, long long power)
 // 3. GCD of BigInt
 string bigintgcd(string num1, string num2)
 {
-    if (isZero(num1))
+    bool first = isZero(num1);
+    bool second = isZero(num2);
+    if (first == second == true)
+        return "Undefined";
+    if (first)
         return num2;
-    if (isZero(num2))
+    if (second)
         return num1;
 
     if (isEqual(num1, num2))

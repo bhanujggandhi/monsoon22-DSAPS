@@ -12,15 +12,15 @@ class Deque
     int _rear;
 
 public:
-    Deque()
+    void deque()
     {
         max_size = 2;
         _front = -1;
-        _rear = 3;
+        _rear = -1;
         arr = new T[max_size];
     }
 
-    Deque(const int n, const T x)
+    void deque(const int n, const T x)
     {
         max_size = n;
         _front = 0;
@@ -91,7 +91,7 @@ public:
         }
         else if (_rear == -1)
         {
-            throw underflow_error("Deque is empty");
+            cout << "underflow_error: Deque is empty" << endl;
         }
         else
         {
@@ -171,7 +171,7 @@ public:
         }
         else if (_front == -1)
         {
-            throw underflow_error("Deque is empty");
+            cout << "underflow_error: Deque is empty" << endl;
         }
         else
         {
@@ -356,63 +356,170 @@ public:
         _front = _rear = -1;
         max_size = 2;
         delete[] oldarr;
-        arr = new int[max_size];
+        arr = new T[max_size];
     }
 };
 
 int main()
 {
-    Deque<int> dq;
-    dq.push_back(1);
-    dq.push_front(2);
-    dq.push_front(3);
-    dq.push_back(4);
-    dq.push_back(5);
+    Deque<string> DQ; // or Deque<float> DQ;
+    string val;       // or float val;
+    // 0 - QUIT
+    // 1 - deque()
+    // 2 - deque(n, x)
+    // 3 - push_back(x)
+    // 4 - pop_back()
+    // 5 - push_front(x)
+    // 6 - pop_front()
+    // 7 - front()
+    // 8 - back()
+    // 9 - empty()
+    // 10 - size()
+    // 11 - resize(n, x)
+    // 12 - clear()
+    // 13 - D[n]
+    // 14 - display()
+    // 15 - capacity()
+    int choice, flag = 1;
+    int n;
 
-    cout << dq[0] << endl;
-
-    cout << "SIZE: " << dq.size() << endl;
-    cout << "FRONT ELEMENT: " << dq.front() << endl;
-    cout << "REAR ELEMENT: " << dq.back() << endl;
-
-    dq.resize(2, 100);
-
-    for (int i = 0; i < dq.size(); i++)
+    while (flag)
     {
-        cout << dq[i] << "    ";
+        cout << "-------------------------\n";
+        cout << "choice: ";
+        cin >> choice;
+        switch (choice)
+        {
+        case 0:
+            flag = 0;
+            break;
+        case 1:
+            DQ.deque();
+            break;
+        case 2:
+            cin >> n >> val;
+            DQ.deque(n, val);
+            break;
+        case 3:
+            cin >> val;
+            DQ.push_back(val);
+            break;
+        case 4:
+            DQ.pop_back();
+            break;
+        case 5:
+            cin >> val;
+            DQ.push_front(val);
+            break;
+        case 6:
+            DQ.pop_front();
+            break;
+        case 7:
+            cout << DQ.front() << endl;
+            break;
+        case 8:
+            cout << DQ.back() << endl;
+            break;
+        case 9:
+            cout << ((DQ.empty()) ? "true" : "false") << endl;
+            break;
+        case 10:
+            cout << DQ.size() << endl;
+            break;
+        case 11:
+            cin >> n >> val;
+            DQ.resize(n, val);
+            break;
+        case 12:
+            DQ.clear();
+            break;
+        case 13:
+            cin >> n;
+            cout << DQ[n] << endl;
+            break;
+        case 14:
+            // For Debugging
+            for (int i = 0; i < DQ.size(); i++)
+                cout << DQ[i] << "  ";
+            cout << endl;
+            break;
+        case 15:
+            // For Debugging
+            cout << DQ.capacity() << endl;
+            break;
+        default:
+            cout << "Enter correct choice\n";
+        }
     }
-    cout << endl;
-    cout << "FRONT ELEMENT: " << dq.front() << endl;
-    cout << "REAR ELEMENT: " << dq.back() << endl;
-
-    Deque<char> dq2(10, 'a');
-    cout << dq.front() << endl;
-    cout << dq.back() << endl;
-
-    dq2.push_back('b');
-    dq2.push_back('c');
-    dq2.push_back('d');
-    dq2.push_back('e');
-    dq2.push_back('f');
-
-    cout << "SIZE: " << dq2.size() << endl;
-
-    cout << "FRONT ELEMENT: " << dq2.front() << endl;
-    cout << "REAR ELEMENT: " << dq2.back() << endl;
-
-    dq2.resize(20, 'k');
-
-    for (int i = 0; i < dq2.size(); i++)
-    {
-        cout << dq2[i] << "    ";
-    }
-    cout << endl;
-
-    Deque<string> d3;
-    d3.push_back("Hello");
-    cout << d3.front() << endl;
-    cout << d3.back() << endl;
-    d3.pop_front();
-    cout << d3.front() << endl;
-    cout << d3.back() << endl;
+    return 0;
 }
+// 0 - QUIT
+// 1 - deque()
+// 2 - deque(n, x)
+// 3 - push_back(x)
+// 4 - pop_back()
+// 5 - push_front(x)
+// 6 - pop_front()
+// 7 - front()
+// 8 - back()
+// 9 - empty()
+// 10 - size()
+// 11 - resize(n, x)
+// 12 - clear()
+// 13 - D[n]
+// 14 - display()
+// 15 - capacity()
+
+// Deque<int> dq;
+// dq.push_back(1);
+// dq.push_front(2);
+// dq.push_front(3);
+// dq.push_back(4);
+// dq.push_back(5);
+
+// cout << dq[0] << endl;
+
+// cout << "SIZE: " << dq.size() << endl;
+// cout << "FRONT ELEMENT: " << dq.front() << endl;
+// cout << "REAR ELEMENT: " << dq.back() << endl;
+
+// dq.resize(2, 100);
+
+// for (int i = 0; i < dq.size(); i++)
+// {
+//     cout << dq[i] << "    ";
+// }
+// cout << endl;
+// cout << "FRONT ELEMENT: " << dq.front() << endl;
+// cout << "REAR ELEMENT: " << dq.back() << endl;
+
+// Deque<char> dq2(10, 'a');
+// cout << dq.front() << endl;
+// cout << dq.back() << endl;
+
+// dq2.push_back('b');
+// dq2.push_back('c');
+// dq2.push_back('d');
+// dq2.push_back('e');
+// dq2.push_back('f');
+
+// cout << "SIZE: " << dq2.size() << endl;
+
+// cout << "FRONT ELEMENT: " << dq2.front() << endl;
+// cout << "REAR ELEMENT: " << dq2.back() << endl;
+
+// dq2.resize(20, 'k');
+
+// for (int i = 0; i < dq2.size(); i++)
+// {
+//     cout << dq2[i] << "    ";
+// }
+// cout << endl;
+
+// Deque<string> d3;
+// d3.push_back("Hello");
+// cout << d3.front() << endl;
+// cout << d3.back() << endl;
+// d3.pop_front();
+// cout << d3.front() << endl;
+// cout << d3.back() << endl;
