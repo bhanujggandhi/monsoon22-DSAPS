@@ -1,5 +1,11 @@
 {
   "files.associations": {
-    "deque": "cpp"
+    "deque": "cpp",
+    "array": "cpp",
+    "*.tcc": "cpp",
+    "istream": "cpp",
+    "tuple": "cpp",
+    "utility": "cpp",
+    "new": "cpp"
   }
 }
