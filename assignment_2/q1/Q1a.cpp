@@ -1,6 +1,7 @@
 #include <iostream>
 #include <unordered_map>
 
+// Structure of Node for doubly linked list
 struct Node
 {
     int key;
@@ -17,6 +18,7 @@ struct Node
     }
 };
 
+// LRUCache Class Declaration
 class LRUCache
 {
 private:
@@ -33,6 +35,7 @@ public:
     void display();
 };
 
+// Contructor to set the class variables
 LRUCache::LRUCache(const int _capacity)
 {
     capacity = _capacity;
@@ -41,6 +44,7 @@ LRUCache::LRUCache(const int _capacity)
     logger.clear();
 }
 
+// Destructor to clean the memory
 LRUCache::~LRUCache()
 {
     Node *temp = front;
@@ -52,12 +56,14 @@ LRUCache::~LRUCache()
     }
 }
 
+// Function to set key, value in the cache class
 void LRUCache::set(int key, int value)
 {
     // 1. Key is not present and capacity is not full
     if (logger.size() < capacity and logger.find(key) == logger.end())
     {
         Node *curr = new Node(key, value);
+        // First element in the cache
         if (logger.size() == 0)
         {
             front = curr;
@@ -82,12 +88,13 @@ void LRUCache::set(int key, int value)
 
         // Remove the least recently used key
         Node *temp = tail->prev;
-        // This is the only node in the list
+        // This is the only node in the list (When capacity = 1)
         if (temp == NULL)
         {
             front = NULL;
-            tail = NULL;
+            logger.erase(tail->key);
             delete tail;
+            tail = NULL;
         }
         else
         {
@@ -98,33 +105,43 @@ void LRUCache::set(int key, int value)
         }
         logger.insert({key, curr});
     }
+    // If key is already present in the map
     else if (logger.find(key) != logger.end())
     {
         Node *old = logger[key];
+        // It could be a update request
         Node *curr = new Node({key, value});
+
         // If old is the front itself
         if (old->prev == NULL)
         {
             front = front->next;
             front->prev = NULL;
+            logger.erase(key);
             delete old;
         }
+        // If old is the tail
         else if (old->next == NULL)
         {
+            tail = tail->prev;
             old->prev->next = NULL;
+            logger.erase(key);
             delete old;
         }
+        // Remove the old from the middle
         else
         {
             old->prev->next = old->next;
             old->next->prev = old->prev;
+            logger.erase(key);
             delete old;
         }
 
+        // Insert current at the front
         curr->next = front;
         front->prev = curr;
         front = front->prev;
-        logger[key] = curr;
+        logger.insert({key, curr});
     }
 }
 
@@ -142,9 +159,11 @@ int LRUCache::get(int key)
         // If old is at the end
         else if (old->next == NULL)
         {
+            tail = tail->prev;
             old->prev->next = NULL;
             old->prev = NULL;
         }
+        // Remove old from the middle
         else
         {
             old->prev->next = old->next;
@@ -153,6 +172,7 @@ int LRUCache::get(int key)
             old->next = NULL;
         }
 
+        // Pushing old to the front
         old->next = front;
         front->prev = old;
         front = front->prev;
@@ -182,6 +202,9 @@ int main()
     c.set(1, 2);
     c.set(2, 3);
     c.set(3, 4);
+    c.set(4, 5);
+    c.set(5, 6);
+    c.set(6, 7);
     c.display();
     std::cout << "----------" << std::endl;
     c.set(4, 5);
@@ -203,6 +226,9 @@ int main()
     c.display();
     std::cout << "----------" << std::endl;
     std::cout << c.get(2) << std::endl;
+    c.display();
+    std::cout << "----------" << std::endl;
+    std::cout << c.get(19) << std::endl;
     c.display();
 
     return 0;
