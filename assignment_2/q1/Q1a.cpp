@@ -112,36 +112,47 @@ void LRUCache::set(int key, int value)
         // It could be a update request
         Node *curr = new Node({key, value});
 
-        // If old is the front itself
-        if (old->prev == NULL)
+        // If this is the only node
+        if (old->prev == NULL and old->next == NULL)
         {
-            front = front->next;
-            front->prev = NULL;
+            front = tail = curr;
             logger.erase(key);
+            logger.insert({key, curr});
             delete old;
         }
-        // If old is the tail
-        else if (old->next == NULL)
-        {
-            tail = tail->prev;
-            old->prev->next = NULL;
-            logger.erase(key);
-            delete old;
-        }
-        // Remove the old from the middle
         else
         {
-            old->prev->next = old->next;
-            old->next->prev = old->prev;
-            logger.erase(key);
-            delete old;
-        }
+            // If old is the front itself
+            if (old->prev == NULL)
+            {
+                front = front->next;
+                front->prev = NULL;
+                logger.erase(key);
+                delete old;
+            }
+            // If old is the tail
+            else if (old->next == NULL)
+            {
+                tail = tail->prev;
+                old->prev->next = NULL;
+                logger.erase(key);
+                delete old;
+            }
+            // Remove the old from the middle
+            else
+            {
+                old->prev->next = old->next;
+                old->next->prev = old->prev;
+                logger.erase(key);
+                delete old;
+            }
 
-        // Insert current at the front
-        curr->next = front;
-        front->prev = curr;
-        front = front->prev;
-        logger.insert({key, curr});
+            // Insert current at the front
+            curr->next = front;
+            front->prev = curr;
+            front = front->prev;
+            logger.insert({key, curr});
+        }
     }
 }
 
@@ -198,38 +209,18 @@ void LRUCache::display()
 
 int main()
 {
-    LRUCache c(3);
-    c.set(1, 2);
-    c.set(2, 3);
-    c.set(3, 4);
-    c.set(4, 5);
-    c.set(5, 6);
-    c.set(6, 7);
-    c.display();
-    std::cout << "----------" << std::endl;
-    c.set(4, 5);
-    c.display();
-    std::cout << "----------" << std::endl;
-    c.set(2, 6);
-    c.display();
-    std::cout << "----------" << std::endl;
+    LRUCache c(2);
     c.set(2, 1);
-    c.display();
-    std::cout << "----------" << std::endl;
-    c.set(4, 14);
-    c.display();
-    std::cout << "----------" << std::endl;
-    std::cout << c.get(3) << std::endl;
-    c.display();
-    std::cout << "----------" << std::endl;
-    std::cout << c.get(4) << std::endl;
-    c.display();
-    std::cout << "----------" << std::endl;
+    c.set(2, 2);
     std::cout << c.get(2) << std::endl;
-    c.display();
-    std::cout << "----------" << std::endl;
-    std::cout << c.get(19) << std::endl;
-    c.display();
+    c.set(1, 1);
+    c.set(4, 1);
+    std::cout << c.get(2) << std::endl;
+
+    /*
+    ["LRUCache","put","put","get","put","put","get"]
+    [[2],[2,1],[2,2],[2],[1,1],[4,1],[2]]
+    */
 
     return 0;
 }
