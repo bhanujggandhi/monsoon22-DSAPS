@@ -13,7 +13,7 @@ struct Node
     {
         key = _key;
         value = _value;
-        frequency = 0;
+        frequency = 1;
         prev = NULL;
         next = NULL;
     }
@@ -34,21 +34,31 @@ struct List
         tail->prev = front;
     }
 
+    ~List()
+    {
+        Node *temp;
+        while (front != NULL)
+        {
+            temp = front;
+            delete temp;
+            front = front->next;
+        }
+    }
+
     void add(Node *data)
     {
         front->next->prev = data;
         data->next = front->next;
         front->next = data;
         data->prev = front;
-        size++;
+        this->size++;
     }
 
     void remove(Node *data)
     {
         data->prev->next = data->next;
         data->next->prev = data->prev;
-        delete data;
-        size--;
+        this->size--;
     }
 };
 
@@ -64,6 +74,7 @@ public:
     LFUCache(int _capacity);
     ~LFUCache();
     void set(int key, int value);
+    int get(int key);
 };
 
 LFUCache::LFUCache(int _capacity)
@@ -150,8 +161,56 @@ void LFUCache::set(int key, int value)
     }
 }
 
+int LFUCache::get(int key)
+{
+    if (keynodelogger.find(key) != keynodelogger.end())
+    {
+        Node *old = keynodelogger[key];
+
+        // Remove from the current frequency list
+        List *oldlist = freqlistlogger[old->frequency];
+        oldlist->remove(old);
+
+        // Check if oldnode has the least freq and oldlist is empty
+        if (old->frequency == leastFrequency and oldlist->size == 0)
+            leastFrequency++;
+
+        List *newlist;
+        // If current node frequency + 1 has already a list
+        if (freqlistlogger.find(old->frequency + 1) != freqlistlogger.end())
+        {
+            newlist = freqlistlogger[old->frequency + 1];
+            old->frequency += 1;
+            newlist->add(old);
+        }
+        // If no list, then create one
+        else
+        {
+            newlist = new List();
+            old->frequency += 1;
+            newlist->add(old);
+            freqlistlogger.insert({old->frequency, newlist});
+        }
+
+        return old->value;
+    }
+    else
+    {
+        return -1;
+    }
+}
+
 int main()
 {
+
+    LFUCache c(3);
+    c.set(1, 10);
+    std::cout << c.get(1) << std::endl;
+    c.set(2, 20);
+    c.set(3, 30);
+    c.set(4, 40);
+    std::cout << c.get(3) << std::endl;
+    std::cout << c.get(2) << std::endl;
 
     return 0;
 }
