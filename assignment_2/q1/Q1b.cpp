@@ -1,16 +1,14 @@
 #include <iostream>
 #include <unordered_map>
 
-struct Node
-{
+struct Node {
     int key;
     int value;
     int frequency;
     Node *prev;
     Node *next;
 
-    Node(int _key, int _value)
-    {
+    Node(int _key, int _value) {
         key = _key;
         value = _value;
         frequency = 1;
@@ -19,14 +17,12 @@ struct Node
     }
 };
 
-struct List
-{
+struct List {
     Node *front;
     Node *tail;
     int size;
 
-    List()
-    {
+    List() {
         size = 0;
         front = new Node(-1, -1);
         tail = new Node(-1, -1);
@@ -34,19 +30,16 @@ struct List
         tail->prev = front;
     }
 
-    ~List()
-    {
+    ~List() {
         Node *temp;
-        while (front != NULL)
-        {
+        while (front != NULL) {
             temp = front;
             delete temp;
             front = front->next;
         }
     }
 
-    void add(Node *data)
-    {
+    void add(Node *data) {
         front->next->prev = data;
         data->next = front->next;
         front->next = data;
@@ -54,46 +47,39 @@ struct List
         this->size++;
     }
 
-    void remove(Node *data)
-    {
+    void remove(Node *data) {
         data->prev->next = data->next;
         data->next->prev = data->prev;
         this->size--;
     }
 };
 
-class LFUCache
-{
-private:
+class LFUCache {
+   private:
     std::unordered_map<int, Node *> keynodelogger;
     std::unordered_map<int, List *> freqlistlogger;
     int capacity;
     int leastFrequency;
 
-public:
+   public:
     LFUCache(int _capacity);
     ~LFUCache();
     void set(int key, int value);
     int get(int key);
 };
 
-LFUCache::LFUCache(int _capacity)
-{
+LFUCache::LFUCache(int _capacity) {
     keynodelogger.clear();
     freqlistlogger.clear();
     capacity = _capacity;
     leastFrequency = 0;
 }
 
-LFUCache::~LFUCache()
-{
-}
+LFUCache::~LFUCache() {}
 
-void LFUCache::set(int key, int value)
-{
+void LFUCache::set(int key, int value) {
     // Case 1: If the key is already present
-    if (keynodelogger.find(key) != keynodelogger.end())
-    {
+    if (keynodelogger.find(key) != keynodelogger.end()) {
         Node *old = keynodelogger[key];
 
         // Update the value
@@ -109,15 +95,13 @@ void LFUCache::set(int key, int value)
 
         List *newlist;
         // If current node frequency + 1 has already a list
-        if (freqlistlogger.find(old->frequency + 1) != freqlistlogger.end())
-        {
+        if (freqlistlogger.find(old->frequency + 1) != freqlistlogger.end()) {
             newlist = freqlistlogger[old->frequency + 1];
             old->frequency += 1;
             newlist->add(old);
         }
         // If no list, then create one
-        else
-        {
+        else {
             newlist = new List();
             old->frequency += 1;
             newlist->add(old);
@@ -125,11 +109,9 @@ void LFUCache::set(int key, int value)
         }
     }
     // Case 2: If the node is not already present
-    else
-    {
+    else {
         // If capacity is full
-        if (keynodelogger.size() == capacity)
-        {
+        if (keynodelogger.size() == capacity) {
             List *minlist = freqlistlogger[leastFrequency];
             // Remove from the tail node
             Node *removenode = minlist->tail->prev;
@@ -141,16 +123,13 @@ void LFUCache::set(int key, int value)
         List *newlist;
         // This new node is first time accessed
         leastFrequency = 1;
-        if (freqlistlogger.find(leastFrequency) != freqlistlogger.end())
-        {
+        if (freqlistlogger.find(leastFrequency) != freqlistlogger.end()) {
             newlist = freqlistlogger[leastFrequency];
             Node *newnode = new Node(key, value);
 
             newlist->add(newnode);
             keynodelogger.insert({key, newnode});
-        }
-        else
-        {
+        } else {
             newlist = new List();
             Node *newnode = new Node(key, value);
 
@@ -161,10 +140,8 @@ void LFUCache::set(int key, int value)
     }
 }
 
-int LFUCache::get(int key)
-{
-    if (keynodelogger.find(key) != keynodelogger.end())
-    {
+int LFUCache::get(int key) {
+    if (keynodelogger.find(key) != keynodelogger.end()) {
         Node *old = keynodelogger[key];
 
         // Remove from the current frequency list
@@ -177,15 +154,13 @@ int LFUCache::get(int key)
 
         List *newlist;
         // If current node frequency + 1 has already a list
-        if (freqlistlogger.find(old->frequency + 1) != freqlistlogger.end())
-        {
+        if (freqlistlogger.find(old->frequency + 1) != freqlistlogger.end()) {
             newlist = freqlistlogger[old->frequency + 1];
             old->frequency += 1;
             newlist->add(old);
         }
         // If no list, then create one
-        else
-        {
+        else {
             newlist = new List();
             old->frequency += 1;
             newlist->add(old);
@@ -193,15 +168,12 @@ int LFUCache::get(int key)
         }
 
         return old->value;
-    }
-    else
-    {
+    } else {
         return -1;
     }
 }
 
-int main()
-{
+int main() {
 
     LFUCache c(3);
     c.set(1, 10);
