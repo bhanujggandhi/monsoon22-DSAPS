@@ -29,6 +29,7 @@ class AVLTree {
     Node* left_rotate(Node* node);
     Node* right_rotate(Node* node);
     Node* insertHelper(Node* root, int key);
+    bool searchHelper(Node* root, int key);
 
    public:
     AVLTree();
@@ -37,6 +38,7 @@ class AVLTree {
     void insert(int key);
     void inorder(Node* root);
     void preorder(Node* root);
+    bool search(int key);
 };
 
 AVLTree::AVLTree() { root = NULL; }
@@ -122,6 +124,19 @@ Node* AVLTree::insertHelper(Node* node, int key) {
 
 void AVLTree::insert(int key) { root = insertHelper(root, key); }
 
+bool AVLTree::searchHelper(Node* node, int key) {
+    if (node == NULL) return false;
+
+    if (node->value == key) return true;
+
+    if (node->value > key) return searchHelper(node->left, key);
+    if (node->value < key) return searchHelper(node->right, key);
+
+    return false;
+}
+
+bool AVLTree::search(int key) { return searchHelper(root, key); }
+
 void AVLTree::inorder(Node* root) {
     if (root == NULL) return;
 
@@ -161,10 +176,12 @@ int main() {
     b.insert(4);
     b.insert(3);
     b.insert(2);
-    b.insert(1);
+    b.insert(4);
     b.insert(2);
     b.insert(1);
     b.insert(6);
+    std::cout << b.search(1) << std::endl;
+    std::cout << b.search(4) << std::endl;
     b.preorder(a.getRoot());
     std::cout << std::endl;
     b.inorder(a.getRoot());
