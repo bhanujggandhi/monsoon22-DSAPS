@@ -28,8 +28,9 @@ class AVLTree {
     int getBF(Node* node);
     Node* left_rotate(Node* node);
     Node* right_rotate(Node* node);
-    Node* insertHelper(Node* root, int key);
-    bool searchHelper(Node* root, int key);
+    Node* insertHelper(Node* node, int key);
+    bool searchHelper(Node* node, int key);
+    int countOccurenceHelper(Node* node, int key);
 
    public:
     AVLTree();
@@ -39,6 +40,7 @@ class AVLTree {
     void inorder(Node* root);
     void preorder(Node* root);
     bool search(int key);
+    int count_occurence(int key);
 };
 
 AVLTree::AVLTree() { root = NULL; }
@@ -137,6 +139,21 @@ bool AVLTree::searchHelper(Node* node, int key) {
 
 bool AVLTree::search(int key) { return searchHelper(root, key); }
 
+int AVLTree::countOccurenceHelper(Node* node, int key) {
+    if (node == NULL) return 0;
+
+    if (node->value == key) return node->count;
+
+    if (node->value > key) return countOccurenceHelper(node->left, key);
+    if (node->value < key) return countOccurenceHelper(node->right, key);
+
+    return 0;
+}
+
+int AVLTree::count_occurence(int key) {
+    return countOccurenceHelper(root, key);
+}
+
 void AVLTree::inorder(Node* root) {
     if (root == NULL) return;
 
@@ -154,21 +171,6 @@ void AVLTree::preorder(Node* root) {
 }
 
 int main() {
-    AVLTree a;
-    a.insert(1);
-    a.insert(2);
-    a.insert(3);
-    a.insert(4);
-    a.insert(5);
-    a.insert(6);
-    a.insert(7);
-    a.insert(6);
-    a.insert(7);
-    a.insert(2);
-    a.preorder(a.getRoot());
-    std::cout << std::endl;
-    a.inorder(a.getRoot());
-    std::cout << std::endl;
     AVLTree b;
     b.insert(7);
     b.insert(6);
@@ -180,11 +182,19 @@ int main() {
     b.insert(2);
     b.insert(1);
     b.insert(6);
+    b.insert(6);
+    b.insert(6);
+    b.insert(6);
+    b.insert(6);
     std::cout << b.search(1) << std::endl;
     std::cout << b.search(4) << std::endl;
-    b.preorder(a.getRoot());
+    std::cout << b.count_occurence(4) << std::endl;
+    std::cout << b.count_occurence(20) << std::endl;
+    std::cout << b.count_occurence(6) << std::endl;
+
+    b.preorder(b.getRoot());
     std::cout << std::endl;
-    b.inorder(a.getRoot());
+    b.inorder(b.getRoot());
     std::cout << std::endl;
 
     return 0;
