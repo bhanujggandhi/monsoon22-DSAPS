@@ -45,6 +45,7 @@ class AVLTree {
     int count_occurence(int key);
     int lower_bound(int n);
     int upper_bound(int n);
+    int closest_element(int n);
     int Kth_largest(int k);
     int count_range(int eLeft, int eRight);
     void inorder(Node* root);
@@ -240,6 +241,34 @@ int AVLTree::upper_bound(int n) {
     return prev->value > n ? prev->value : 0;
 }
 
+int AVLTree::closest_element(int n) {
+    Node* curr = root;
+    Node* prev = NULL;
+    int diff = INT32_MAX;
+    int ans = 0;
+
+    while (curr != NULL) {
+        if (curr->value > n) {
+            // prev = curr;
+            if (abs(curr->value - n) < diff) {
+                diff = abs(curr->value - n);
+                ans = curr->value;
+            }
+            curr = curr->left;
+        } else if (curr->value < n) {
+            if (abs(curr->value - n) < diff) {
+                diff = abs(curr->value - n);
+                ans = curr->value;
+            }
+            // prev = curr;
+            curr = curr->right;
+        } else {
+            return curr->value;
+        }
+    }
+    return ans;
+}
+
 int AVLTree::Kth_largest(int k) {
     int ans = 0;
     kthLargestHelper(root, k, ans);
@@ -270,20 +299,21 @@ void AVLTree::preorder(Node* root) {
 
 int main() {
     AVLTree b;
-    b.insert(7);
-    b.insert(6);
-    b.insert(5);
-    b.insert(4);
-    b.insert(3);
-    b.insert(2);
     b.insert(1);
+    b.insert(1);
+    b.insert(2);
+    b.insert(2);
+    b.insert(2);
+    b.insert(3);
+    b.insert(3);
 
     b.inorder(b.getRoot());
     std::cout << std::endl;
-    std::cout << b.lower_bound(6) << std::endl;
-    std::cout << b.upper_bound(7) << std::endl;
-    std::cout << b.Kth_largest(2) << std::endl;
-    std::cout << b.count_range(1, 4) << std::endl;
+    std::cout << b.lower_bound(3) << std::endl;
+    std::cout << b.upper_bound(2) << std::endl;
+    // std::cout << b.Kth_largest(2) << std::endl;
+    // std::cout << b.count_range(1, 4) << std::endl;
+    // std::cout << b.closest_element(21989) << std::endl;
 
     return 0;
 }
