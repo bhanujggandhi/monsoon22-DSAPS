@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <iostream>
 
 struct Node {
@@ -331,8 +330,6 @@ int AVLTree::lower_bound(int n) {
             curr = curr->left;
 
         } else if (curr->value < n) {
-            // prev = curr;
-            // if (ans == INT32_MIN or ans > curr->value) ans = curr->value;
             curr = curr->right;
 
         } else {
@@ -351,7 +348,6 @@ int AVLTree::upper_bound(int n) {
             if (ans == INT32_MIN or ans > curr->value) ans = curr->value;
             curr = curr->left;
         } else {
-            // if (ans == INT32_MIN or ans > curr->value) ans = curr->value;
             curr = curr->right;
         }
     }
@@ -423,7 +419,7 @@ int main() {
     std::cout << b.upper_bound(3) << std::endl;
     std::cout << "--------------------------------" << std::endl;
 
-    // b.delete_node(3);
+    b.delete_node(12);
     // b.delete_node(1);
     // b.delete_node(4);
 
