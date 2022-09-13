@@ -32,21 +32,20 @@ class AVLTree {
     Node* insertHelper(Node* node, int key);
     bool searchHelper(Node* node, int key);
     int countOccurenceHelper(Node* node, int key);
+    void deleteTree(Node* node);
 
    public:
     AVLTree();
     ~AVLTree();
     Node* getRoot();
     void insert(int key);
-    void inorder(Node* root);
-    void preorder(Node* root);
     bool search(int key);
     int count_occurence(int key);
+    void inorder(Node* root);
+    void preorder(Node* root);
 };
 
-AVLTree::AVLTree() { root = NULL; }
-
-AVLTree::~AVLTree() {}
+// --------------------- Private ----------------------
 
 int AVLTree::max(int a, int b) { return a > b ? a : b; }
 
@@ -107,8 +106,6 @@ Node* AVLTree::rebalance(Node* node, int balancefac) {
     return node;
 }
 
-Node* AVLTree::getRoot() { return root; }
-
 Node* AVLTree::insertHelper(Node* node, int key) {
     if (node == NULL) {
         node = new Node(key);
@@ -131,8 +128,6 @@ Node* AVLTree::insertHelper(Node* node, int key) {
     return node;
 }
 
-void AVLTree::insert(int key) { root = insertHelper(root, key); }
-
 bool AVLTree::searchHelper(Node* node, int key) {
     if (node == NULL) return false;
 
@@ -144,8 +139,6 @@ bool AVLTree::searchHelper(Node* node, int key) {
     return false;
 }
 
-bool AVLTree::search(int key) { return searchHelper(root, key); }
-
 int AVLTree::countOccurenceHelper(Node* node, int key) {
     if (node == NULL) return 0;
 
@@ -156,6 +149,26 @@ int AVLTree::countOccurenceHelper(Node* node, int key) {
 
     return 0;
 }
+
+void AVLTree::deleteTree(Node* node) {
+    if (node == NULL) return;
+
+    deleteTree(node->left);
+    deleteTree(node->right);
+
+    delete node;
+}
+
+// -------------------- Public -------------------
+AVLTree::AVLTree() { root = NULL; }
+
+AVLTree::~AVLTree() { deleteTree(root); }
+
+Node* AVLTree::getRoot() { return root; }
+
+void AVLTree::insert(int key) { root = insertHelper(root, key); }
+
+bool AVLTree::search(int key) { return searchHelper(root, key); }
 
 int AVLTree::count_occurence(int key) {
     return countOccurenceHelper(root, key);
@@ -176,6 +189,8 @@ void AVLTree::preorder(Node* root) {
     preorder(root->left);
     preorder(root->right);
 }
+
+// ----------------- Driver Code ------------------------
 
 int main() {
     AVLTree b;
