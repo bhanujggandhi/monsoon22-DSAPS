@@ -60,7 +60,7 @@ class AVLTree {
     int countOccurenceHelper(Node *node, int key);
 
     // Utility to find kth largest node
-    void kthLargestHelper(Node *node, int &k, int &ans);
+    void kthLargestHelper(Node *node, int &k, int &ans, bool &flag);
 
     // Utility to find number of nodes in a range
     int countRangeHelper(Node *node, int low, int high);
@@ -264,18 +264,19 @@ int AVLTree::countOccurenceHelper(Node *node, int key) {
     return 0;
 }
 
-void AVLTree::kthLargestHelper(Node *node, int &k, int &ans) {
-    if (node == NULL) return;
+void AVLTree::kthLargestHelper(Node *node, int &k, int &ans, bool &flag) {
+    if (flag or node == NULL) return;
 
-    kthLargestHelper(node->right, k, ans);
+    kthLargestHelper(node->right, k, ans, flag);
 
-    k--;
-    if (k == 0) {
+    k -= node->count;
+    if (k <= 0 and flag == false) {
+        flag = true;
         ans = node->value;
         return;
     }
 
-    kthLargestHelper(node->left, k, ans);
+    kthLargestHelper(node->left, k, ans, flag);
 }
 
 int AVLTree::countRangeHelper(Node *node, int eLeft, int eRight) {
@@ -378,7 +379,8 @@ int AVLTree::closest_element(int n) {
 
 int AVLTree::Kth_largest(int k) {
     int ans = 0;
-    kthLargestHelper(root, k, ans);
+    bool flag = false;
+    kthLargestHelper(root, k, ans, flag);
     return ans;
 }
 
@@ -422,21 +424,16 @@ int main() {
     b.insert(11);
     b.insert(48);
 
-    std::cout << b.upper_bound(61) << std::endl;
-    std::cout << b.lower_bound(61) << std::endl;
+    // std::cout << b.upper_bound(61) << std::endl;
+    // std::cout << b.lower_bound(61) << std::endl;
 
-    b.preorder(b.getRoot());
+    b.inorder(b.getRoot());
     std::cout << std::endl;
-    b.inorder(b.getRoot());
+
+    std::cout << b.Kth_largest(15) << std::endl;
+
     std::cout << "--------------------------------" << std::endl;
-    // b.delete_node(12);
-    b.delete_node(20);
-    std::cout << b.count_occurence(15) << std::endl;
-    std::cout << "--------------------------------" << std::endl;
-    // b.delete_node(4);
-    b.inorder(b.getRoot());
-    std::cout << "--------------------------------" << std::endl;
-    printBT(b.getRoot());
+    // printBT(b.getRoot());
 
     return 0;
 }
