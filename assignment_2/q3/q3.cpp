@@ -22,18 +22,44 @@ class AVLTree {
     Node* root;
 
     // Methods
+
+    // Utility to get maximum
     int max(int a, int b);
+
+    // Utility to get height of a node from it's children
     int getHeight(Node* node);
+
+    // Utility to set height of a node
     void setHeight(Node* node);
+
+    // Utility to get balance factor using left and right height
     int getBF(Node* node);
+
+    // Utility for left rotation and update height
     Node* left_rotate(Node* node);
+
+    // Utitlity of right rotation and update height
     Node* right_rotate(Node* node);
+
+    // Utility to rebalance a node
     Node* rebalance(Node* node, int bf);
+
+    // Utitlity to insert a node in the tree
     Node* insertHelper(Node* node, int key);
+
+    // Utility to search a node in the tree
     bool searchHelper(Node* node, int key);
+
+    // Utility to count occurence of a key
     int countOccurenceHelper(Node* node, int key);
+
+    // Utility to find kth largest node
     void kthLargestHelper(Node* node, int& k, int& ans);
+
+    // Utility to find number of nodes in a range
     int countRangeHelper(Node* node, int low, int high);
+
+    // Utility to delete the whole tree in order keep memory clean
     void deleteTree(Node* node);
 
    public:
@@ -249,7 +275,6 @@ int AVLTree::closest_element(int n) {
 
     while (curr != NULL) {
         if (curr->value > n) {
-            // prev = curr;
             if (abs(curr->value - n) < diff) {
                 diff = abs(curr->value - n);
                 ans = curr->value;
@@ -260,7 +285,6 @@ int AVLTree::closest_element(int n) {
                 diff = abs(curr->value - n);
                 ans = curr->value;
             }
-            // prev = curr;
             curr = curr->right;
         } else {
             return curr->value;
@@ -311,9 +335,6 @@ int main() {
     std::cout << std::endl;
     std::cout << b.lower_bound(3) << std::endl;
     std::cout << b.upper_bound(2) << std::endl;
-    // std::cout << b.Kth_largest(2) << std::endl;
-    // std::cout << b.count_range(1, 4) << std::endl;
-    // std::cout << b.closest_element(21989) << std::endl;
 
     return 0;
 }
