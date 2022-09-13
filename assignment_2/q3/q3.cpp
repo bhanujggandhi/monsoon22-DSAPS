@@ -2,8 +2,8 @@
 
 struct Node {
     int value;
-    Node* left;
-    Node* right;
+    Node *left;
+    Node *right;
     int height;
     int count;
 
@@ -19,7 +19,7 @@ struct Node {
 class AVLTree {
    private:
     //    Members
-    Node* root;
+    Node *root;
 
     // Methods
 
@@ -27,48 +27,48 @@ class AVLTree {
     int max(int a, int b);
 
     // Utility to get height of a node from it's children
-    int getHeight(Node* node);
+    int getHeight(Node *node);
 
     // Utility to set height of a node
-    void setHeight(Node* node);
+    void setHeight(Node *node);
 
     // Utility to get balance factor using left and right height
-    int getBF(Node* node);
+    int getBF(Node *node);
 
     // Utility for left rotation and update height
-    Node* left_rotate(Node* node);
+    Node *left_rotate(Node *node);
 
     // Utitlity of right rotation and update height
-    Node* right_rotate(Node* node);
+    Node *right_rotate(Node *node);
 
     // Utility to rebalance a node
-    Node* rebalance(Node* node, int bf);
+    Node *rebalance(Node *node, int bf);
 
     // Utitlity to insert a node in the tree
-    Node* insertHelper(Node* node, int key);
+    Node *insertHelper(Node *node, int key);
 
     // Utitlity to delete a node in the tree
-    Node* deleteHelper(Node* node, int key);
+    Node *deleteHelper(Node *node, int key);
 
     // Utility to search a node in the tree
-    bool searchHelper(Node* node, int key);
+    bool searchHelper(Node *node, int key);
 
     // Utility to count occurence of a key
-    int countOccurenceHelper(Node* node, int key);
+    int countOccurenceHelper(Node *node, int key);
 
     // Utility to find kth largest node
-    void kthLargestHelper(Node* node, int& k, int& ans);
+    void kthLargestHelper(Node *node, int &k, int &ans);
 
     // Utility to find number of nodes in a range
-    int countRangeHelper(Node* node, int low, int high);
+    int countRangeHelper(Node *node, int low, int high);
 
     // Utility to delete the whole tree in order keep memory clean
-    void deleteTree(Node* node);
+    void deleteTree(Node *node);
 
    public:
     AVLTree();
     ~AVLTree();
-    Node* getRoot();
+    Node *getRoot();
     void insert(int key);
     void delete_node(int key);
     bool search(int key);
@@ -78,32 +78,32 @@ class AVLTree {
     int closest_element(int n);
     int Kth_largest(int k);
     int count_range(int eLeft, int eRight);
-    void inorder(Node* root);
-    void preorder(Node* root);
+    void inorder(Node *root);
+    void preorder(Node *root);
 };
 
 // --------------------- Private ----------------------
 
 int AVLTree::max(int a, int b) { return a > b ? a : b; }
 
-int AVLTree::getHeight(Node* node) {
+int AVLTree::getHeight(Node *node) {
     if (node == NULL) return 0;
     return node->height;
 }
 
-void AVLTree::setHeight(Node* node) {
+void AVLTree::setHeight(Node *node) {
     if (node == NULL) return;
     node->height = 1 + max(getHeight(node->left), getHeight(node->right));
 }
 
-int AVLTree::getBF(Node* node) {
+int AVLTree::getBF(Node *node) {
     if (node == NULL) return 0;
 
     return getHeight(node->left) - getHeight(node->right);
 }
 
-Node* AVLTree::left_rotate(Node* node) {
-    Node* temp = node->right;
+Node *AVLTree::left_rotate(Node *node) {
+    Node *temp = node->right;
     node->right = temp->left;
     temp->left = node;
 
@@ -113,8 +113,8 @@ Node* AVLTree::left_rotate(Node* node) {
     return temp;
 }
 
-Node* AVLTree::right_rotate(Node* node) {
-    Node* temp = node->left;
+Node *AVLTree::right_rotate(Node *node) {
+    Node *temp = node->left;
     node->left = temp->right;
     temp->right = node;
 
@@ -124,7 +124,7 @@ Node* AVLTree::right_rotate(Node* node) {
     return temp;
 }
 
-Node* AVLTree::rebalance(Node* node, int balancefac) {
+Node *AVLTree::rebalance(Node *node, int balancefac) {
     // LL Case
     if (balancefac == 2 and getBF(node->left) > 0) {
         node = right_rotate(node);
@@ -144,7 +144,7 @@ Node* AVLTree::rebalance(Node* node, int balancefac) {
     return node;
 }
 
-Node* AVLTree::insertHelper(Node* node, int key) {
+Node *AVLTree::insertHelper(Node *node, int key) {
     if (node == NULL) {
         node = new Node(key);
         return node;
@@ -166,7 +166,7 @@ Node* AVLTree::insertHelper(Node* node, int key) {
     return node;
 }
 
-Node* AVLTree::deleteHelper(Node* node, int key) {
+Node *AVLTree::deleteHelper(Node *node, int key) {
     if (node == NULL) return node;
 
     if (node->value > key)
@@ -186,14 +186,14 @@ Node* AVLTree::deleteHelper(Node* node, int key) {
 
         // One right child
         else if (node->left == NULL) {
-            Node* temp = node->right;
+            Node *temp = node->right;
             delete node;
             node = temp;
         }
 
         // One left child
         else if (node->right == NULL) {
-            Node* temp = node->left;
+            Node *temp = node->left;
             delete node;
             node = temp;
         }
@@ -205,7 +205,7 @@ Node* AVLTree::deleteHelper(Node* node, int key) {
     return node;
 }
 
-bool AVLTree::searchHelper(Node* node, int key) {
+bool AVLTree::searchHelper(Node *node, int key) {
     if (node == NULL) return false;
 
     if (node->value == key) return true;
@@ -216,7 +216,7 @@ bool AVLTree::searchHelper(Node* node, int key) {
     return false;
 }
 
-int AVLTree::countOccurenceHelper(Node* node, int key) {
+int AVLTree::countOccurenceHelper(Node *node, int key) {
     if (node == NULL) return 0;
 
     if (node->value == key) return node->count;
@@ -227,7 +227,7 @@ int AVLTree::countOccurenceHelper(Node* node, int key) {
     return 0;
 }
 
-void AVLTree::kthLargestHelper(Node* node, int& k, int& ans) {
+void AVLTree::kthLargestHelper(Node *node, int &k, int &ans) {
     if (node == NULL) return;
 
     kthLargestHelper(node->right, k, ans);
@@ -241,7 +241,7 @@ void AVLTree::kthLargestHelper(Node* node, int& k, int& ans) {
     kthLargestHelper(node->left, k, ans);
 }
 
-int AVLTree::countRangeHelper(Node* node, int eLeft, int eRight) {
+int AVLTree::countRangeHelper(Node *node, int eLeft, int eRight) {
     if (node == NULL) return 0;
 
     if (node->value >= eLeft and node->value <= eRight)
@@ -253,7 +253,7 @@ int AVLTree::countRangeHelper(Node* node, int eLeft, int eRight) {
         return countRangeHelper(node->right, eLeft, eRight);
 }
 
-void AVLTree::deleteTree(Node* node) {
+void AVLTree::deleteTree(Node *node) {
     if (node == NULL) return;
 
     deleteTree(node->left);
@@ -267,7 +267,7 @@ AVLTree::AVLTree() { root = NULL; }
 
 AVLTree::~AVLTree() { deleteTree(root); }
 
-Node* AVLTree::getRoot() { return root; }
+Node *AVLTree::getRoot() { return root; }
 
 void AVLTree::insert(int key) { root = insertHelper(root, key); }
 
@@ -280,8 +280,8 @@ int AVLTree::count_occurence(int key) {
 }
 
 int AVLTree::lower_bound(int n) {
-    Node* curr = root;
-    Node* prev = NULL;
+    Node *curr = root;
+    Node *prev = NULL;
 
     while (curr != NULL) {
         if (curr->value > n) {
@@ -298,8 +298,8 @@ int AVLTree::lower_bound(int n) {
 }
 
 int AVLTree::upper_bound(int n) {
-    Node* curr = root;
-    Node* prev = NULL;
+    Node *curr = root;
+    Node *prev = NULL;
 
     while (curr != NULL) {
         if (curr->value > n) {
@@ -314,8 +314,8 @@ int AVLTree::upper_bound(int n) {
 }
 
 int AVLTree::closest_element(int n) {
-    Node* curr = root;
-    Node* prev = NULL;
+    Node *curr = root;
+    Node *prev = NULL;
     int diff = INT32_MAX;
     int ans = 0;
 
@@ -349,7 +349,7 @@ int AVLTree::count_range(int eLeft, int eRight) {
     return countRangeHelper(root, eLeft, eRight);
 }
 
-void AVLTree::inorder(Node* root) {
+void AVLTree::inorder(Node *root) {
     if (root == NULL) return;
 
     inorder(root->left);
@@ -357,7 +357,7 @@ void AVLTree::inorder(Node* root) {
     inorder(root->right);
 }
 
-void AVLTree::preorder(Node* root) {
+void AVLTree::preorder(Node *root) {
     if (root == NULL) return;
 
     std::cout << root->value << "  ";
