@@ -33,6 +33,7 @@ class AVLTree {
     bool searchHelper(Node* node, int key);
     int countOccurenceHelper(Node* node, int key);
     void kthLargestHelper(Node* node, int& k, int& ans);
+    int countRangeHelper(Node* node, int low, int high);
     void deleteTree(Node* node);
 
    public:
@@ -45,6 +46,7 @@ class AVLTree {
     int lower_bound(int n);
     int upper_bound(int n);
     int Kth_largest(int k);
+    int count_range(int eLeft, int eRight);
     void inorder(Node* root);
     void preorder(Node* root);
 };
@@ -168,6 +170,18 @@ void AVLTree::kthLargestHelper(Node* node, int& k, int& ans) {
     kthLargestHelper(node->left, k, ans);
 }
 
+int AVLTree::countRangeHelper(Node* node, int eLeft, int eRight) {
+    if (node == NULL) return 0;
+
+    if (node->value >= eLeft and node->value <= eRight)
+        return 1 + countRangeHelper(node->left, eLeft, eRight) +
+               countRangeHelper(node->right, eLeft, eRight);
+    else if (node->value >= eLeft)
+        return countRangeHelper(node->left, eLeft, eRight);
+    else
+        return countRangeHelper(node->right, eLeft, eRight);
+}
+
 void AVLTree::deleteTree(Node* node) {
     if (node == NULL) return;
 
@@ -232,6 +246,10 @@ int AVLTree::Kth_largest(int k) {
     return ans;
 }
 
+int AVLTree::count_range(int eLeft, int eRight) {
+    return countRangeHelper(root, eLeft, eRight);
+}
+
 void AVLTree::inorder(Node* root) {
     if (root == NULL) return;
 
@@ -265,6 +283,7 @@ int main() {
     std::cout << b.lower_bound(6) << std::endl;
     std::cout << b.upper_bound(7) << std::endl;
     std::cout << b.Kth_largest(2) << std::endl;
+    std::cout << b.count_range(1, 4) << std::endl;
 
     return 0;
 }
