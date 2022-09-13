@@ -32,6 +32,7 @@ class AVLTree {
     Node* insertHelper(Node* node, int key);
     bool searchHelper(Node* node, int key);
     int countOccurenceHelper(Node* node, int key);
+    void kthLargestHelper(Node* node, int& k, int& ans);
     void deleteTree(Node* node);
 
    public:
@@ -43,6 +44,7 @@ class AVLTree {
     int count_occurence(int key);
     int lower_bound(int n);
     int upper_bound(int n);
+    int Kth_largest(int k);
     void inorder(Node* root);
     void preorder(Node* root);
 };
@@ -152,6 +154,20 @@ int AVLTree::countOccurenceHelper(Node* node, int key) {
     return 0;
 }
 
+void AVLTree::kthLargestHelper(Node* node, int& k, int& ans) {
+    if (node == NULL) return;
+
+    kthLargestHelper(node->right, k, ans);
+
+    k--;
+    if (k == 0) {
+        ans = node->value;
+        return;
+    }
+
+    kthLargestHelper(node->left, k, ans);
+}
+
 void AVLTree::deleteTree(Node* node) {
     if (node == NULL) return;
 
@@ -210,6 +226,12 @@ int AVLTree::upper_bound(int n) {
     return prev->value > n ? prev->value : 0;
 }
 
+int AVLTree::Kth_largest(int k) {
+    int ans = 0;
+    kthLargestHelper(root, k, ans);
+    return ans;
+}
+
 void AVLTree::inorder(Node* root) {
     if (root == NULL) return;
 
@@ -242,6 +264,7 @@ int main() {
     std::cout << std::endl;
     std::cout << b.lower_bound(6) << std::endl;
     std::cout << b.upper_bound(7) << std::endl;
+    std::cout << b.Kth_largest(2) << std::endl;
 
     return 0;
 }
