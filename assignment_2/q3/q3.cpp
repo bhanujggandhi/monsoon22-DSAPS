@@ -166,10 +166,7 @@ Node *AVLTree::rebalance(Node *node, int balancefac) {
 
 Node *AVLTree::inorderPredecessor(Node *node) {
     Node *temp = node;
-
-    /* loop down to find the leftmost leaf */
     while (temp->right != NULL) temp = temp->right;
-
     return temp;
 }
 
@@ -320,12 +317,10 @@ int AVLTree::count_occurence(int key) {
 
 int AVLTree::lower_bound(int n) {
     Node *curr = root;
-    // Node *prev = NULL;
     int ans = INT32_MIN;
 
     while (curr != NULL) {
         if (curr->value > n) {
-            // prev = curr;
             if (ans == INT32_MIN or ans > curr->value) ans = curr->value;
             curr = curr->left;
 
@@ -410,11 +405,16 @@ void AVLTree::preorder(Node *root) {
 
 int main() {
     AVLTree b;
-    b.insert(2);
-    b.insert(5);
-    b.insert(6);
-    b.insert(7);
-    b.insert(1);
+    b.insert(50);
+    b.insert(20);
+    b.insert(60);
+    b.insert(10);
+    b.insert(8);
+    b.insert(15);
+    b.insert(32);
+    b.insert(46);
+    b.insert(11);
+    b.insert(48);
 
     std::cout << b.upper_bound(3) << std::endl;
     std::cout << "--------------------------------" << std::endl;
