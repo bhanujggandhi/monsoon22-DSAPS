@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 
 struct Node {
@@ -11,7 +12,7 @@ struct Node {
         value = key;
         left = NULL;
         right = NULL;
-        height = 0;
+        height = 1;
         count = 1;
     }
 };
@@ -43,6 +44,9 @@ class AVLTree {
 
     // Utility to rebalance a node
     Node *rebalance(Node *node, int bf);
+
+    // Utility to find Highest element in the left subtree
+    Node *inorderPredecessor(Node *node);
 
     // Utitlity to insert a node in the tree
     Node *insertHelper(Node *node, int key);
@@ -81,6 +85,23 @@ class AVLTree {
     void inorder(Node *root);
     void preorder(Node *root);
 };
+
+void printBT(const std::string &prefix, const Node *node, bool isLeft) {
+    if (node != nullptr) {
+        std::cout << prefix;
+
+        std::cout << (isLeft ? "├──" : "└──");
+
+        // print the value of the node
+        std::cout << node->value << std::endl;
+
+        // enter the next tree level - left and right branch
+        printBT(prefix + (isLeft ? "│   " : "    "), node->left, true);
+        printBT(prefix + (isLeft ? "│   " : "    "), node->right, false);
+    }
+}
+
+void printBT(const Node *node) { printBT("", node, false); }
 
 // --------------------- Private ----------------------
 
@@ -144,6 +165,15 @@ Node *AVLTree::rebalance(Node *node, int balancefac) {
     return node;
 }
 
+Node *AVLTree::inorderPredecessor(Node *node) {
+    Node *temp = node;
+
+    /* loop down to find the leftmost leaf */
+    while (temp->right != NULL) temp = temp->right;
+
+    return temp;
+}
+
 Node *AVLTree::insertHelper(Node *node, int key) {
     if (node == NULL) {
         node = new Node(key);
@@ -196,6 +226,16 @@ Node *AVLTree::deleteHelper(Node *node, int key) {
             Node *temp = node->left;
             delete node;
             node = temp;
+        }
+        // Node with both children
+        else {
+            Node *inorderP = inorderPredecessor(node->left);
+
+            // Swap values
+            // std::swap(node->value, inorderP->value);
+            node->value = inorderP->value;
+
+            node->left = deleteHelper(node->left, inorderP->value);
         }
     }
 
@@ -281,36 +321,41 @@ int AVLTree::count_occurence(int key) {
 
 int AVLTree::lower_bound(int n) {
     Node *curr = root;
-    Node *prev = NULL;
+    // Node *prev = NULL;
+    int ans = INT32_MIN;
 
     while (curr != NULL) {
         if (curr->value > n) {
-            prev = curr;
+            // prev = curr;
+            if (ans == INT32_MIN or ans > curr->value) ans = curr->value;
             curr = curr->left;
+
         } else if (curr->value < n) {
-            prev = curr;
+            // prev = curr;
+            // if (ans == INT32_MIN or ans > curr->value) ans = curr->value;
             curr = curr->right;
+
         } else {
             return curr->value;
         }
     }
-    return prev->value > n ? prev->value : 0;
+    return ans == INT32_MIN ? 0 : ans;
 }
 
 int AVLTree::upper_bound(int n) {
     Node *curr = root;
-    Node *prev = NULL;
+    int ans = INT32_MIN;
 
     while (curr != NULL) {
         if (curr->value > n) {
-            prev = curr;
+            if (ans == INT32_MIN or ans > curr->value) ans = curr->value;
             curr = curr->left;
         } else {
-            prev = curr;
+            // if (ans == INT32_MIN or ans > curr->value) ans = curr->value;
             curr = curr->right;
         }
     }
-    return prev->value > n ? prev->value : 0;
+    return ans == INT32_MIN ? 0 : ans;
 }
 
 int AVLTree::closest_element(int n) {
@@ -369,27 +414,20 @@ void AVLTree::preorder(Node *root) {
 
 int main() {
     AVLTree b;
-    b.insert(1);
     b.insert(2);
-    b.insert(3);
-    b.insert(4);
     b.insert(5);
     b.insert(6);
     b.insert(7);
-    b.insert(7);
-    b.insert(7);
-    b.insert(7);
-    b.insert(7);
+    b.insert(1);
 
-    // std::cout << b.lower_bound(3) << std::endl;
-    // std::cout << b.upper_bound(2) << std::endl;
+    std::cout << b.upper_bound(3) << std::endl;
+    std::cout << "--------------------------------" << std::endl;
 
-    b.delete_node(3);
-    b.delete_node(1);
-    b.delete_node(7);
+    // b.delete_node(3);
+    // b.delete_node(1);
+    // b.delete_node(4);
 
-    b.inorder(b.getRoot());
-    std::cout << std::endl;
+    printBT(b.getRoot());
 
     return 0;
 }
