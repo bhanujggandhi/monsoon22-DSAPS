@@ -11,7 +11,7 @@ struct Node {
         value = key;
         left = NULL;
         right = NULL;
-        height = 1;
+        height = 0;
         count = 1;
     }
 };
@@ -47,6 +47,9 @@ class AVLTree {
     // Utitlity to insert a node in the tree
     Node* insertHelper(Node* node, int key);
 
+    // Utitlity to delete a node in the tree
+    Node* deleteHelper(Node* node, int key);
+
     // Utility to search a node in the tree
     bool searchHelper(Node* node, int key);
 
@@ -67,6 +70,7 @@ class AVLTree {
     ~AVLTree();
     Node* getRoot();
     void insert(int key);
+    void delete_node(int key);
     bool search(int key);
     int count_occurence(int key);
     int lower_bound(int n);
@@ -88,6 +92,7 @@ int AVLTree::getHeight(Node* node) {
 }
 
 void AVLTree::setHeight(Node* node) {
+    if (node == NULL) return;
     node->height = 1 + max(getHeight(node->left), getHeight(node->right));
 }
 
@@ -161,6 +166,45 @@ Node* AVLTree::insertHelper(Node* node, int key) {
     return node;
 }
 
+Node* AVLTree::deleteHelper(Node* node, int key) {
+    if (node == NULL) return node;
+
+    if (node->value > key)
+        node->left = deleteHelper(node->left, key);
+    else if (node->value < key)
+        node->right = deleteHelper(node->right, key);
+    else {
+        if (node->count > 1) {
+            node->count--;
+            return node;
+        }
+        // No child
+        else if (node->left == NULL and node->right == NULL) {
+            delete node;
+            node = NULL;
+        }
+
+        // One right child
+        else if (node->left == NULL) {
+            Node* temp = node->right;
+            delete node;
+            node = temp;
+        }
+
+        // One left child
+        else if (node->right == NULL) {
+            Node* temp = node->left;
+            delete node;
+            node = temp;
+        }
+    }
+
+    setHeight(node);
+
+    node = rebalance(node, getBF(node));
+    return node;
+}
+
 bool AVLTree::searchHelper(Node* node, int key) {
     if (node == NULL) return false;
 
@@ -226,6 +270,8 @@ AVLTree::~AVLTree() { deleteTree(root); }
 Node* AVLTree::getRoot() { return root; }
 
 void AVLTree::insert(int key) { root = insertHelper(root, key); }
+
+void AVLTree::delete_node(int key) { root = deleteHelper(root, key); }
 
 bool AVLTree::search(int key) { return searchHelper(root, key); }
 
@@ -324,17 +370,26 @@ void AVLTree::preorder(Node* root) {
 int main() {
     AVLTree b;
     b.insert(1);
-    b.insert(1);
-    b.insert(2);
-    b.insert(2);
     b.insert(2);
     b.insert(3);
-    b.insert(3);
+    b.insert(4);
+    b.insert(5);
+    b.insert(6);
+    b.insert(7);
+    b.insert(7);
+    b.insert(7);
+    b.insert(7);
+    b.insert(7);
+
+    // std::cout << b.lower_bound(3) << std::endl;
+    // std::cout << b.upper_bound(2) << std::endl;
+
+    b.delete_node(3);
+    b.delete_node(1);
+    b.delete_node(7);
 
     b.inorder(b.getRoot());
     std::cout << std::endl;
-    std::cout << b.lower_bound(3) << std::endl;
-    std::cout << b.upper_bound(2) << std::endl;
 
     return 0;
 }
