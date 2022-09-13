@@ -200,12 +200,12 @@ Node *AVLTree::deleteHelper(Node *node, int key) {
     else if (node->value < key)
         node->right = deleteHelper(node->right, key);
     else {
-        if (node->count > 1) {
-            node->count--;
-            return node;
-        }
+        // if (node->count > 1) {
+        //     node->count--;
+        //     return node;
+        // }
         // No child
-        else if (node->left == NULL and node->right == NULL) {
+        if (node->left == NULL and node->right == NULL) {
             delete node;
             node = NULL;
         }
@@ -230,6 +230,7 @@ Node *AVLTree::deleteHelper(Node *node, int key) {
             // Swap values
             // std::swap(node->value, inorderP->value);
             node->value = inorderP->value;
+            node->count = inorderP->count - 1;
 
             node->left = deleteHelper(node->left, inorderP->value);
         }
@@ -389,14 +390,16 @@ void AVLTree::inorder(Node *root) {
     if (root == NULL) return;
 
     inorder(root->left);
-    std::cout << root->value << "  ";
+    int i = root->count;
+    while (i--) std::cout << root->value << "  ";
     inorder(root->right);
 }
 
 void AVLTree::preorder(Node *root) {
     if (root == NULL) return;
 
-    std::cout << root->value << "  ";
+    int i = root->count;
+    while (i--) std::cout << root->value << "  ";
     preorder(root->left);
     preorder(root->right);
 }
@@ -411,18 +414,28 @@ int main() {
     b.insert(10);
     b.insert(8);
     b.insert(15);
+    b.insert(15);
+    b.insert(15);
+    b.insert(15);
     b.insert(32);
     b.insert(46);
     b.insert(11);
     b.insert(48);
 
-    std::cout << b.upper_bound(3) << std::endl;
+    std::cout << b.upper_bound(61) << std::endl;
+    std::cout << b.lower_bound(61) << std::endl;
+
+    b.preorder(b.getRoot());
+    std::cout << std::endl;
+    b.inorder(b.getRoot());
     std::cout << "--------------------------------" << std::endl;
-
-    b.delete_node(12);
-    // b.delete_node(1);
+    // b.delete_node(12);
+    b.delete_node(20);
+    std::cout << b.count_occurence(15) << std::endl;
+    std::cout << "--------------------------------" << std::endl;
     // b.delete_node(4);
-
+    b.inorder(b.getRoot());
+    std::cout << "--------------------------------" << std::endl;
     printBT(b.getRoot());
 
     return 0;
