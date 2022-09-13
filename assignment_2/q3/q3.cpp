@@ -41,6 +41,8 @@ class AVLTree {
     void insert(int key);
     bool search(int key);
     int count_occurence(int key);
+    int lower_bound(int n);
+    int upper_bound(int n);
     void inorder(Node* root);
     void preorder(Node* root);
 };
@@ -174,6 +176,40 @@ int AVLTree::count_occurence(int key) {
     return countOccurenceHelper(root, key);
 }
 
+int AVLTree::lower_bound(int n) {
+    Node* curr = root;
+    Node* prev = NULL;
+
+    while (curr != NULL) {
+        if (curr->value > n) {
+            prev = curr;
+            curr = curr->left;
+        } else if (curr->value < n) {
+            prev = curr;
+            curr = curr->right;
+        } else {
+            return curr->value;
+        }
+    }
+    return prev->value > n ? prev->value : 0;
+}
+
+int AVLTree::upper_bound(int n) {
+    Node* curr = root;
+    Node* prev = NULL;
+
+    while (curr != NULL) {
+        if (curr->value > n) {
+            prev = curr;
+            curr = curr->left;
+        } else {
+            prev = curr;
+            curr = curr->right;
+        }
+    }
+    return prev->value > n ? prev->value : 0;
+}
+
 void AVLTree::inorder(Node* root) {
     if (root == NULL) return;
 
@@ -202,10 +238,10 @@ int main() {
     b.insert(2);
     b.insert(1);
 
-    b.preorder(b.getRoot());
-    std::cout << std::endl;
     b.inorder(b.getRoot());
     std::cout << std::endl;
+    std::cout << b.lower_bound(6) << std::endl;
+    std::cout << b.upper_bound(7) << std::endl;
 
     return 0;
 }
