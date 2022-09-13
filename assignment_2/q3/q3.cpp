@@ -28,6 +28,7 @@ class AVLTree {
     int getBF(Node* node);
     Node* left_rotate(Node* node);
     Node* right_rotate(Node* node);
+    Node* rebalance(Node* node, int bf);
     Node* insertHelper(Node* node, int key);
     bool searchHelper(Node* node, int key);
     int countOccurenceHelper(Node* node, int key);
@@ -86,6 +87,26 @@ Node* AVLTree::right_rotate(Node* node) {
     return temp;
 }
 
+Node* AVLTree::rebalance(Node* node, int balancefac) {
+    // LL Case
+    if (balancefac == 2 and getBF(node->left) > 0) {
+        node = right_rotate(node);
+        // LR Case
+    } else if (balancefac == 2 and getBF(node->left) <= 0) {
+        node->left = left_rotate(node->left);
+        node = right_rotate(node);
+        // RR Case
+    } else if (balancefac == -2 and getBF(node->right) <= 0) {
+        node = left_rotate(node);
+        // RL Case
+    } else if (balancefac == -2 and getBF(node->right) > 0) {
+        node->right = right_rotate(node->right);
+        node = left_rotate(node);
+    }
+
+    return node;
+}
+
 Node* AVLTree::getRoot() { return root; }
 
 Node* AVLTree::insertHelper(Node* node, int key) {
@@ -104,22 +125,8 @@ Node* AVLTree::insertHelper(Node* node, int key) {
     }
 
     setHeight(node);
-    int balancefac = getBF(node);
 
-    // If left insertion (LL Case)
-    if (balancefac == 2 and key < node->left->value) {
-        node = right_rotate(node);
-    } else if (balancefac == -2 and key > node->right->value) {
-        node = left_rotate(node);
-    } else if (balancefac == 2 and key > node->left->value) {
-        node->left = left_rotate(node->left);
-        // left_rotate(node->left);
-        node = right_rotate(node);
-    } else if (balancefac == -2 and key < node->right->value) {
-        node->right = right_rotate(node->right);
-        // right_rotate(root->right);
-        node = left_rotate(node);
-    }
+    node = rebalance(node, getBF(node));
 
     return node;
 }
@@ -178,19 +185,7 @@ int main() {
     b.insert(4);
     b.insert(3);
     b.insert(2);
-    b.insert(4);
-    b.insert(2);
     b.insert(1);
-    b.insert(6);
-    b.insert(6);
-    b.insert(6);
-    b.insert(6);
-    b.insert(6);
-    std::cout << b.search(1) << std::endl;
-    std::cout << b.search(4) << std::endl;
-    std::cout << b.count_occurence(4) << std::endl;
-    std::cout << b.count_occurence(20) << std::endl;
-    std::cout << b.count_occurence(6) << std::endl;
 
     b.preorder(b.getRoot());
     std::cout << std::endl;
