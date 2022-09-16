@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <iostream>
 
 typedef long long ll;
@@ -104,7 +103,18 @@ class MaxHeap {
     }
 };
 
-bool cmp(int a, int b) { return abs(a) < abs(b); }
+// Heap sort function
+void abssort(ll arr[], int n) {
+    MaxHeap maxhp(n);
+    for (int i = 0; i < n; i++) {
+        maxhp.insert(abs(arr[i]), i);
+    }
+
+    for (int i = n - 1; i >= 0; i--) {
+        arr[i] = maxhp.top().value;
+        maxhp.remove();
+    }
+}
 
 void solve(ll popularity[], int n, int k) {
     // 1. Calculate Max Sum of all positives
@@ -118,7 +128,7 @@ void solve(ll popularity[], int n, int k) {
     };
 
     // 2. Sort the array
-    std::sort(popularity, popularity + n, cmp);
+    abssort(popularity, n);
 
     // 3. Heap of Pair
     MaxHeap hp(k);
@@ -142,6 +152,7 @@ void solve(ll popularity[], int n, int k) {
     }
 }
 
+// Driver Code
 int main() {
     int n, k;
     std::cin >> n >> k;
