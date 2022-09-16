@@ -1,4 +1,7 @@
+#include <algorithm>
 #include <iostream>
+
+typedef long long ll;
 
 /*
 0-based heap
@@ -6,7 +9,7 @@ if i->parent then 2i+1, 2i+2 are children
 if i is child then (i-1)/2 is parent
 */
 struct Pair {
-    int value;
+    ll value;
     int ind;
 };
 
@@ -29,7 +32,7 @@ class MaxHeap {
         arr = new Pair[max_size];
     }
 
-    void insert(int key, int i) {
+    void insert(ll key, int i) {
         if (size == max_size) return;
 
         arr[size].value = key;
@@ -55,7 +58,7 @@ class MaxHeap {
             return arr[size];
         }
 
-        int maxval = arr[0].value;
+        ll maxval = arr[0].value;
         int maxind = arr[0].ind;
         // replace root by last element
         swap(&arr[0], &arr[size - 1]);
@@ -84,48 +87,70 @@ class MaxHeap {
             ind = largechild;
         }
 
+        if (size == 2) {
+            if (arr[ind].value < arr[ind + 1].value)
+                swap(&arr[ind], &arr[ind + 1]);
+        }
+
         return {maxval, maxind};
     }
 
-    int top() {
+    Pair top() {
         if (size == 0) {
             std::cout << "No top" << std::endl;
-            return INT32_MIN;
+            return {INT32_MIN, INT32_MIN};
         }
-        return arr[0].value;
+        return arr[0];
     }
 };
 
+bool cmp(int a, int b) { return abs(a) < abs(b); }
+
+void solve(ll popularity[], int n, int k) {
+    // 1. Calculate Max Sum of all positives
+    ll maxsum = 0;
+    for (int i = 0; i < n; i++)
+        if (popularity[i] > 0) maxsum += popularity[i];
+
+    if (k == 1) {
+        std ::cout << maxsum << std::endl;
+        return;
+    };
+
+    // 2. Sort the array
+    std::sort(popularity, popularity + n, cmp);
+
+    // 3. Heap of Pair
+    MaxHeap hp(k);
+    std::cout << maxsum << " ";
+    hp.insert(maxsum - abs(popularity[0]), 0);
+    int i = 1;
+    while (i != k) {
+        ll topval = hp.top().value;
+        int topind = hp.top().ind;
+
+        std::cout << topval << " ";
+        i++;
+
+        hp.remove();
+        if (topind + 1 < n) {
+            hp.insert(
+                topval + abs(popularity[topind]) - abs(popularity[topind + 1]),
+                topind + 1);
+            hp.insert(topval - abs(popularity[topind + 1]), topind + 1);
+        }
+    }
+}
+
 int main() {
-    MaxHeap pq(6);
+    int n, k;
+    std::cin >> n >> k;
 
-    pq.insert(3, 1);
-    pq.insert(2, 2);
-    pq.insert(15, 3);
-    std::cout << pq.top() << " ";
-    pq.remove();
+    ll popularity[n];
 
-    std::cout << pq.top() << " ";
-    pq.remove();
+    for (int i = 0; i < n; i++) std::cin >> popularity[i];
 
-    pq.insert(5, 1);
-    pq.insert(4, 2);
-    pq.insert(45, 3);
-
-    std::cout << pq.top() << " ";
-    pq.remove();
-
-    std::cout << pq.top() << " ";
-    pq.remove();
-
-    std::cout << pq.top() << " ";
-    pq.remove();
-
-    std::cout << pq.top() << " ";
-    pq.remove();
-
-    pq.top();
-    pq.remove();
+    solve(popularity, n, k);
 
     return 0;
 }
