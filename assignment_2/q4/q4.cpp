@@ -27,13 +27,11 @@ struct SparseMatrix {
         ind = 0;
     }
 
-    int size() { return ind; }
+    void setMatrix(Data *mat) { matrix = mat; }
 };
 
 void insert_elements(SparseMatrix &m, int row, int col, int val) {
-    if (row < 0 or row >= m.rows or col < 0 or col >= m.cols) {
-        return;
-    }
+    if (row < 0 or row >= m.rows or col < 0 or col >= m.cols) return;
 
     m.matrix[m.ind++] = {row, col, val};
 }
@@ -42,13 +40,12 @@ void printmatrix(SparseMatrix &m) {
     int k = 0;
     for (int i = 0; i < m.rows; i++) {
         for (int j = 0; j < m.cols; j++) {
-            if (k < m.ind and i == m.matrix[k].row and j == m.matrix[k].col) {
-                cout << m.matrix[k].value << " ";
-                k++;
-            } else
-                cout << 0 << " ";
+            if (k < m.ind and i == m.matrix[k].row and j == m.matrix[k].col)
+                cout << m.matrix[k++].value << "\t";
+            else
+                cout << 0 << "\t";
         }
-        cout << endl;
+        cout << "\n";
     }
 }
 
@@ -105,6 +102,38 @@ void add(SparseMatrix m1, SparseMatrix m2) {
     }
 }
 
+SparseMatrix transpose(SparseMatrix m) {
+    int total[m.cols] = {0};
+    int index[m.cols + 1];
+
+    for (int i = 0; i < m.ind; i++) {
+        total[m.matrix[i].col]++;
+    }
+
+    index[0] = 0;
+    for (int i = 1; i <= m.cols; i++) {
+        index[i] = index[i - 1] + total[i - 1];
+    }
+
+    SparseMatrix result(m.rows, m.cols);
+    result.ind = m.ind;
+    Data *arr = new Data[m.ind];
+
+    for (int i = 0; i < m.ind; i++) {
+        int ind = index[m.matrix[i].col];
+        arr[ind].col = m.matrix[i].row;
+        arr[ind].row = m.matrix[i].col;
+        arr[ind].value = m.matrix[i].value;
+        index[m.matrix[i].col]++;
+    }
+
+    result.setMatrix(arr);
+
+    printmatrix(result);
+
+    return result;
+}
+
 int main() {
     // m->rows
     // n->cols
@@ -136,7 +165,8 @@ int main() {
         }
     }
 
-    add(sm1, sm2);
+    // add(sm1, sm2);
+    // transpose(sm1);
 
     return 0;
 }
