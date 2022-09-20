@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 
 using namespace std;
@@ -6,12 +7,6 @@ struct Data {
     int row;
     int col;
     int value = 0;
-
-    // Data(int _row, int _col, int _val) {
-    //     row = _row;
-    //     col = _col;
-    //     value = _val;
-    // }
 };
 
 struct SparseMatrix {
@@ -86,6 +81,7 @@ void add(SparseMatrix m1, SparseMatrix m2) {
                 j++;
             }
         }
+
         while (i < m1.ind) {
             insert_elements(result, m1.matrix[i].row, m1.matrix[i].col,
                             m1.matrix[i].value);
@@ -134,31 +130,56 @@ SparseMatrix transpose(SparseMatrix m) {
     return result;
 }
 
+bool cmp(Data a, Data b) {
+    if (a.row == b.row) return a.col < b.col;
+
+    return a.row < b.row;
+}
+
 void multiply(SparseMatrix m1, SparseMatrix m2) {
-    // Transpose m2
-    //
+    // Multiply col1 x row2
+    // Sort
+    // Remove duplicates
 
     if (m1.cols != m2.cols) return;
 
     SparseMatrix result(m1.rows, m2.rows);
 
     for (int i = 0; i < m1.ind; i++) {
-        cout << m1.matrix[i].row << "\t" << m1.matrix[i].col << "\t"
-             << m1.matrix[i].value << endl;
-    }
-
-    cout << "----------------------------------" << endl;
-
-    for (int i = 0; i < m2.ind; i++) {
-        cout << m2.matrix[i].row << "\t" << m2.matrix[i].col << "\t"
-             << m2.matrix[i].value << endl;
-    }
-    for (int i = 0; i < m1.ind; i++) {
         for (int j = 0; j < m2.ind; j++) {
-            if (m1.matrix[i].col == m2.matrix[j].col) {
+            if (m1.matrix[i].col == m2.matrix[j].row) {
+                insert_elements(result, m1.matrix[i].row, m2.matrix[j].col,
+                                m1.matrix[i].value * m2.matrix[j].value);
             }
         }
     }
+
+    sort(result.matrix, result.matrix + result.ind, cmp);
+
+    SparseMatrix ans(result.rows, result.cols);
+
+    for (int i = 0; i < result.ind; i++) {
+        if (i + 1 < result.ind) {
+            if (result.matrix[i].row == result.matrix[i + 1].row and
+                result.matrix[i].col == result.matrix[i + 1].col) {
+                Data temp = {result.matrix[i].row, result.matrix[i].col,
+                             result.matrix[i].value};
+
+                while (i + 1 < result.ind and
+                       result.matrix[i].row == result.matrix[i + 1].row and
+                       result.matrix[i].col == result.matrix[i + 1].col) {
+                    temp.value += result.matrix[i + 1].value;
+                    i++;
+                }
+                insert_elements(ans, temp.row, temp.col, temp.value);
+            } else {
+                insert_elements(ans, result.matrix[i].row, result.matrix[i].col,
+                                result.matrix[i].value);
+            }
+        }
+    }
+
+    printmatrix(ans);
 }
 
 int main() {
@@ -195,7 +216,28 @@ int main() {
     // add(sm1, sm2);
     // transpose(sm1);
 
-    multiply(sm1, transpose(sm2));
+    multiply(sm1, sm2);
 
+    // 4 4
+    // 0 10 0 12
+    // 0 0 0 0
+    // 0 0 5 0
+    // 15 12 0 0
+    // 4 4
+    // 0 0 8 0
+    // 0 0 0 23
+    // 0 0 9 0
+    // 20 25 0 0
+
+    // 4 4
+    // 0 10 4 2
+    // 0 0 0 0
+    // 0 0 3 0
+    // 4 2 0 1
+    // 4 4
+    // 0 0 0 2
+    // 0 0 2 7
+    // 8 0 9 0
+    // 0 3 6 6
     return 0;
 }

@@ -434,31 +434,6 @@ int main() {
     b.insert(7);
     b.insert(17);
 
-    // root = insert_node(root, 8);
-    // root = insert_node(root, 7);
-    // root = insert_node(root, 6);
-    // root = insert_node(root, 5);
-    // root = insert_node(root, 4);
-    // root = insert_node(root, 3);
-    // root = insert_node(root, 2);
-    // root = insert_node(root, 1);
-    // root = insert_node(root, 5);
-    // root = insert_node(root, 6);
-    // root = insert_node(root, 6);
-    // root = insert_node(root, 3);
-    // root = insert_node(root, 54);
-    // root = insert_node(root, 59);
-    // root = insert_node(root, 65);
-    // root = insert_node(root, 70);
-    // root = insert_node(root, 51);
-    // root = insert_node(root, 9);
-    // root = insert_node(root, 5);
-    // root = insert_node(root, 10);
-    // root = insert_node(root, 5);
-    // root = insert_node(root, 9);
-    // root = insert_node(root, 7);
-    // root = insert_node(root, 17);
-
     // std::cout << b.upper_bound(61) << std::endl;
     // std::cout << b.lower_bound(61) << std::endl;
 
