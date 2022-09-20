@@ -244,9 +244,88 @@ void LLPrintMatrix(LLSparseMatrix m) {
     }
 }
 
+void LLAdd(LLSparseMatrix m1, LLSparseMatrix m2) {
+    if (m1.rows != m2.rows or m1.cols != m2.cols)
+        return;
+    else {
+        LLSparseMatrix result(m1.rows, m1.cols);
+        LLData *temp1 = m1.head, *temp2 = m2.head, *start = NULL;
+
+        while (temp1 != NULL and temp2 != NULL) {
+            if (temp1->row == temp2->row) {
+                if (temp1->col == temp2->col) {
+                    if (temp1->value + temp2->value != 0) {
+                        LLInsertElements(result, temp1->row, temp1->col,
+                                         temp1->value + temp2->value);
+                    }
+                    temp1 = temp1->next;
+                    temp2 = temp2->next;
+                } else if (temp1->col < temp2->col) {
+                    LLInsertElements(result, temp1->row, temp1->col,
+                                     temp1->value);
+                    temp1 = temp1->next;
+                } else {
+                    LLInsertElements(result, temp2->row, temp2->col,
+                                     temp2->value);
+                    temp2 = temp2->next;
+                }
+            } else if (temp1->row < temp2->row) {
+                LLInsertElements(result, temp1->row, temp1->col, temp1->value);
+                temp1 = temp1->next;
+            } else {
+                LLInsertElements(result, temp2->row, temp2->col, temp2->value);
+                temp2 = temp2->next;
+            }
+        }
+
+        while (temp1 != NULL) {
+            LLInsertElements(result, temp1->row, temp1->col, temp1->value);
+            temp1 = temp1->next;
+        }
+
+        while (temp2 != NULL) {
+            LLInsertElements(result, temp2->row, temp2->col, temp2->value);
+            temp2 = temp2->next;
+        }
+
+        LLPrintMatrix(result);
+    }
+}
+
 int main() {
     // m->rows
     // n->cols
+
+    int m1, n1;
+    cin >> m1 >> n1;
+
+    LLSparseMatrix sm1(m1, n1);
+    for (int i = 0; i < m1; i++) {
+        for (int j = 0; j < n1; j++) {
+            int k;
+            cin >> k;
+            if (k != 0) {
+                LLInsertElements(sm1, i, j, k);
+            }
+        }
+    }
+
+    int m2, n2;
+    cin >> m2 >> n2;
+
+    LLSparseMatrix sm2(m2, n2);
+    for (int i = 0; i < m2; i++) {
+        for (int j = 0; j < n2; j++) {
+            int k;
+            cin >> k;
+            if (k != 0) {
+                LLInsertElements(sm2, i, j, k);
+            }
+        }
+    }
+
+    LLAdd(sm1, sm2);
+
     // int m1, n1;
     // cin >> m1 >> n1;
 
@@ -278,36 +357,6 @@ int main() {
     // add(sm1, sm2);
     // transpose(sm1);
     // ArrMultiply(sm1, sm2);
-
-    int m1, n1;
-    cin >> m1 >> n1;
-
-    LLSparseMatrix sm1(m1, n1);
-    for (int i = 0; i < m1; i++) {
-        for (int j = 0; j < n1; j++) {
-            int k;
-            cin >> k;
-            if (k != 0) {
-                LLInsertElements(sm1, i, j, k);
-            }
-        }
-    }
-
-    int m2, n2;
-    cin >> m2 >> n2;
-
-    LLSparseMatrix sm2(m2, n2);
-    for (int i = 0; i < m2; i++) {
-        for (int j = 0; j < n2; j++) {
-            int k;
-            cin >> k;
-            if (k != 0) {
-                LLInsertElements(sm2, i, j, k);
-            }
-        }
-    }
-
-    LLPrintMatrix(sm2);
 
     // 4 4
     // 0 10 0 12
