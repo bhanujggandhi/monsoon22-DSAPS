@@ -410,19 +410,54 @@ void AVLTree::preorder(Node *root) {
 
 int main() {
     AVLTree b;
-    b.insert(50);
-    b.insert(20);
-    b.insert(60);
-    b.insert(10);
     b.insert(8);
-    b.insert(15);
-    b.insert(15);
-    b.insert(15);
-    b.insert(15);
-    b.insert(32);
-    b.insert(46);
-    b.insert(11);
-    b.insert(48);
+    b.insert(7);
+    b.insert(6);
+    b.insert(5);
+    b.insert(4);
+    b.insert(3);
+    b.insert(2);
+    b.insert(1);
+    b.insert(5);
+    b.insert(6);
+    b.insert(6);
+    b.insert(3);
+    b.insert(54);
+    b.insert(59);
+    b.insert(65);
+    b.insert(70);
+    b.insert(51);
+    b.insert(5);
+    b.insert(10);
+    b.insert(5);
+    b.insert(9);
+    b.insert(7);
+    b.insert(17);
+
+    // root = insert_node(root, 8);
+    // root = insert_node(root, 7);
+    // root = insert_node(root, 6);
+    // root = insert_node(root, 5);
+    // root = insert_node(root, 4);
+    // root = insert_node(root, 3);
+    // root = insert_node(root, 2);
+    // root = insert_node(root, 1);
+    // root = insert_node(root, 5);
+    // root = insert_node(root, 6);
+    // root = insert_node(root, 6);
+    // root = insert_node(root, 3);
+    // root = insert_node(root, 54);
+    // root = insert_node(root, 59);
+    // root = insert_node(root, 65);
+    // root = insert_node(root, 70);
+    // root = insert_node(root, 51);
+    // root = insert_node(root, 9);
+    // root = insert_node(root, 5);
+    // root = insert_node(root, 10);
+    // root = insert_node(root, 5);
+    // root = insert_node(root, 9);
+    // root = insert_node(root, 7);
+    // root = insert_node(root, 17);
 
     // std::cout << b.upper_bound(61) << std::endl;
     // std::cout << b.lower_bound(61) << std::endl;
@@ -433,7 +468,7 @@ int main() {
     std::cout << b.Kth_largest(15) << std::endl;
 
     std::cout << "--------------------------------" << std::endl;
-    // printBT(b.getRoot());
+    printBT(b.getRoot());
 
     return 0;
 }

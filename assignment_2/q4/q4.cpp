@@ -5,7 +5,7 @@ using namespace std;
 struct Data {
     int row;
     int col;
-    int value;
+    int value = 0;
 
     // Data(int _row, int _col, int _val) {
     //     row = _row;
@@ -129,9 +129,36 @@ SparseMatrix transpose(SparseMatrix m) {
 
     result.setMatrix(arr);
 
-    printmatrix(result);
+    // printmatrix(result);
 
     return result;
+}
+
+void multiply(SparseMatrix m1, SparseMatrix m2) {
+    // Transpose m2
+    //
+
+    if (m1.cols != m2.cols) return;
+
+    SparseMatrix result(m1.rows, m2.rows);
+
+    for (int i = 0; i < m1.ind; i++) {
+        cout << m1.matrix[i].row << "\t" << m1.matrix[i].col << "\t"
+             << m1.matrix[i].value << endl;
+    }
+
+    cout << "----------------------------------" << endl;
+
+    for (int i = 0; i < m2.ind; i++) {
+        cout << m2.matrix[i].row << "\t" << m2.matrix[i].col << "\t"
+             << m2.matrix[i].value << endl;
+    }
+    for (int i = 0; i < m1.ind; i++) {
+        for (int j = 0; j < m2.ind; j++) {
+            if (m1.matrix[i].col == m2.matrix[j].col) {
+            }
+        }
+    }
 }
 
 int main() {
@@ -167,6 +194,8 @@ int main() {
 
     // add(sm1, sm2);
     // transpose(sm1);
+
+    multiply(sm1, transpose(sm2));
 
     return 0;
 }
