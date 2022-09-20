@@ -6,6 +6,8 @@
     "list": "cpp",
     "ostream": "cpp",
     "iostream": "cpp",
-    "istream": "cpp"
+    "istream": "cpp",
+    "compare": "cpp",
+    "cmath": "cpp"
   }
 }
