@@ -260,9 +260,9 @@ void ArrMultiply(ArrSparseMatrix m1, ArrSparseMatrix m2) {
     // Sort
     // Remove duplicates
 
-    if (m1.cols != m2.cols) return;
+    if (m1.cols != m2.rows) return;
 
-    ArrSparseMatrix result(m1.rows, m2.rows);
+    ArrSparseMatrix result(m1.rows, m2.cols);
 
     for (int i = 0; i < m1.ind; i++) {
         for (int j = 0; j < m2.ind; j++) {
@@ -391,97 +391,189 @@ LLSparseMatrix LLTranspose(LLSparseMatrix m) {
     return m;
 }
 
+void LLMultiply(LLSparseMatrix m1, LLSparseMatrix m2) {
+    if (m1.cols != m2.rows) return;
+
+    LLSparseMatrix result(m1.rows, m2.cols);
+
+    for (LLData *temp1 = m1.head; temp1 != NULL; temp1 = temp1->next) {
+        for (LLData *temp2 = m2.head; temp2 != NULL; temp2 = temp2->next) {
+            if (temp1->col == temp2->row) {
+                LLInsertElements(result, temp1->row, temp2->col,
+                                 temp1->value * temp2->value);
+            }
+        }
+    }
+
+    result.head = mergeSort(result.head);
+
+    LLSparseMatrix ans(result.rows, result.cols);
+
+    for (LLData *temp = result.head; temp != NULL; temp = temp->next) {
+        if (temp->next != NULL) {
+            if (temp->row == temp->next->row and temp->col == temp->next->col) {
+                LLData *newnode = new LLData(temp->row, temp->col, temp->value);
+                while (temp->next != NULL and temp->row == temp->next->row and
+                       temp->col == temp->next->col) {
+                    newnode->value += temp->next->value;
+                    temp = temp->next;
+                }
+                LLInsertElements(ans, newnode->row, newnode->col,
+                                 newnode->value);
+            } else {
+                LLInsertElements(ans, temp->row, temp->col, temp->value);
+            }
+        }
+    }
+
+    LLPrintMatrix(ans);
+
+    std::cout << "-----------------" << std::endl;
+    printlist(ans.head);
+}
+
 int main() {
-    // m->rows
-    // n->cols
+    int mode;
+    std::cin >> mode;
 
-    int m1, n1;
-    cin >> m1 >> n1;
+    if (mode == 1) {
+        int operation;
+        std::cin >> operation;
+        if (operation == 1) {
+            int n1, m1;
+            std::cin >> n1 >> m1;
+            ArrSparseMatrix sm1(n1, m1);
 
-    LLSparseMatrix sm1(m1, n1);
-    for (int i = 0; i < m1; i++) {
-        for (int j = 0; j < n1; j++) {
-            int k;
-            cin >> k;
-            if (k != 0) {
-                LLInsertElements(sm1, i, j, k);
+            for (int i = 0; i < n1; i++) {
+                for (int j = 0; j < m1; j++) {
+                    int k;
+                    std::cin >> k;
+                    if (k != 0) ArrInsertElements(sm1, i, j, k);
+                }
             }
+
+            int n2, m2;
+            std::cin >> n2 >> m2;
+            ArrSparseMatrix sm2(n2, m2);
+            for (int i = 0; i < n2; i++) {
+                for (int j = 0; j < m2; j++) {
+                    int k;
+                    std::cin >> k;
+                    if (k != 0) ArrInsertElements(sm2, i, j, k);
+                }
+            }
+            ArrAdd(sm1, sm2);
+        } else if (operation == 2) {
+            int n1, m1;
+            std::cin >> n1 >> m1;
+            ArrSparseMatrix sm1(n1, m1);
+
+            for (int i = 0; i < n1; i++) {
+                for (int j = 0; j < m1; j++) {
+                    int k;
+                    std::cin >> k;
+                    if (k != 0) ArrInsertElements(sm1, i, j, k);
+                }
+            }
+
+            ArrTranspose(sm1);
+            ArrPrintMatrix(sm1);
+        } else if (operation == 3) {
+            int operation;
+            std::cin >> operation;
+            int n1, m1;
+            std::cin >> n1 >> m1;
+            ArrSparseMatrix sm1(n1, m1);
+
+            for (int i = 0; i < n1; i++) {
+                for (int j = 0; j < m1; j++) {
+                    int k;
+                    std::cin >> k;
+                    if (k != 0) ArrInsertElements(sm1, i, j, k);
+                }
+            }
+
+            int n2, m2;
+            std::cin >> n2 >> m2;
+            ArrSparseMatrix sm2(n2, m2);
+            for (int i = 0; i < n2; i++) {
+                for (int j = 0; j < m2; j++) {
+                    int k;
+                    std::cin >> k;
+                    if (k != 0) ArrInsertElements(sm2, i, j, k);
+                }
+            }
+            ArrMultiply(sm1, sm2);
+        }
+    } else if (mode == 2) {
+        int operation;
+        std::cin >> operation;
+        if (operation == 1) {
+            int n1, m1;
+            std::cin >> n1 >> m1;
+            LLSparseMatrix sm1(n1, m1);
+
+            for (int i = 0; i < n1; i++) {
+                for (int j = 0; j < m1; j++) {
+                    int k;
+                    std::cin >> k;
+                    if (k != 0) LLInsertElements(sm1, i, j, k);
+                }
+            }
+
+            int n2, m2;
+            std::cin >> n2 >> m2;
+            LLSparseMatrix sm2(n2, m2);
+            for (int i = 0; i < n2; i++) {
+                for (int j = 0; j < m2; j++) {
+                    int k;
+                    std::cin >> k;
+                    if (k != 0) LLInsertElements(sm2, i, j, k);
+                }
+            }
+            LLAdd(sm1, sm2);
+        } else if (operation == 2) {
+            int n1, m1;
+            std::cin >> n1 >> m1;
+            LLSparseMatrix sm1(n1, m1);
+
+            for (int i = 0; i < n1; i++) {
+                for (int j = 0; j < m1; j++) {
+                    int k;
+                    std::cin >> k;
+                    if (k != 0) LLInsertElements(sm1, i, j, k);
+                }
+            }
+
+            LLTranspose(sm1);
+            LLPrintMatrix(sm1);
+        } else if (operation == 3) {
+            int operation;
+            std::cin >> operation;
+            int n1, m1;
+            std::cin >> n1 >> m1;
+            LLSparseMatrix sm1(n1, m1);
+
+            for (int i = 0; i < n1; i++) {
+                for (int j = 0; j < m1; j++) {
+                    int k;
+                    std::cin >> k;
+                    if (k != 0) LLInsertElements(sm1, i, j, k);
+                }
+            }
+
+            int n2, m2;
+            std::cin >> n2 >> m2;
+            LLSparseMatrix sm2(n2, m2);
+            for (int i = 0; i < n2; i++) {
+                for (int j = 0; j < m2; j++) {
+                    int k;
+                    std::cin >> k;
+                    if (k != 0) LLInsertElements(sm2, i, j, k);
+                }
+            }
+            LLMultiply(sm1, sm2);
         }
     }
-
-    int m2, n2;
-    cin >> m2 >> n2;
-
-    LLSparseMatrix sm2(m2, n2);
-    for (int i = 0; i < m2; i++) {
-        for (int j = 0; j < n2; j++) {
-            int k;
-            cin >> k;
-            if (k != 0) {
-                LLInsertElements(sm2, i, j, k);
-            }
-        }
-    }
-
-    // LLAdd(sm1, sm2);
-    LLPrintMatrix(sm1);
-    std::cout << "-----------------" << std::endl;
-    LLPrintMatrix(LLTranspose(sm1));
-    std::cout << "-----------------" << std::endl;
-    printlist(LLTranspose(sm1).head);
-
-    // int m1, n1;
-    // cin >> m1 >> n1;
-
-    // ArrSparseMatrix sm1(m1, n1);
-    // for (int i = 0; i < m1; i++) {
-    //     for (int j = 0; j < n1; j++) {
-    //         int k;
-    //         cin >> k;
-    //         if (k != 0) {
-    //             ArrInsertElements(sm1, i, j, k);
-    //         }
-    //     }
-    // }
-
-    // int m2, n2;
-    // cin >> m2 >> n2;
-
-    // ArrSparseMatrix sm2(m2, n2);
-    // for (int i = 0; i < m2; i++) {
-    //     for (int j = 0; j < n2; j++) {
-    //         int k;
-    //         cin >> k;
-    //         if (k != 0) {
-    //             ArrInsertElements(sm2, i, j, k);
-    //         }
-    //     }
-    // }
-
-    // add(sm1, sm2);
-    // transpose(sm1);
-    // ArrMultiply(sm1, sm2);
-
-    // 4 4
-    // 0 10 0 12
-    // 0 0 0 0
-    // 0 0 5 0
-    // 15 12 0 0
-    // 4 4
-    // 0 0 8 0
-    // 0 0 0 23
-    // 0 0 9 0
-    // 20 25 0 0
-
-    // 4 4
-    // 0 10 4 2
-    // 0 0 0 0
-    // 0 0 3 0
-    // 4 2 0 1
-    // 4 4
-    // 0 0 0 2
-    // 0 0 2 7
-    // 8 0 9 0
-    // 0 3 6 6
     return 0;
 }
