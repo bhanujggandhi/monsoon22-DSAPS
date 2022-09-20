@@ -178,13 +178,28 @@ void LRUCache::display() {
 }
 
 int main() {
-    LRUCache c(2);
-    c.set(2, 1);
-    c.set(2, 2);
-    std::cout << c.get(2) << std::endl;
-    c.set(1, 1);
-    c.set(4, 1);
-    std::cout << c.get(2) << std::endl;
+    int cap, q;
+
+    std::cin >> cap >> q;
+    LRUCache c(cap);
+
+    while (q--) {
+        int operation;
+        // 1 -> get
+        // 2 -> set
+
+        std::cin >> operation;
+
+        if (operation == 1) {
+            int key;
+            std::cin >> key;
+            std::cout << c.get(key) << std::endl;
+        } else if (operation == 2) {
+            int key, value;
+            std::cin >> key >> value;
+            c.set(key, value);
+        }
+    }
 
     /*
     ["LRUCache","put","put","get","put","put","get"]

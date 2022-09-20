@@ -174,15 +174,28 @@ int LFUCache::get(int key) {
 }
 
 int main() {
+    int cap, q;
 
-    LFUCache c(3);
-    c.set(1, 10);
-    std::cout << c.get(1) << std::endl;
-    c.set(2, 20);
-    c.set(3, 30);
-    c.set(4, 40);
-    std::cout << c.get(3) << std::endl;
-    std::cout << c.get(2) << std::endl;
+    std::cin >> cap >> q;
+    LFUCache c(cap);
+
+    while (q--) {
+        int operation;
+        // 1 -> get
+        // 2 -> set
+
+        std::cin >> operation;
+
+        if (operation == 1) {
+            int key;
+            std::cin >> key;
+            std::cout << c.get(key) << std::endl;
+        } else if (operation == 2) {
+            int key, value;
+            std::cin >> key >> value;
+            c.set(key, value);
+        }
+    }
 
     return 0;
 }
