@@ -3,35 +3,70 @@
 
 using namespace std;
 
-struct Data {
+// -------------------Data Types-----------------------
+struct ArrData {
     int row;
     int col;
     int value = 0;
 };
 
-struct SparseMatrix {
+struct ArrSparseMatrix {
     int rows;
     int cols;
-    Data *matrix;
+    ArrData *matrix;
     int ind;
 
-    SparseMatrix(int r, int c) {
+    ArrSparseMatrix(int r, int c) {
         rows = r;
         cols = c;
-        matrix = new Data[rows * cols];
+        matrix = new ArrData[rows * cols];
         ind = 0;
     }
 
-    void setMatrix(Data *mat) { matrix = mat; }
+    void setMatrix(ArrData *mat) { matrix = mat; }
 };
 
-void insert_elements(SparseMatrix &m, int row, int col, int val) {
+struct LLData {
+    int row;
+    int col;
+    int value;
+    LLData *next;
+    LLData *prev;
+
+    LLData(int r, int c, int v) {
+        row = r;
+        col = c;
+        value = v;
+        next = NULL;
+        prev = NULL;
+    }
+};
+
+struct LLSparseMatrix {
+    int rows;
+    int cols;
+    LLData *head;
+    int size;
+
+    LLSparseMatrix(int r, int c) {
+        rows = r;
+        cols = c;
+        head = NULL;
+        size = 0;
+    }
+
+    void setHead(LLData *node) { head = node; }
+};
+
+// -------------------Array Based Implementation-----------------------
+
+void insert_elements(ArrSparseMatrix &m, int row, int col, int val) {
     if (row < 0 or row >= m.rows or col < 0 or col >= m.cols) return;
 
     m.matrix[m.ind++] = {row, col, val};
 }
 
-void printmatrix(SparseMatrix &m) {
+void printmatrix(ArrSparseMatrix &m) {
     int k = 0;
     for (int i = 0; i < m.rows; i++) {
         for (int j = 0; j < m.cols; j++) {
@@ -44,12 +79,12 @@ void printmatrix(SparseMatrix &m) {
     }
 }
 
-void add(SparseMatrix m1, SparseMatrix m2) {
+void add(ArrSparseMatrix m1, ArrSparseMatrix m2) {
     // For additions rows and cols should be same
     if (m1.rows != m2.rows or m1.cols != m2.cols)
         return;
     else {
-        SparseMatrix result(m1.rows, m1.cols);
+        ArrSparseMatrix result(m1.rows, m1.cols);
         int i = 0, j = 0, k = 0;
 
         while (i < m1.ind and j < m2.ind) {
@@ -98,7 +133,7 @@ void add(SparseMatrix m1, SparseMatrix m2) {
     }
 }
 
-SparseMatrix transpose(SparseMatrix m) {
+ArrSparseMatrix transpose(ArrSparseMatrix m) {
     int total[m.cols] = {0};
     int index[m.cols + 1];
 
@@ -111,9 +146,9 @@ SparseMatrix transpose(SparseMatrix m) {
         index[i] = index[i - 1] + total[i - 1];
     }
 
-    SparseMatrix result(m.rows, m.cols);
+    ArrSparseMatrix result(m.rows, m.cols);
     result.ind = m.ind;
-    Data *arr = new Data[m.ind];
+    ArrData *arr = new ArrData[m.ind];
 
     for (int i = 0; i < m.ind; i++) {
         int ind = index[m.matrix[i].col];
@@ -125,25 +160,23 @@ SparseMatrix transpose(SparseMatrix m) {
 
     result.setMatrix(arr);
 
-    // printmatrix(result);
-
     return result;
 }
 
-bool cmp(Data a, Data b) {
+bool cmp(ArrData a, ArrData b) {
     if (a.row == b.row) return a.col < b.col;
 
     return a.row < b.row;
 }
 
-void multiply(SparseMatrix m1, SparseMatrix m2) {
+void multiply(ArrSparseMatrix m1, ArrSparseMatrix m2) {
     // Multiply col1 x row2
     // Sort
     // Remove duplicates
 
     if (m1.cols != m2.cols) return;
 
-    SparseMatrix result(m1.rows, m2.rows);
+    ArrSparseMatrix result(m1.rows, m2.rows);
 
     for (int i = 0; i < m1.ind; i++) {
         for (int j = 0; j < m2.ind; j++) {
@@ -156,14 +189,14 @@ void multiply(SparseMatrix m1, SparseMatrix m2) {
 
     sort(result.matrix, result.matrix + result.ind, cmp);
 
-    SparseMatrix ans(result.rows, result.cols);
+    ArrSparseMatrix ans(result.rows, result.cols);
 
     for (int i = 0; i < result.ind; i++) {
         if (i + 1 < result.ind) {
             if (result.matrix[i].row == result.matrix[i + 1].row and
                 result.matrix[i].col == result.matrix[i + 1].col) {
-                Data temp = {result.matrix[i].row, result.matrix[i].col,
-                             result.matrix[i].value};
+                ArrData temp = {result.matrix[i].row, result.matrix[i].col,
+                                result.matrix[i].value};
 
                 while (i + 1 < result.ind and
                        result.matrix[i].row == result.matrix[i + 1].row and
@@ -182,13 +215,15 @@ void multiply(SparseMatrix m1, SparseMatrix m2) {
     printmatrix(ans);
 }
 
+// -------------------Linked List Based Implementation-----------------------
+
 int main() {
     // m->rows
     // n->cols
     int m1, n1;
     cin >> m1 >> n1;
 
-    SparseMatrix sm1(m1, n1);
+    ArrSparseMatrix sm1(m1, n1);
     for (int i = 0; i < m1; i++) {
         for (int j = 0; j < n1; j++) {
             int k;
@@ -202,7 +237,7 @@ int main() {
     int m2, n2;
     cin >> m2 >> n2;
 
-    SparseMatrix sm2(m2, n2);
+    ArrSparseMatrix sm2(m2, n2);
     for (int i = 0; i < m2; i++) {
         for (int j = 0; j < n2; j++) {
             int k;
