@@ -59,6 +59,97 @@ struct LLSparseMatrix {
     void setHead(LLData *node) { head = node; }
 };
 
+// -------------------Utility-----------------------
+
+bool cmp(ArrData a, ArrData b) {
+    if (a.row == b.row) return a.col < b.col;
+
+    return a.row < b.row;
+}
+
+LLData *merge(LLData *left, LLData *right) {
+    if (left == NULL) return right;
+
+    if (right == NULL) return left;
+
+    LLData *head = new LLData(-1, -1, -1);
+    LLData *tail = head;
+
+    while (left != NULL and right != NULL) {
+        if (left->row < right->row) {
+            tail->next = left;
+            tail = tail->next;
+            left = left->next;
+            tail->next = NULL;
+        } else if (left->row == right->row) {
+            if (left->col < right->col) {
+                tail->next = left;
+                tail = tail->next;
+                left = left->next;
+                tail->next = NULL;
+            } else {
+                tail->next = right;
+                tail = tail->next;
+                right = right->next;
+                tail->next = NULL;
+            }
+        } else {
+            tail->next = right;
+            tail = tail->next;
+            right = right->next;
+            tail->next = NULL;
+        }
+    }
+
+    while (left != NULL) {
+        tail->next = left;
+        tail = tail->next;
+        left = left->next;
+        tail->next = NULL;
+    }
+
+    while (right != NULL) {
+        tail->next = right;
+        tail = tail->next;
+        right = right->next;
+        tail->next = NULL;
+    }
+
+    tail->next = NULL;
+    return head->next;
+}
+
+LLData *mergeSort(LLData *head) {
+    if (head == NULL or head->next == NULL) return head;
+
+    LLData *prev = NULL;
+    LLData *mid = head;
+    LLData *a = head;
+
+    while (a != NULL and a->next != NULL) {
+        prev = mid;
+        a = a->next->next;
+        mid = mid->next;
+    }
+
+    if (prev != NULL) prev->next = NULL;
+
+    LLData *right = NULL, *left = NULL;
+
+    left = mergeSort(head);
+    right = mergeSort(mid);
+
+    return merge(left, right);
+}
+
+void printlist(LLData *node) {
+    while (node) {
+        std::cout << node->row << "\t" << node->col << "\t" << node->value
+                  << std::endl;
+        node = node->next;
+    }
+}
+
 // -------------------Array Based Implementation-----------------------
 
 void ArrInsertElements(ArrSparseMatrix &m, int row, int col, int val) {
@@ -162,12 +253,6 @@ ArrSparseMatrix ArrTranspose(ArrSparseMatrix m) {
     result.setMatrix(arr);
 
     return result;
-}
-
-bool cmp(ArrData a, ArrData b) {
-    if (a.row == b.row) return a.col < b.col;
-
-    return a.row < b.row;
 }
 
 void ArrMultiply(ArrSparseMatrix m1, ArrSparseMatrix m2) {
@@ -292,6 +377,20 @@ void LLAdd(LLSparseMatrix m1, LLSparseMatrix m2) {
     }
 }
 
+LLSparseMatrix LLTranspose(LLSparseMatrix m) {
+    LLData *temp = m.head;
+    while (temp) {
+        int t = temp->row;
+        temp->row = temp->col;
+        temp->col = t;
+        temp = temp->next;
+    }
+
+    m.head = mergeSort(m.head);
+
+    return m;
+}
+
 int main() {
     // m->rows
     // n->cols
@@ -324,7 +423,12 @@ int main() {
         }
     }
 
-    LLAdd(sm1, sm2);
+    // LLAdd(sm1, sm2);
+    LLPrintMatrix(sm1);
+    std::cout << "-----------------" << std::endl;
+    LLPrintMatrix(LLTranspose(sm1));
+    std::cout << "-----------------" << std::endl;
+    printlist(LLTranspose(sm1).head);
 
     // int m1, n1;
     // cin >> m1 >> n1;
