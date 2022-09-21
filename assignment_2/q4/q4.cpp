@@ -152,13 +152,13 @@ void printlist(LLData *node) {
 
 // -------------------Array Based Implementation-----------------------
 
-void ArrInsertElements(ArrSparseMatrix &m, int row, int col, int val) {
+void arrInsertElements(ArrSparseMatrix &m, int row, int col, int val) {
     if (row < 0 or row >= m.rows or col < 0 or col >= m.cols) return;
 
     m.matrix[m.ind++] = {row, col, val};
 }
 
-void ArrPrintMatrix(ArrSparseMatrix &m) {
+void arrPrintMatrix(ArrSparseMatrix &m) {
     int k = 0;
     for (int i = 0; i < m.rows; i++) {
         for (int j = 0; j < m.cols; j++) {
@@ -171,7 +171,7 @@ void ArrPrintMatrix(ArrSparseMatrix &m) {
     }
 }
 
-void ArrAdd(ArrSparseMatrix m1, ArrSparseMatrix m2) {
+void arrAdd(ArrSparseMatrix m1, ArrSparseMatrix m2) {
     // For additions rows and cols should be same
     if (m1.rows != m2.rows or m1.cols != m2.cols)
         return;
@@ -183,49 +183,49 @@ void ArrAdd(ArrSparseMatrix m1, ArrSparseMatrix m2) {
             if (m1.matrix[i].row == m2.matrix[j].row) {
                 if (m1.matrix[i].col == m2.matrix[j].col) {
                     if (m1.matrix[i].value + m2.matrix[j].value != 0) {
-                        ArrInsertElements(
+                        arrInsertElements(
                             result, m1.matrix[i].row, m1.matrix[i].col,
                             m1.matrix[i].value + m2.matrix[j].value);
                     }
                     i++;
                     j++;
                 } else if (m1.matrix[i].col < m2.matrix[j].col) {
-                    ArrInsertElements(result, m1.matrix[i].row,
+                    arrInsertElements(result, m1.matrix[i].row,
                                       m1.matrix[i].col, m1.matrix[i].value);
                     i++;
                 } else {
-                    ArrInsertElements(result, m2.matrix[j].row,
+                    arrInsertElements(result, m2.matrix[j].row,
                                       m2.matrix[j].col, m2.matrix[j].value);
                     j++;
                 }
             } else if (m1.matrix[i].row < m2.matrix[i].row) {
-                ArrInsertElements(result, m1.matrix[i].row, m1.matrix[i].col,
+                arrInsertElements(result, m1.matrix[i].row, m1.matrix[i].col,
                                   m1.matrix[i].value);
                 i++;
             } else {
-                ArrInsertElements(result, m2.matrix[j].row, m2.matrix[j].col,
+                arrInsertElements(result, m2.matrix[j].row, m2.matrix[j].col,
                                   m2.matrix[j].value);
                 j++;
             }
         }
 
         while (i < m1.ind) {
-            ArrInsertElements(result, m1.matrix[i].row, m1.matrix[i].col,
+            arrInsertElements(result, m1.matrix[i].row, m1.matrix[i].col,
                               m1.matrix[i].value);
             i++;
         }
 
         while (j < m2.ind) {
-            ArrInsertElements(result, m2.matrix[j].row, m2.matrix[j].col,
+            arrInsertElements(result, m2.matrix[j].row, m2.matrix[j].col,
                               m2.matrix[j].value);
             j++;
         }
 
-        ArrPrintMatrix(result);
+        arrPrintMatrix(result);
     }
 }
 
-ArrSparseMatrix ArrTranspose(ArrSparseMatrix m) {
+ArrSparseMatrix arrTranspose(ArrSparseMatrix m) {
     int total[m.cols] = {0};
     int index[m.cols + 1];
 
@@ -255,7 +255,7 @@ ArrSparseMatrix ArrTranspose(ArrSparseMatrix m) {
     return result;
 }
 
-void ArrMultiply(ArrSparseMatrix m1, ArrSparseMatrix m2) {
+void arrMultiply(ArrSparseMatrix m1, ArrSparseMatrix m2) {
     // Multiply col1 x row2
     // Sort
     // Remove duplicates
@@ -267,7 +267,7 @@ void ArrMultiply(ArrSparseMatrix m1, ArrSparseMatrix m2) {
     for (int i = 0; i < m1.ind; i++) {
         for (int j = 0; j < m2.ind; j++) {
             if (m1.matrix[i].col == m2.matrix[j].row) {
-                ArrInsertElements(result, m1.matrix[i].row, m2.matrix[j].col,
+                arrInsertElements(result, m1.matrix[i].row, m2.matrix[j].col,
                                   m1.matrix[i].value * m2.matrix[j].value);
             }
         }
@@ -290,20 +290,20 @@ void ArrMultiply(ArrSparseMatrix m1, ArrSparseMatrix m2) {
                     temp.value += result.matrix[i + 1].value;
                     i++;
                 }
-                ArrInsertElements(ans, temp.row, temp.col, temp.value);
+                arrInsertElements(ans, temp.row, temp.col, temp.value);
             } else {
-                ArrInsertElements(ans, result.matrix[i].row,
+                arrInsertElements(ans, result.matrix[i].row,
                                   result.matrix[i].col, result.matrix[i].value);
             }
         }
     }
 
-    ArrPrintMatrix(ans);
+    arrPrintMatrix(ans);
 }
 
 // -------------------Linked List Based Implementation-----------------------
 
-void LLInsertElements(LLSparseMatrix &m, int row, int col, int val) {
+void llInsertElements(LLSparseMatrix &m, int row, int col, int val) {
     if (m.size == 0) {
         m.head = m.tail = new LLData(row, col, val);
         m.size++;
@@ -315,7 +315,7 @@ void LLInsertElements(LLSparseMatrix &m, int row, int col, int val) {
     }
 }
 
-void LLPrintMatrix(LLSparseMatrix m) {
+void llPrintMatrix(LLSparseMatrix m) {
     LLData *temp = m.head;
     for (int i = 0; i < m.rows; i++) {
         for (int j = 0; j < m.cols; j++) {
@@ -329,7 +329,7 @@ void LLPrintMatrix(LLSparseMatrix m) {
     }
 }
 
-void LLAdd(LLSparseMatrix m1, LLSparseMatrix m2) {
+void llAdd(LLSparseMatrix m1, LLSparseMatrix m2) {
     if (m1.rows != m2.rows or m1.cols != m2.cols)
         return;
     else {
@@ -340,44 +340,44 @@ void LLAdd(LLSparseMatrix m1, LLSparseMatrix m2) {
             if (temp1->row == temp2->row) {
                 if (temp1->col == temp2->col) {
                     if (temp1->value + temp2->value != 0) {
-                        LLInsertElements(result, temp1->row, temp1->col,
+                        llInsertElements(result, temp1->row, temp1->col,
                                          temp1->value + temp2->value);
                     }
                     temp1 = temp1->next;
                     temp2 = temp2->next;
                 } else if (temp1->col < temp2->col) {
-                    LLInsertElements(result, temp1->row, temp1->col,
+                    llInsertElements(result, temp1->row, temp1->col,
                                      temp1->value);
                     temp1 = temp1->next;
                 } else {
-                    LLInsertElements(result, temp2->row, temp2->col,
+                    llInsertElements(result, temp2->row, temp2->col,
                                      temp2->value);
                     temp2 = temp2->next;
                 }
             } else if (temp1->row < temp2->row) {
-                LLInsertElements(result, temp1->row, temp1->col, temp1->value);
+                llInsertElements(result, temp1->row, temp1->col, temp1->value);
                 temp1 = temp1->next;
             } else {
-                LLInsertElements(result, temp2->row, temp2->col, temp2->value);
+                llInsertElements(result, temp2->row, temp2->col, temp2->value);
                 temp2 = temp2->next;
             }
         }
 
         while (temp1 != NULL) {
-            LLInsertElements(result, temp1->row, temp1->col, temp1->value);
+            llInsertElements(result, temp1->row, temp1->col, temp1->value);
             temp1 = temp1->next;
         }
 
         while (temp2 != NULL) {
-            LLInsertElements(result, temp2->row, temp2->col, temp2->value);
+            llInsertElements(result, temp2->row, temp2->col, temp2->value);
             temp2 = temp2->next;
         }
 
-        LLPrintMatrix(result);
+        llPrintMatrix(result);
     }
 }
 
-LLSparseMatrix LLTranspose(LLSparseMatrix m) {
+LLSparseMatrix llTranspose(LLSparseMatrix m) {
     LLData *temp = m.head;
     while (temp) {
         int t = temp->row;
@@ -391,7 +391,7 @@ LLSparseMatrix LLTranspose(LLSparseMatrix m) {
     return m;
 }
 
-void LLMultiply(LLSparseMatrix m1, LLSparseMatrix m2) {
+void llMultiply(LLSparseMatrix m1, LLSparseMatrix m2) {
     if (m1.cols != m2.rows) return;
 
     LLSparseMatrix result(m1.rows, m2.cols);
@@ -399,7 +399,7 @@ void LLMultiply(LLSparseMatrix m1, LLSparseMatrix m2) {
     for (LLData *temp1 = m1.head; temp1 != NULL; temp1 = temp1->next) {
         for (LLData *temp2 = m2.head; temp2 != NULL; temp2 = temp2->next) {
             if (temp1->col == temp2->row) {
-                LLInsertElements(result, temp1->row, temp2->col,
+                llInsertElements(result, temp1->row, temp2->col,
                                  temp1->value * temp2->value);
             }
         }
@@ -418,18 +418,15 @@ void LLMultiply(LLSparseMatrix m1, LLSparseMatrix m2) {
                     newnode->value += temp->next->value;
                     temp = temp->next;
                 }
-                LLInsertElements(ans, newnode->row, newnode->col,
+                llInsertElements(ans, newnode->row, newnode->col,
                                  newnode->value);
             } else {
-                LLInsertElements(ans, temp->row, temp->col, temp->value);
+                llInsertElements(ans, temp->row, temp->col, temp->value);
             }
         }
     }
 
-    LLPrintMatrix(ans);
-
-    std::cout << "-----------------" << std::endl;
-    printlist(ans.head);
+    llPrintMatrix(ans);
 }
 
 int main() {
@@ -448,7 +445,7 @@ int main() {
                 for (int j = 0; j < m1; j++) {
                     int k;
                     std::cin >> k;
-                    if (k != 0) ArrInsertElements(sm1, i, j, k);
+                    if (k != 0) arrInsertElements(sm1, i, j, k);
                 }
             }
 
@@ -459,10 +456,10 @@ int main() {
                 for (int j = 0; j < m2; j++) {
                     int k;
                     std::cin >> k;
-                    if (k != 0) ArrInsertElements(sm2, i, j, k);
+                    if (k != 0) arrInsertElements(sm2, i, j, k);
                 }
             }
-            ArrAdd(sm1, sm2);
+            arrAdd(sm1, sm2);
         } else if (operation == 2) {
             int n1, m1;
             std::cin >> n1 >> m1;
@@ -472,15 +469,12 @@ int main() {
                 for (int j = 0; j < m1; j++) {
                     int k;
                     std::cin >> k;
-                    if (k != 0) ArrInsertElements(sm1, i, j, k);
+                    if (k != 0) arrInsertElements(sm1, i, j, k);
                 }
             }
-
-            ArrTranspose(sm1);
-            ArrPrintMatrix(sm1);
+            sm1 = arrTranspose(sm1);
+            arrPrintMatrix(sm1);
         } else if (operation == 3) {
-            int operation;
-            std::cin >> operation;
             int n1, m1;
             std::cin >> n1 >> m1;
             ArrSparseMatrix sm1(n1, m1);
@@ -489,7 +483,7 @@ int main() {
                 for (int j = 0; j < m1; j++) {
                     int k;
                     std::cin >> k;
-                    if (k != 0) ArrInsertElements(sm1, i, j, k);
+                    if (k != 0) arrInsertElements(sm1, i, j, k);
                 }
             }
 
@@ -500,10 +494,10 @@ int main() {
                 for (int j = 0; j < m2; j++) {
                     int k;
                     std::cin >> k;
-                    if (k != 0) ArrInsertElements(sm2, i, j, k);
+                    if (k != 0) arrInsertElements(sm2, i, j, k);
                 }
             }
-            ArrMultiply(sm1, sm2);
+            arrMultiply(sm1, sm2);
         }
     } else if (mode == 2) {
         int operation;
@@ -517,7 +511,7 @@ int main() {
                 for (int j = 0; j < m1; j++) {
                     int k;
                     std::cin >> k;
-                    if (k != 0) LLInsertElements(sm1, i, j, k);
+                    if (k != 0) llInsertElements(sm1, i, j, k);
                 }
             }
 
@@ -528,10 +522,10 @@ int main() {
                 for (int j = 0; j < m2; j++) {
                     int k;
                     std::cin >> k;
-                    if (k != 0) LLInsertElements(sm2, i, j, k);
+                    if (k != 0) llInsertElements(sm2, i, j, k);
                 }
             }
-            LLAdd(sm1, sm2);
+            llAdd(sm1, sm2);
         } else if (operation == 2) {
             int n1, m1;
             std::cin >> n1 >> m1;
@@ -541,15 +535,12 @@ int main() {
                 for (int j = 0; j < m1; j++) {
                     int k;
                     std::cin >> k;
-                    if (k != 0) LLInsertElements(sm1, i, j, k);
+                    if (k != 0) llInsertElements(sm1, i, j, k);
                 }
             }
 
-            LLTranspose(sm1);
-            LLPrintMatrix(sm1);
+            llPrintMatrix(llTranspose(sm1));
         } else if (operation == 3) {
-            int operation;
-            std::cin >> operation;
             int n1, m1;
             std::cin >> n1 >> m1;
             LLSparseMatrix sm1(n1, m1);
@@ -558,7 +549,7 @@ int main() {
                 for (int j = 0; j < m1; j++) {
                     int k;
                     std::cin >> k;
-                    if (k != 0) LLInsertElements(sm1, i, j, k);
+                    if (k != 0) llInsertElements(sm1, i, j, k);
                 }
             }
 
@@ -569,11 +560,26 @@ int main() {
                 for (int j = 0; j < m2; j++) {
                     int k;
                     std::cin >> k;
-                    if (k != 0) LLInsertElements(sm2, i, j, k);
+                    if (k != 0) llInsertElements(sm2, i, j, k);
                 }
             }
-            LLMultiply(sm1, sm2);
+            llMultiply(sm1, sm2);
         }
     }
     return 0;
 }
+
+/*
+
+4 4
+0 10 4 2
+0 0 0 0
+0 0 3 0
+4 2 0 0
+4 4
+0 0 0 2
+0 0 2 7
+8 0 9 0
+0 3 6 0
+
+*/
