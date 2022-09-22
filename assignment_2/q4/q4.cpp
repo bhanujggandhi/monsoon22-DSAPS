@@ -208,7 +208,7 @@ class ArrSparseMatrix {
     }
 };
 
-// -------------------Linked List Based Implementation-----------------------
+// ---------------Linked List Based Implementation-------------------
 
 template <class T>
 class LLSparseMatrix {
