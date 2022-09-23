@@ -1,11 +1,14 @@
 #include <iostream>
 
+// ---------------Data Type-------------------
 struct Node {
     int value;
     Node *left;
     Node *right;
     int height;
     int count;
+    int numright;
+    int numleft;
 
     Node(int key) {
         value = key;
@@ -13,6 +16,8 @@ struct Node {
         right = NULL;
         height = 1;
         count = 1;
+        numright = 0;
+        numleft = 0;
     }
 };
 
@@ -35,6 +40,10 @@ class AVLTree {
     // Utility to get balance factor using left and right height
     int getBF(Node *node);
 
+    int getCount(Node *node);
+
+    void setCount(Node *node, int key);
+
     // Utility for left rotation and update height
     Node *left_rotate(Node *node);
 
@@ -51,7 +60,7 @@ class AVLTree {
     Node *insertHelper(Node *node, int key);
 
     // Utitlity to delete a node in the tree
-    Node *deleteHelper(Node *node, int key);
+    Node *deleteHelper(Node *node, int key, int &todel);
 
     // Utility to search a node in the tree
     bool searchHelper(Node *node, int key);
@@ -60,7 +69,7 @@ class AVLTree {
     int countOccurenceHelper(Node *node, int key);
 
     // Utility to find kth largest node
-    void kthLargestHelper(Node *node, int &k, int &ans, bool &flag);
+    int kthLargestHelper(Node *node, int &k, int &ans, bool &flag);
 
     // Utility to find number of nodes in a range
     int countRangeHelper(Node *node, int low, int high);
@@ -122,13 +131,33 @@ int AVLTree::getBF(Node *node) {
     return getHeight(node->left) - getHeight(node->right);
 }
 
+int AVLTree::getCount(Node *node) {
+    if (node == NULL) return 0;
+    return node->numright + node->numleft;
+}
+
+void AVLTree::setCount(Node *node, int key) {
+    //     if (node == NULL) return;
+    //     if (key == node->value) {
+    //         node->numright = 2 + getCount(node->right);
+    //         node->numleft = 1 + getCount(node->left);
+    //         return;
+    //     }
+    //     node->numright = getCount(node->right);
+    //     node->numleft = getCount(node->left);
+}
+
 Node *AVLTree::left_rotate(Node *node) {
     Node *temp = node->right;
     node->right = temp->left;
     temp->left = node;
 
+    node->numright = temp->numleft;
+    temp->numleft = 1 + node->numleft + node->numright;
     setHeight(node);
+    // setCount(node, -1);
     setHeight(temp);
+    // setCount(temp, -1);
 
     return temp;
 }
@@ -138,8 +167,12 @@ Node *AVLTree::right_rotate(Node *node) {
     node->left = temp->right;
     temp->right = node;
 
+    node->numleft = temp->numright;
+    temp->numright = 1 + node->numleft + node->numright;
     setHeight(node);
+    // setCount(node, -1);
     setHeight(temp);
+    // setCount(temp, -1);
 
     return temp;
 }
@@ -176,15 +209,18 @@ Node *AVLTree::insertHelper(Node *node, int key) {
         return node;
     }
 
-    if (node->value > key)
+    if (node->value > key) {
         node->left = insertHelper(node->left, key);
-    else if (node->value < key)
+        node->numleft++;
+    } else if (node->value < key) {
         node->right = insertHelper(node->right, key);
-    else {
+        node->numright++;
+    } else {
         node->count++;
-        return node;
+        node->numright++;
     }
 
+    setCount(node, -1);
     setHeight(node);
 
     node = rebalance(node, getBF(node));
@@ -192,20 +228,23 @@ Node *AVLTree::insertHelper(Node *node, int key) {
     return node;
 }
 
-Node *AVLTree::deleteHelper(Node *node, int key) {
+Node *AVLTree::deleteHelper(Node *node, int key, int &todel) {
     if (node == NULL) return node;
 
-    if (node->value > key)
-        node->left = deleteHelper(node->left, key);
-    else if (node->value < key)
-        node->right = deleteHelper(node->right, key);
-    else {
+    if (node->value > key) {
+        node->left = deleteHelper(node->left, key, todel);
+        node->numleft -= todel;
+    } else if (node->value < key) {
+        node->right = deleteHelper(node->right, key, todel);
+        node->numright -= todel;
+    } else {
         // if (node->count > 1) {
         //     node->count--;
         //     return node;
         // }
         // No child
         if (node->left == NULL and node->right == NULL) {
+            todel = node->count;
             delete node;
             node = NULL;
         }
@@ -213,6 +252,7 @@ Node *AVLTree::deleteHelper(Node *node, int key) {
         // One right child
         else if (node->left == NULL) {
             Node *temp = node->right;
+            todel = node->count;
             delete node;
             node = temp;
         }
@@ -220,19 +260,22 @@ Node *AVLTree::deleteHelper(Node *node, int key) {
         // One left child
         else if (node->right == NULL) {
             Node *temp = node->left;
+            todel = node->count;
             delete node;
             node = temp;
         }
         // Node with both children
         else {
             Node *inorderP = inorderPredecessor(node->left);
+            todel = node->count;
 
             // Swap values
             // std::swap(node->value, inorderP->value);
             node->value = inorderP->value;
-            node->count = inorderP->count - 1;
+            node->count = inorderP->count;
 
-            node->left = deleteHelper(node->left, inorderP->value);
+            node->left = deleteHelper(node->left, inorderP->value, todel);
+            node->numleft -= todel;
         }
     }
 
@@ -264,19 +307,23 @@ int AVLTree::countOccurenceHelper(Node *node, int key) {
     return 0;
 }
 
-void AVLTree::kthLargestHelper(Node *node, int &k, int &ans, bool &flag) {
-    if (flag or node == NULL) return;
+int AVLTree::kthLargestHelper(Node *node, int &k, int &ans, bool &flag) {
+    if (node == NULL) return 0;
 
-    kthLargestHelper(node->right, k, ans, flag);
-
-    k -= node->count;
-    if (k <= 0 and flag == false) {
-        flag = true;
-        ans = node->value;
-        return;
+    Node *temp = node;
+    while (temp) {
+        if (k == temp->numright + 1) {
+            return temp->value;
+        } else if (k > temp->numright + 1) {
+            if (k <= temp->count) return temp->value;
+            k = k - temp->numright - 1;
+            temp = temp->left;
+        } else {
+            if (k <= temp->count) return temp->value;
+            temp = temp->right;
+        }
     }
-
-    kthLargestHelper(node->left, k, ans, flag);
+    return 0;
 }
 
 int AVLTree::countRangeHelper(Node *node, int eLeft, int eRight) {
@@ -309,7 +356,10 @@ Node *AVLTree::getRoot() { return root; }
 
 void AVLTree::insert(int key) { root = insertHelper(root, key); }
 
-void AVLTree::delete_node(int key) { root = deleteHelper(root, key); }
+void AVLTree::delete_node(int key) {
+    int todel = 0;
+    root = deleteHelper(root, key, todel);
+}
 
 bool AVLTree::search(int key) { return searchHelper(root, key); }
 
@@ -380,8 +430,8 @@ int AVLTree::closest_element(int n) {
 int AVLTree::Kth_largest(int k) {
     int ans = 0;
     bool flag = false;
-    kthLargestHelper(root, k, ans, flag);
-    return ans;
+    return kthLargestHelper(root, k, ans, flag);
+    // return ans;
 }
 
 int AVLTree::count_range(int eLeft, int eRight) {
@@ -410,37 +460,51 @@ void AVLTree::preorder(Node *root) {
 
 int main() {
     AVLTree b;
-    b.insert(8);
-    b.insert(7);
-    b.insert(6);
-    b.insert(5);
-    b.insert(4);
-    b.insert(3);
-    b.insert(2);
-    b.insert(1);
-    b.insert(5);
-    b.insert(6);
-    b.insert(6);
-    b.insert(3);
-    b.insert(54);
-    b.insert(59);
-    b.insert(65);
-    b.insert(70);
-    b.insert(51);
-    b.insert(5);
-    b.insert(10);
-    b.insert(5);
-    b.insert(9);
-    b.insert(7);
-    b.insert(17);
+    // b.insert(8);
+    // b.insert(7);
+    // b.insert(6);
+    // b.insert(5);
+    // b.insert(4);
+    // b.insert(3);
+    // b.insert(2);
+    // b.insert(1);
+    // b.insert(5);
+    // b.insert(6);
+    // b.insert(6);
+    // b.insert(3);
+    // b.insert(54);
+    // b.insert(59);
+    // b.insert(65);
+    // b.insert(70);
+    // b.insert(51);
+    // b.insert(5);
+    // b.insert(10);
+    // b.insert(5);
+    // b.insert(9);
+    // b.insert(7);
+    // b.insert(17);
 
+    b.insert(5);
+    b.insert(1);
+    b.insert(2);
+    b.insert(3);
+    b.insert(7);
+    b.insert(7);
+    b.insert(6);
+    b.insert(6);
+    b.insert(4);
+    b.insert(8);
+    b.insert(8);
+    b.insert(8);
+    b.insert(8);
+    b.delete_node(7);
     // std::cout << b.upper_bound(61) << std::endl;
     // std::cout << b.lower_bound(61) << std::endl;
 
     b.inorder(b.getRoot());
     std::cout << std::endl;
 
-    std::cout << b.Kth_largest(15) << std::endl;
+    std::cout << b.Kth_largest(10) << std::endl;
 
     std::cout << "--------------------------------" << std::endl;
     printBT(b.getRoot());

@@ -8,6 +8,9 @@
     "iostream": "cpp",
     "istream": "cpp",
     "compare": "cpp",
-    "cmath": "cpp"
+    "cmath": "cpp",
+    "deque": "cpp",
+    "unordered_map": "cpp",
+    "vector": "cpp"
   }
 }
