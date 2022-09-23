@@ -20,7 +20,7 @@ struct LLData {
     LLData<T> *next;
     // LLData<T> *prev;
 
-    LLData(int r, int c, int v) {
+    LLData(int r, int c, T v) {
         row = r;
         col = c;
         value = v;
@@ -54,7 +54,7 @@ class ArrSparseMatrix {
         return a.row < b.row;
     }
 
-    void arrInsertElements(int row, int col, int val) {
+    void arrInsertElements(int row, int col, T val) {
         if (row < 0 or row >= rows or col < 0 or col >= cols) return;
 
         matrix[ind++] = {row, col, val};
@@ -450,11 +450,11 @@ int main() {
         if (operation == 1) {
             int n1, m1;
             std::cin >> n1 >> m1;
-            ArrSparseMatrix<int> sm1(n1, m1);
+            ArrSparseMatrix<float> sm1(n1, m1);
 
             for (int i = 0; i < n1; i++) {
                 for (int j = 0; j < m1; j++) {
-                    int k;
+                    float k;
                     std::cin >> k;
                     if (k != 0) sm1.arrInsertElements(i, j, k);
                 }
@@ -462,10 +462,10 @@ int main() {
 
             int n2, m2;
             std::cin >> n2 >> m2;
-            ArrSparseMatrix<int> sm2(n2, m2);
+            ArrSparseMatrix<float> sm2(n2, m2);
             for (int i = 0; i < n2; i++) {
                 for (int j = 0; j < m2; j++) {
-                    int k;
+                    float k;
                     std::cin >> k;
                     if (k != 0) sm2.arrInsertElements(i, j, k);
                 }
@@ -474,11 +474,11 @@ int main() {
         } else if (operation == 2) {
             int n1, m1;
             std::cin >> n1 >> m1;
-            ArrSparseMatrix<int> sm1(n1, m1);
+            ArrSparseMatrix<float> sm1(n1, m1);
 
             for (int i = 0; i < n1; i++) {
                 for (int j = 0; j < m1; j++) {
-                    int k;
+                    float k;
                     std::cin >> k;
                     if (k != 0) sm1.arrInsertElements(i, j, k);
                 }
@@ -488,11 +488,11 @@ int main() {
         } else if (operation == 3) {
             int n1, m1;
             std::cin >> n1 >> m1;
-            ArrSparseMatrix<int> sm1(n1, m1);
+            ArrSparseMatrix<float> sm1(n1, m1);
 
             for (int i = 0; i < n1; i++) {
                 for (int j = 0; j < m1; j++) {
-                    int k;
+                    float k;
                     std::cin >> k;
                     if (k != 0) sm1.arrInsertElements(i, j, k);
                 }
@@ -500,10 +500,10 @@ int main() {
 
             int n2, m2;
             std::cin >> n2 >> m2;
-            ArrSparseMatrix<int> sm2(n2, m2);
+            ArrSparseMatrix<float> sm2(n2, m2);
             for (int i = 0; i < n2; i++) {
                 for (int j = 0; j < m2; j++) {
-                    int k;
+                    float k;
                     std::cin >> k;
                     if (k != 0) sm2.arrInsertElements(i, j, k);
                 }
@@ -583,14 +583,14 @@ int main() {
 /*
 
 4 4
-0 10 4 2
+0 10.2 4.1 2
 0 0 0 0
-0 0 3 0
-4 2 0 0
+0 0 3.4 0
+4.9 2.1 0 0
 4 4
-0 0 0 2
-0 0 2 7
-8 0 9 0
-0 3 6 0
+0 0 0 2.4
+0 0 2.1 7.9
+8.1 0 9.1 0
+0 3.4 6.2 0
 
 */
