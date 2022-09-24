@@ -346,14 +346,32 @@ class AVLTree {
 
    public:
     AVLTree() { root = NULL; }
+
     ~AVLTree() { deleteTree(root); }
+
+    /// @brief Function to Return Root of the Tree
+    /// @return Node Pointer
     Node *getRoot() { return root; }
+
+    /// @brief Function to Insert a Node into AVL Tree
+    /// @param key
     void insert(T key) { root = insertHelper(root, key); }
+
+    /// @brief Function to Delete a Node from AVL Tree
+    /// @param key
     void delete_node(T key) {
         int todel = 0;
         root = deleteHelper(root, key, todel);
     }
+
+    /// @brief Search Element Utility
+    /// @param key
+    /// @return boolean
     bool search(T key) { return searchHelper(root, key); }
+
+    /// @brief Find number of occurences utility
+    /// @param key
+    /// @return Integer
     int count_occurence(T key) { return countOccurenceHelper(root, key); }
     T lower_bound(T n) {
         Node *curr = root;
@@ -362,7 +380,7 @@ class AVLTree {
         while (curr != NULL) {
             if (cmprtr(curr->value, n) == 0) {
                 if (ans == nullptr or cmprtr(*ans, curr->value) == 0)
-                    *ans = curr->value;
+                    ans = &curr->value;
                 curr = curr->left;
 
             } else if (cmprtr(curr->value, n) == 1) {
@@ -374,6 +392,10 @@ class AVLTree {
         }
         return ans == nullptr ? T() : *ans;
     }
+
+    /// @brief Find Upper Bound ( > T) utility
+    /// @param n
+    /// @return Element Greater than the given value n
     T upper_bound(T n) {
         Node *curr = root;
         T *ans = nullptr;
@@ -389,22 +411,26 @@ class AVLTree {
         }
         return ans == nullptr ? T() : *ans;
     }
-    int closest_element(int n) {
+
+    /// @brief Find Closest Element Utility
+    /// @param key
+    /// @return Closest Element to given key
+    T closest_element(int key) {
         Node *curr = root;
         Node *prev = NULL;
-        int diff = INT32_MAX;
-        int ans = 0;
+        T diff = INT32_MAX;
+        T ans = 0;
 
         while (curr != NULL) {
-            if (curr->value > n) {
-                if (abs(curr->value - n) < diff) {
-                    diff = abs(curr->value - n);
+            if (curr->value > key) {
+                if (abs(curr->value - key) < diff) {
+                    diff = abs(curr->value - key);
                     ans = curr->value;
                 }
                 curr = curr->left;
-            } else if (curr->value < n) {
-                if (abs(curr->value - n) < diff) {
-                    diff = abs(curr->value - n);
+            } else if (curr->value < key) {
+                if (abs(curr->value - key) < diff) {
+                    diff = abs(curr->value - key);
                     ans = curr->value;
                 }
                 curr = curr->right;
@@ -414,10 +440,17 @@ class AVLTree {
         }
         return ans;
     }
+
+    /// @brief Find Kth Largest Utility
+    /// @param k
+    /// @return Kth Largest Element in the AVL Tree
     T Kth_largest(int k) { return kthLargestHelper(root, k); }
     int count_range(T eLeft, T eRight) {
         return countRangeHelper(root, eLeft, eRight);
     }
+
+    /// @brief Inorder Traversal Utility
+    /// @param root
     void inorder(Node *root) {
         if (root == NULL) return;
 
@@ -426,6 +459,9 @@ class AVLTree {
         while (i--) std::cout << root->value << "  ";
         inorder(root->right);
     }
+
+    /// @brief Preorder Traveseral Utility
+    /// @param root
     void preorder(Node *root) {
         if (root == NULL) return;
 
@@ -434,114 +470,61 @@ class AVLTree {
         preorder(root->left);
         preorder(root->right);
     }
-
-    void printBT(const std::string &prefix, Node *node, bool isLeft) {
-        if (node != nullptr) {
-            std::cout << prefix;
-
-            std::cout << (isLeft ? "├──" : "└──");
-
-            // print the value of the node
-            std::cout << node->value << std::endl;
-
-            // enter the next tree level - left and right branch
-            printBT(prefix + (isLeft ? "│   " : "    "), node->left, true);
-            printBT(prefix + (isLeft ? "│   " : "    "), node->right, false);
-        }
-    }
-
-    void printBT(Node *node) { printBT("", node, false); }
 };
 
 // ----------------- Driver Code ------------------------
 
 int main() {
-    AVLTree<MyClass> b;
+    AVLTree<std::string> b;
 
-    // b.insert(8);
-    // b.insert(7);
-    // b.insert(6);
-    // b.insert(5);
-    // b.insert(4);
-    // b.insert(3);
-    // b.insert(2);
-    // b.insert(1);
-    // b.insert(5);
-    // b.insert(6);
-    // b.insert(6);
-    // b.insert(3);
-    // b.insert(54);
-    // b.insert(59);
-    // b.insert(65);
-    // b.insert(70);
-    // b.insert(51);
-    // b.insert(5);
-    // b.insert(10);
-    // b.insert(5);
-    // b.insert(9);
-    // b.insert(7);
-    // b.insert(17);
+    std::string str = "hello";
+    std::string str1 = "bye";
+    std::string str2 = "bhanu";
+    std::string str3 = "king";
+    std::string str4 = "gandhi";
+    std::string str5 = "yellow";
+    std::string str6 = "white";
+    std::string str7 = "white";
+    std::string str8 = "white";
+    std::string str9 = "white";
+    std::string str10 = "white";
+    std::string str11 = "white";
+    std::string str12 = "white";
+    std::string str13 = "white";
 
-    // std::string str = "hello";
-    // std::string str1 = "bye";
-    // std::string str2 = "bhanu";
-    // std::string str3 = "king";
-    // std::string str4 = "gandhi";
-    // std::string str5 = "yellow";
-    // std::string str6 = "white";
-    // std::string str7 = "white";
-    // std::string str8 = "white";
-    // std::string str9 = "white";
-    // std::string str10 = "white";
-    // std::string str11 = "white";
-    // std::string str12 = "white";
-    // std::string str13 = "white";
-
-    MyClass a(1, 2);
-    MyClass k(3, 2);
-    MyClass c(4, 2);
-    MyClass d(5, 2);
-    MyClass e(6, 2);
-    MyClass f(7, 2);
-    MyClass g(8, 2);
-    MyClass h(9, 2);
-    MyClass z(10, 2);
-    // int a = 1;
-    // int c = 2;
-    // int d = 3;
-    // int e = 4;
-    // int f = 5;
-    // int g = 6;
-    // int h = 7;
-    // int i = 8;
-    // int j = 9;
-    // int k = 10;
-    // int l = 11;
-    b.insert(a);
-    b.insert(k);
-    b.insert(c);
-    b.insert(d);
-    b.insert(e);
-    b.insert(f);
-    b.insert(g);
-    b.insert(h);
-    // b.insert(i);
-    // b.insert(j);
-    // b.insert(k);
-    // b.insert(l);
-    // b.insert(l);
-    // b.insert(l);
-    // std::cout << b.lower_bound(8) << std::endl;
-    // std::cout << b.lower_bound(61) << std::endl;
-    // b.delete_node(str5);
+    // MyClass a(1, 2);
+    // MyClass k(3, 2);
+    // MyClass c(4, 2);
+    // MyClass d(5, 2);
+    // MyClass e(6, 2);
+    // MyClass f(7, 2);
+    // MyClass g(8, 2);
+    // MyClass h(9, 2);
+    // MyClass z(10, 2);
+    b.insert(str);
+    b.insert(str1);
+    b.insert(str2);
+    b.insert(str3);
+    b.insert(str4);
+    b.insert(str4);
+    b.insert(str5);
+    b.insert(str6);
+    b.insert(str7);
+    b.insert(str7);
+    b.insert(str8);
+    b.insert(str9);
+    b.insert(str10);
+    b.insert(str11);
+    b.insert(str12);
+    b.insert(str13);
+    b.insert(str13);
+    b.insert(str10);
+    b.insert(str7);
 
     b.inorder(b.getRoot());
     std::cout << std::endl;
 
-    std::cout << b.upper_bound(e).a << std::endl;
-
-    std::cout << "--------------------------------" << std::endl;
-    b.printBT(b.getRoot());
+    std::cout << b.upper_bound(str) << std::endl;
 
     return 0;
 }
