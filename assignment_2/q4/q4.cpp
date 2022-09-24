@@ -336,7 +336,7 @@ class LLSparseMatrix {
             return;
         else {
             LLSparseMatrix<T> result(rows, cols);
-            LLData<T> *temp1 = head, *temp2 = head, *start = NULL;
+            LLData<T> *temp1 = head, *temp2 = m2.head, *start = NULL;
 
             while (temp1 != NULL and temp2 != NULL) {
                 if (temp1->row == temp2->row) {
@@ -516,11 +516,11 @@ int main() {
         if (operation == 1) {
             int n1, m1;
             std::cin >> n1 >> m1;
-            LLSparseMatrix<int> sm1(n1, m1);
+            LLSparseMatrix<float> sm1(n1, m1);
 
             for (int i = 0; i < n1; i++) {
                 for (int j = 0; j < m1; j++) {
-                    int k;
+                    float k;
                     std::cin >> k;
                     if (k != 0) sm1.llInsertElements(i, j, k);
                 }
@@ -528,10 +528,10 @@ int main() {
 
             int n2, m2;
             std::cin >> n2 >> m2;
-            LLSparseMatrix<int> sm2(n2, m2);
+            LLSparseMatrix<float> sm2(n2, m2);
             for (int i = 0; i < n2; i++) {
                 for (int j = 0; j < m2; j++) {
-                    int k;
+                    float k;
                     std::cin >> k;
                     if (k != 0) sm2.llInsertElements(i, j, k);
                 }
@@ -540,11 +540,11 @@ int main() {
         } else if (operation == 2) {
             int n1, m1;
             std::cin >> n1 >> m1;
-            LLSparseMatrix<int> sm1(n1, m1);
+            LLSparseMatrix<float> sm1(n1, m1);
 
             for (int i = 0; i < n1; i++) {
                 for (int j = 0; j < m1; j++) {
-                    int k;
+                    float k;
                     std::cin >> k;
                     if (k != 0) sm1.llInsertElements(i, j, k);
                 }
@@ -554,11 +554,11 @@ int main() {
         } else if (operation == 3) {
             int n1, m1;
             std::cin >> n1 >> m1;
-            LLSparseMatrix<int> sm1(n1, m1);
+            LLSparseMatrix<float> sm1(n1, m1);
 
             for (int i = 0; i < n1; i++) {
                 for (int j = 0; j < m1; j++) {
-                    int k;
+                    float k;
                     std::cin >> k;
                     if (k != 0) sm1.llInsertElements(i, j, k);
                 }
@@ -566,10 +566,10 @@ int main() {
 
             int n2, m2;
             std::cin >> n2 >> m2;
-            LLSparseMatrix<int> sm2(n2, m2);
+            LLSparseMatrix<float> sm2(n2, m2);
             for (int i = 0; i < n2; i++) {
                 for (int j = 0; j < m2; j++) {
-                    int k;
+                    float k;
                     std::cin >> k;
                     if (k != 0) sm2.llInsertElements(i, j, k);
                 }
@@ -581,7 +581,7 @@ int main() {
 }
 
 /*
-
+2 3
 4 4
 0 10.2 4.1 2
 0 0 0 0

@@ -317,21 +317,51 @@ class AVLTree {
         return T();
     }
 
+    // Utility to find nodes less than lower range
+    int getLesserThanLeft(Node *node, T eLeft) {
+        if (!node) return 0;
+
+        if (cmprtr(node->value, eLeft) == 2)
+            return node->numleft;
+
+        else {
+            if (cmprtr(node->value, eLeft) == 0)
+                return getLesserThanLeft(node->left, eLeft);
+            else
+                return node->numleft + node->count +
+                       getLesserThanLeft(node->right, eLeft);
+        }
+    }
+
+    // Utility to find nodes greater than upper range
+    int getGreaterThanRight(Node *node, T eRight) {
+        if (!node) return 0;
+
+        if (cmprtr(node->value, eRight) == 2)
+            return node->numright;
+
+        else {
+            if (cmprtr(node->value, eRight) == 1)
+                return getGreaterThanRight(node->right, eRight);
+            else
+                return node->numright + 1 +
+                       getGreaterThanRight(node->left, eRight);
+        }
+    }
+
     // Utility to find number of nodes in a range
     int countRangeHelper(Node *node, T eLeft, T eRight) {
-        if (node == NULL) return 0;
+        if (node == NULL or eLeft > eRight) return 0;
 
-        if ((cmprtr(node->value, eLeft) == 0 or
-             cmprtr(node->value, eLeft) == 2) and
-            (cmprtr(node->value, eRight) == 1 or
-             cmprtr(node->value, eRight) == 2))
-            return 1 + countRangeHelper(node->left, eLeft, eRight) +
-                   countRangeHelper(node->right, eLeft, eRight);
-        else if ((cmprtr(node->value, eLeft) == 0 or
-                  cmprtr(node->value, eLeft) == 2))
-            return countRangeHelper(node->left, eLeft, eRight);
-        else
-            return countRangeHelper(node->right, eLeft, eRight);
+        // if we have to find root only
+        if (cmprtr(node->value, eLeft) == 2 and
+            cmprtr(node->value, eRight) == 2)
+            return node->count;
+        else {
+            return node->numleft + node->numright + 1 -
+                   getLesserThanLeft(node->left, eLeft) -
+                   getGreaterThanRight(node->right, eRight);
+        }
     }
 
     // Utility to delete the whole tree in order keep memory clean
@@ -418,8 +448,8 @@ class AVLTree {
     T closest_element(int key) {
         Node *curr = root;
         Node *prev = NULL;
-        T diff = INT32_MAX;
-        T ans = 0;
+        T diff = curr ? abs(curr->value - key) : T();
+        T ans = T();
 
         while (curr != NULL) {
             if (curr->value > key) {
@@ -429,7 +459,7 @@ class AVLTree {
                 }
                 curr = curr->left;
             } else if (curr->value < key) {
-                if (abs(curr->value - key) < diff) {
+                if (diff and abs(curr->value - key) < (diff)) {
                     diff = abs(curr->value - key);
                     ans = curr->value;
                 }
@@ -445,6 +475,11 @@ class AVLTree {
     /// @param k
     /// @return Kth Largest Element in the AVL Tree
     T Kth_largest(int k) { return kthLargestHelper(root, k); }
+
+    /// @brief Function to number of elements in the given range
+    /// @param eLeft
+    /// @param eRight
+    /// @return Integer count of number of elements in the given range
     int count_range(T eLeft, T eRight) {
         return countRangeHelper(root, eLeft, eRight);
     }
@@ -475,7 +510,7 @@ class AVLTree {
 // ----------------- Driver Code ------------------------
 
 int main() {
-    AVLTree<std::string> b;
+    AVLTree<char> b;
 
     std::string str = "hello";
     std::string str1 = "bye";
@@ -501,30 +536,46 @@ int main() {
     // MyClass g(8, 2);
     // MyClass h(9, 2);
     // MyClass z(10, 2);
-    b.insert(str);
-    b.insert(str1);
-    b.insert(str2);
-    b.insert(str3);
-    b.insert(str4);
-    b.insert(str4);
-    b.insert(str5);
-    b.insert(str6);
-    b.insert(str7);
-    b.insert(str7);
-    b.insert(str8);
-    b.insert(str9);
-    b.insert(str10);
-    b.insert(str11);
-    b.insert(str12);
-    b.insert(str13);
-    b.insert(str13);
-    b.insert(str10);
-    b.insert(str7);
+
+    char a = 'a';
+    char f = 'q';
+    char c = 'w';
+    char d = 'e';
+    char e = 'r';
+    char g = 't';
+    char h = 'y';
+    char i = 'u';
+    char j = 'i';
+    char k = 'o';
+    char l = 'p';
+    b.insert(a);
+    b.insert(k);
+    b.insert(c);
+    b.insert(d);
+    b.insert(e);
+    b.insert(f);
+    b.insert(g);
+    b.insert(h);
+    b.insert(i);
+    b.insert(j);
+    b.insert(k);
+    b.insert(k);
+    b.insert(k);
+    b.insert(k);
+    b.insert(k);
+    b.insert(k);
+    b.insert(k);
+    b.insert(k);
+    b.insert(k);
+    b.insert(l);
 
     b.inorder(b.getRoot());
     std::cout << std::endl;
 
-    std::cout << b.upper_bound(str) << std::endl;
+    std::cout << b.upper_bound('y') << std::endl;
+    std::cout << b.lower_bound('y') << std::endl;
+    std::cout << b.closest_element('z') << std::endl;
+    std::cout << b.count_range('a', 'z') << std::endl;
 
     return 0;
 }
