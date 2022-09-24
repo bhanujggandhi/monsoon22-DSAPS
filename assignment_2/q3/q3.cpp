@@ -351,7 +351,7 @@ class AVLTree {
 
     // Utility to find number of nodes in a range
     int countRangeHelper(Node *node, T eLeft, T eRight) {
-        if (node == NULL or eLeft > eRight) return 0;
+        if (node == NULL or cmprtr(eLeft, eRight) == 0) return 0;
 
         // if we have to find root only
         if (cmprtr(node->value, eLeft) == 2 and
@@ -445,20 +445,20 @@ class AVLTree {
     /// @brief Find Closest Element Utility
     /// @param key
     /// @return Closest Element to given key
-    T closest_element(int key) {
+    T closest_element(T key) {
         Node *curr = root;
         Node *prev = NULL;
         T diff = curr ? abs(curr->value - key) : T();
         T ans = T();
 
         while (curr != NULL) {
-            if (curr->value > key) {
+            if (cmprtr(curr->value, key) == 0) {
                 if (abs(curr->value - key) < diff) {
                     diff = abs(curr->value - key);
                     ans = curr->value;
                 }
                 curr = curr->left;
-            } else if (curr->value < key) {
+            } else if (cmprtr(curr->value, key) == 1) {
                 if (diff and abs(curr->value - key) < (diff)) {
                     diff = abs(curr->value - key);
                     ans = curr->value;
@@ -509,73 +509,144 @@ class AVLTree {
 
 // ----------------- Driver Code ------------------------
 
+// int main() {
+//     AVLTree<MyClass> b;
+
+//     MyClass a(1, 2);
+//     MyClass k(3, 2);
+//     MyClass c(4, 2);
+//     MyClass d(5, 2);
+//     MyClass e(6, 2);
+//     MyClass f(7, 2);
+//     MyClass g(8, 2);
+//     MyClass h(9, 2);
+//     MyClass z(10, 2);
+//     MyClass i(11, 2);
+//     MyClass l(13, 2);
+//     MyClass j(14, 2);
+
+//     b.insert(a);
+//     b.insert(k);
+//     b.insert(c);
+//     b.insert(d);
+//     b.insert(e);
+//     b.insert(f);
+//     b.insert(g);
+//     b.insert(g);
+//     b.insert(h);
+//     b.insert(i);
+//     b.insert(j);
+//     b.insert(k);
+//     b.insert(k);
+//     b.insert(k);
+//     b.insert(k);
+//     b.insert(k);
+//     b.insert(k);
+//     b.insert(k);
+//     b.insert(k);
+//     b.insert(k);
+//     b.insert(l);
+
+//     b.inorder(b.getRoot());
+//     std::cout << std::endl;
+
+//     std::cout << b.upper_bound(z).a << std::endl;
+//     std::cout << b.lower_bound(g).a << std::endl;
+//     std::cout << b.count_range(a, e) << std::endl;
+
+//     return 0;
+// }
+
+// int main() {
+//     AVLTree<char> b;
+
+//     char a = 'a';
+//     char f = 'q';
+//     char c = 'w';
+//     char d = 'e';
+//     char e = 'r';
+//     char g = 't';
+//     char h = 'y';
+//     char i = 'u';
+//     char j = 'i';
+//     char k = 'o';
+//     char l = 'p';
+//     b.insert(a);
+//     b.insert(k);
+//     b.insert(c);
+//     b.insert(d);
+//     b.insert(e);
+//     b.insert(f);
+//     b.insert(g);
+//     b.insert(g);
+//     b.insert(h);
+//     b.insert(i);
+//     b.insert(j);
+//     b.insert(k);
+//     b.insert(k);
+//     b.insert(k);
+//     b.insert(k);
+//     b.insert(k);
+//     b.insert(k);
+//     b.insert(k);
+//     b.insert(k);
+//     b.insert(k);
+//     b.insert(l);
+
+//     b.inorder(b.getRoot());
+//     std::cout << std::endl;
+
+//     std::cout << b.upper_bound(e) << std::endl;
+//     std::cout << b.lower_bound(e) << std::endl;
+//     std::cout << b.closest_element('$') << std::endl;
+//     std::cout << b.count_range(a, e) << std::endl;
+
+//     return 0;
+// }
+
 int main() {
-    AVLTree<char> b;
+    AVLTree<std::string> b;
 
     std::string str = "hello";
     std::string str1 = "bye";
-    std::string str2 = "bhanu";
-    std::string str3 = "king";
+    std::string str2 = "bhanuj";
+    std::string str3 = "ish";
     std::string str4 = "gandhi";
     std::string str5 = "yellow";
     std::string str6 = "white";
-    std::string str7 = "white";
-    std::string str8 = "white";
-    std::string str9 = "white";
-    std::string str10 = "white";
-    std::string str11 = "white";
-    std::string str12 = "white";
-    std::string str13 = "white";
+    std::string str7 = "pink";
+    std::string str8 = "lemon";
+    std::string str9 = "green";
+    std::string str10 = "lime";
+    std::string str11 = "letter";
+    std::string str12 = "lotus";
+    std::string str13 = "limit";
 
-    // MyClass a(1, 2);
-    // MyClass k(3, 2);
-    // MyClass c(4, 2);
-    // MyClass d(5, 2);
-    // MyClass e(6, 2);
-    // MyClass f(7, 2);
-    // MyClass g(8, 2);
-    // MyClass h(9, 2);
-    // MyClass z(10, 2);
-
-    char a = 'a';
-    char f = 'q';
-    char c = 'w';
-    char d = 'e';
-    char e = 'r';
-    char g = 't';
-    char h = 'y';
-    char i = 'u';
-    char j = 'i';
-    char k = 'o';
-    char l = 'p';
-    b.insert(a);
-    b.insert(k);
-    b.insert(c);
-    b.insert(d);
-    b.insert(e);
-    b.insert(f);
-    b.insert(g);
-    b.insert(h);
-    b.insert(i);
-    b.insert(j);
-    b.insert(k);
-    b.insert(k);
-    b.insert(k);
-    b.insert(k);
-    b.insert(k);
-    b.insert(k);
-    b.insert(k);
-    b.insert(k);
-    b.insert(k);
-    b.insert(l);
+    b.insert(str);
+    b.insert(str1);
+    b.insert(str2);
+    b.insert(str3);
+    b.insert(str4);
+    b.insert(str5);
+    b.insert(str6);
+    b.insert(str7);
+    b.insert(str8);
+    b.insert(str9);
+    b.insert(str10);
+    b.insert(str11);
+    b.insert(str12);
+    b.insert(str13);
+    b.insert(str12);
+    b.insert(str5);
+    b.insert(str8);
+    b.insert(str2);
 
     b.inorder(b.getRoot());
     std::cout << std::endl;
 
-    std::cout << b.upper_bound('y') << std::endl;
-    std::cout << b.lower_bound('y') << std::endl;
-    std::cout << b.closest_element('z') << std::endl;
-    std::cout << b.count_range('a', 'z') << std::endl;
+    std::cout << b.upper_bound(str) << std::endl;
+    std::cout << b.lower_bound(str) << std::endl;
+    std::cout << b.count_range(str2, str4) << std::endl;
 
     return 0;
 }
