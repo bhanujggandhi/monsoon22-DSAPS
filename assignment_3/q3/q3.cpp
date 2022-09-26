@@ -88,7 +88,7 @@ int main() {
 
 /*
 * Remove Duplicated
-    -> Delete Node when traversed
+-> Delete Node when traversed
 */
 
 /*
