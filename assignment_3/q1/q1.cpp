@@ -10,19 +10,15 @@ struct Node {
     int ind;
 };
 
-void buildTrie(Node* root, vector<string>& dict) {
-    int n = dict.size();
-    for (int i = 0; i < n; i++) {
-        Node* curr = root;
-        for (int j = 0; j < dict[i].length(); j++) {
-            if (curr->dictionary[dict[i][j] - 'a'] == NULL) {
-                curr->dictionary[dict[i][j] - 'a'] = new Node();
-            }
-            curr = curr->dictionary[dict[i][j] - 'a'];
+void buildTrie(Node* root, string& word) {
+    Node* curr = root;
+    for (int j = 0; j < word.length(); j++) {
+        if (curr->dictionary[word[j] - 'a'] == NULL) {
+            curr->dictionary[word[j] - 'a'] = new Node();
         }
-        curr->ind = i;
-        curr->isWord = true;
+        curr = curr->dictionary[word[j] - 'a'];
     }
+    curr->isWord = true;
 }
 
 bool spell_check(Node* root, string& word) {
@@ -79,12 +75,12 @@ int main() {
     int n, q;
     cin >> n >> q;
 
-    vector<string> dict(n);
-    for (int i = 0; i < n; i++) {
-        cin >> dict[i];
-    }
     Node* root = new Node();
-    buildTrie(root, dict);
+    for (int i = 0; i < n; i++) {
+        string word;
+        cin >> word;
+        buildTrie(root, word);
+    }
 
     string str = "fi";
 
