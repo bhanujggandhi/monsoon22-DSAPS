@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 
 #define CHUNK_SIZE 1024000
@@ -36,7 +37,7 @@ size_t filesize(char* inputfile) {
 
 */
 
-void divide(char* inputfile) {
+void divide(string inputfilename) {
     /*
         1. open input file
         2. Read first k bytes
@@ -47,31 +48,33 @@ void divide(char* inputfile) {
             read next k block
     */
 
-    char buff[BUFSIZ];
-    long accumulated, i;
-    size_t size;
-    size_t read;
-    size_t written;
-    FILE* inp = openfile(inputfile, "r");
-    size_t segments = (filesize(inputfile) / CHUNK_SIZE) + 1;
-    FILE* chunkf;
-    char chunkfile[256];
-    if (inp != NULL) {
-        for (i = 0; i < segments; i++) {
-            accumulated = 0;
-            sprintf(chunkfile, "%s%ld.txt", "temp", i);
-            chunkf = fopen(chunkfile, "w");
-            if (chunkf) {
-                while (fgets(buff, BUFSIZ, inp) && accumulated <= CHUNK_SIZE) {
-                    accumulated += strlen(buff);
-                    // sort(buff, buff + BUFSIZ);
-                    fputs(buff, chunkf);
-                }
-                fclose(chunkf);
+    std::fstream inputfile(inputfilename, std::ios_base::in);
+
+    for (long long ind = 0; inputfile.peek() != EOF; ind++) {
+
+        vector<long long> buff(CHUNK_SIZE);
+
+        long long a;
+
+        for (long long i = 0; i < CHUNK_SIZE; i++) {
+            if (inputfile >> a) {
+                buff[i] = a;
+            } else {
+                break;
             }
         }
-        fclose(inp);
+
+        sort(buff.begin(), buff.end());
+        string chunkfilename = "temp" + to_string(ind) + ".txt";
+        ofstream out_file{chunkfilename};
+
+        for (auto x : buff) {
+            out_file << x << " ";
+        }
+
+        out_file.close();
     }
+    inputfile.close();
 }
 
 int main(int argc, char* argv[]) {
@@ -79,8 +82,8 @@ int main(int argc, char* argv[]) {
     //     cout << "Please enter two arguments only" << endl;
     //     return 1;
     // }
-
-    divide("input.txt");
+    string inp = "input.txt";
+    divide(inp);
 
     return 0;
 }
