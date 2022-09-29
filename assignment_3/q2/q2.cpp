@@ -8,26 +8,6 @@
 
 using namespace std;
 
-FILE* openfile(char* filename, string mode) {
-    FILE* curr = fopen(filename, mode.c_str());
-    if (curr == NULL) {
-        cout << "Could not open the file" << endl;
-        return NULL;
-    }
-
-    return curr;
-}
-
-size_t filesize(char* inputfile) {
-    FILE* inp = openfile(inputfile, "rb");
-    if (inp) {
-        fseek(inp, 0, SEEK_END);
-        size_t size = ftell(inp) + 1;
-        return size;
-    }
-    return -1;
-}
-
 /*
     -> the primary goal of an external sorting algorithm is to minimize the
    number of times information must be read from or written to disk
