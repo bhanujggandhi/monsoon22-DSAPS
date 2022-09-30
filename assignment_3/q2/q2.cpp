@@ -6,9 +6,7 @@
 #include <fstream>
 #include <iostream>
 
-// #define CHUNK_SIZE 1024000
-#define CHUNK_SIZE 102400
-// #define CHUNK_SIZE 10
+#define CHUNK_SIZE 10240000
 
 using namespace std;
 
@@ -21,44 +19,27 @@ using namespace std;
 
 */
 
-/*
-0-based heap
-if i->parent then 2i+1, 2i+2 are children
-if i is child then (i-1)/2 is parent
-*/
 struct Pair {
     long long value;
-    ifstream fs;
     long long ind;
 };
 
 class MinHeap {
    private:
-    Pair *arr;
-    long long size;
-    long long max_size;
+    vector<Pair> arr;
 
     void swap(Pair *a, Pair *b) {
-        Pair c = move(*a);
-        *a = move(*b);
-        *b = move(c);
+        Pair c = (*a);
+        *a = (*b);
+        *b = (c);
     }
 
    public:
-    MinHeap(int max_ele) {
-        max_size = max_ele;
-        size = 0;
-        arr = new Pair[max_size];
-    }
+    void insert(long long key, long long _ind) {
 
-    void insert(long long key, ifstream fs, int _ind) {
-        if (size == max_size) return;
+        arr.push_back({key, _ind});
 
-        arr[size].value = key;
-        arr[size].fs = move(fs);
-        arr[size].ind = _ind;
-        int ind = size;
-        size++;
+        long long ind = arr.size() - 1;
 
         while (ind != 0) {
             if (arr[ind].value < arr[(ind - 1) / 2].value) {
@@ -71,60 +52,51 @@ class MinHeap {
     }
 
     Pair remove() {
-        if (size <= 0) return {INT32_MIN};
+        if (arr.empty()) return {INT64_MIN, INT64_MIN};
 
-        if (size == 1) {
-            size = 0;
-            return {arr[size].value, move(arr[size].fs), arr[size].ind};
+        if (arr.size() == 1) {
+            Pair ans = {arr[0].value, arr[0].ind};
+            arr.pop_back();
+            return ans;
         }
 
         long long maxval = arr[0].value;
-        ifstream maxfs = move(arr[0].fs);
         long long maxind = arr[0].ind;
-        // replace root by last element
-        swap(&arr[0], &arr[size - 1]);
-        size--;
+        swap(&arr[0], &arr[arr.size() - 1]);
+        arr.pop_back();
 
-        int ind = 0;
+        long long ind = 0;
 
-        while ((2 * ind + 1) < size and (2 * ind + 2) < size) {
-            int leftchild = 2 * ind + 1;
-            int rightchild = 2 * ind + 2;
+        while ((2 * ind + 1) < arr.size() and (2 * ind + 2) < arr.size()) {
+            long long leftchild = 2 * ind + 1;
+            long long rightchild = 2 * ind + 2;
 
-            int largechild;
+            long long smallchild;
 
             if (arr[leftchild].value < arr[ind].value and
                 arr[leftchild].value <= arr[rightchild].value) {
-                largechild = leftchild;
+                smallchild = leftchild;
             } else if (arr[rightchild].value < arr[ind].value and
-                       arr[rightchild].value < arr[leftchild].value) {
-                largechild = rightchild;
+                       arr[rightchild].value <= arr[leftchild].value) {
+                smallchild = rightchild;
             } else {
                 break;
             }
 
-            swap(&arr[ind], &arr[largechild]);
+            swap(&arr[ind], &arr[smallchild]);
 
-            ind = largechild;
+            ind = smallchild;
         }
 
-        if (size == 2) {
-            if (arr[ind].value < arr[ind + 1].value)
+        if (arr.size() == 2) {
+            if (arr[ind].value > arr[ind + 1].value)
                 swap(&arr[ind], &arr[ind + 1]);
         }
 
-        return {maxval, move(maxfs), maxind};
+        return {maxval, maxind};
     }
 
-    Pair top() {
-        if (size == 0) {
-            std::cout << "No top" << std::endl;
-            return {INT32_MIN};
-        }
-        return move(arr[0]);
-    }
-
-    bool empty() { return size == 0; }
+    bool empty() { return arr.empty(); }
 };
 
 long long dividefiles(string inputfilename) {
@@ -172,41 +144,39 @@ long long dividefiles(string inputfilename) {
     return ind;
 }
 
-void mergefiles(long long totalfiles) {
-    vector<ifstream> filesarr(totalfiles);
+// Combine
+void mergefiles(long long totalfiles, string outfilename) {
+    vector<ifstream> filesarr;
     vector<bool> finish(totalfiles, false);
 
     for (long long i = 0; i < totalfiles; i++) {
         string chunkfilename = "temp" + to_string(i) + ".txt";
-        ifstream file(chunkfilename, std::ios_base::in);
-        filesarr[i] = move(file);
+        filesarr.push_back(ifstream(chunkfilename, std::ios_base::in));
     }
 
-    MinHeap minh(totalfiles);
+    MinHeap minh;
 
     for (long long i = 0; i < totalfiles; i++) {
-        ifstream fs = move(filesarr[i]);
         long long curr;
-        if (!finish[i] and fs >> curr) {
-            minh.insert(curr, move(fs), i);
+        if (!finish[i] and filesarr[i] >> curr) {
+            minh.insert(curr, i);
         } else {
-            fs.close();
+            filesarr[i].close();
             finish[i] = true;
         }
     }
 
-    ofstream outfile{"output.txt"};
+    ofstream outfile{outfilename};
 
     while (!minh.empty()) {
         Pair top = minh.remove();
         outfile << top.value << "\n";
-        ifstream fs = move(top.fs);
         long long i = top.ind;
         long long curr;
-        if (!finish[i] and fs >> curr) {
-            minh.insert(curr, move(fs), i);
+        if (!finish[i] and filesarr[i] >> curr) {
+            minh.insert(curr, i);
         } else {
-            fs.close();
+            filesarr[i].close();
             finish[i] = true;
         }
     }
@@ -228,13 +198,14 @@ int main(int argc, char *argv[]) {
 
     auto start = clock();
 
-    string inp = "input.txt";
-    long long totalfiles = dividefiles(inp);
+    string inputfilename(argv[1]);
+    string outputfilename(argv[2]);
+    long long totalfiles = dividefiles(inputfilename);
 
-    cout << "Total Number of Integers in a File" << CHUNK_SIZE << endl;
+    cout << "Total Number of Integers in a File " << CHUNK_SIZE << endl;
 
     cout << "Total Number of Files: " << totalfiles << endl;
-    mergefiles(totalfiles);
+    mergefiles(totalfiles, outputfilename);
 
     auto end = clock();
 

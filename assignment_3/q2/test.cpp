@@ -15,6 +15,7 @@ int main() {
         count++;
         if (prev > a) {
             cout << "Not sorted" << endl;
+            break;
         } else {
             prev = a;
         }
