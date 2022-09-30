@@ -49,6 +49,7 @@ void findwords(char** matrix, Node* root, int i, int j, int r, int c,
 
     if (curr->isWord == true) {
         cout << words[curr->ind] << endl;
+        curr->isWord = false;
     }
 
     visited[i][j] = true;
@@ -130,5 +131,14 @@ eat
 rain
 hklf
 hf
+
+
+4 4
+c a x i
+y r t t
+d r a c
+s p e y
+1
+car
 
 */
