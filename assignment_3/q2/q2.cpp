@@ -4,7 +4,8 @@
 #include <fstream>
 #include <iostream>
 
-#define CHUNK_SIZE 1024000
+// #define CHUNK_SIZE 1024000
+#define CHUNK_SIZE 10
 
 using namespace std;
 
@@ -29,7 +30,7 @@ struct Pair {
     ifstream ind;
 };
 
-class MaxHeap {
+class MinHeap {
    private:
     Pair *arr;
     int size;
@@ -42,7 +43,7 @@ class MaxHeap {
     }
 
    public:
-    MaxHeap(int max_ele) {
+    MinHeap(int max_ele) {
         max_size = max_ele;
         size = 0;
         arr = new Pair[max_size];
@@ -167,11 +168,25 @@ long long divide(string inputfilename) {
 
 void mergefiles(long long totalfiles) {
     vector<ifstream> filesarr(totalfiles);
+    vector<bool> finish(totalfiles, false);
 
     for (long long i = 0; i < totalfiles; i++) {
         string chunkfilename = "temp" + to_string(i) + ".txt";
         ifstream file(chunkfilename, std::ios_base::in);
         filesarr[i] = move(file);
+    }
+
+    MinHeap minh(totalfiles);
+
+    for (long long i = 0; i < totalfiles; i++) {
+        ifstream fs = move(filesarr[i]);
+        long long curr;
+        if (!finish[i] and fs >> curr) {
+            minh.insert(curr, move(fs));
+        } else {
+            fs.close();
+            finish[i] = true;
+        }
     }
 }
 

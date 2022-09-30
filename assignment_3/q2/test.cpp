@@ -7,7 +7,7 @@ struct Pair {
     ifstream ind;
 };
 
-class MaxHeap {
+class MinHeap {
    private:
     Pair *arr;
     int size;
@@ -20,7 +20,7 @@ class MaxHeap {
     }
 
    public:
-    MaxHeap(int max_ele) {
+    MinHeap(int max_ele) {
         max_size = max_ele;
         size = 0;
         arr = new Pair[max_size];
@@ -99,7 +99,7 @@ class MaxHeap {
 };
 
 int main() {
-    MaxHeap hp(10);
+    MinHeap hp(10);
     ifstream fs("input.txt");
     hp.insert(32, move(fs));
     hp.insert(92, move(fs));
