@@ -17,7 +17,7 @@ using namespace std;
 
 */
 
-void divide(string inputfilename) {
+long long divide(string inputfilename) {
     /*
         1. open input file
         2. Read first k bytes
@@ -28,9 +28,11 @@ void divide(string inputfilename) {
             read next k block
     */
 
-    std::fstream inputfile(inputfilename, std::ios_base::in);
+    long long ind = 0;
 
-    for (long long ind = 0; inputfile.peek() != EOF; ind++) {
+    fstream inputfile(inputfilename, std::ios_base::in);
+
+    for (ind = 0; inputfile.peek() != EOF; ind++) {
 
         vector<long long> buff(CHUNK_SIZE);
 
@@ -44,6 +46,7 @@ void divide(string inputfilename) {
             }
         }
 
+        // Conquer
         sort(buff.begin(), buff.end());
         string chunkfilename = "temp" + to_string(ind) + ".txt";
         ofstream out_file{chunkfilename};
@@ -55,7 +58,12 @@ void divide(string inputfilename) {
         out_file.close();
     }
     inputfile.close();
+
+    return ind;
 }
+
+// void mergefiles() { string chunkfilename = "temp" + to_string(ind) + ".txt";
+// }
 
 int main(int argc, char* argv[]) {
     // if (argc != 3) {
@@ -63,7 +71,9 @@ int main(int argc, char* argv[]) {
     //     return 1;
     // }
     string inp = "input.txt";
-    divide(inp);
+    long long totalfiles = divide(inp);
+
+    cout << totalfiles << endl;
 
     return 0;
 }
