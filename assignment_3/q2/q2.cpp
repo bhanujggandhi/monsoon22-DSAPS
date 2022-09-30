@@ -6,7 +6,7 @@
 #include <fstream>
 #include <iostream>
 
-#define CHUNK_SIZE 10240000
+#define CHUNK_SIZE 1e+8
 
 using namespace std;
 
