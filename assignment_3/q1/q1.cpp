@@ -4,13 +4,17 @@
 
 using namespace std;
 
+/// @brief Node structure for Trie
 struct Node {
     Node* dictionary[26];
     bool isWord;
     int ind;
 };
 
-void buildTrie(Node* root, string& word) {
+/// @brief Function to add word to the trie
+/// @param root
+/// @param word
+void addWord(Node* root, string& word) {
     Node* curr = root;
     for (int j = 0; j < word.length(); j++) {
         if (curr->dictionary[word[j] - 'a'] == NULL) {
@@ -21,7 +25,12 @@ void buildTrie(Node* root, string& word) {
     curr->isWord = true;
 }
 
-bool spell_check(Node* root, string& word) {
+/// @brief Function that checks if the word is spelled correct by checking if
+/// the entered word is present in the dictionary
+/// @param root
+/// @param word
+/// @return Boolean True if present, otherwise false
+bool spellCheck(Node* root, string& word) {
     Node* curr = root;
     for (int i = 0; i < word.size(); i++) {
         if (curr->dictionary[word[i] - 'a'] == NULL)
@@ -34,6 +43,11 @@ bool spell_check(Node* root, string& word) {
     return false;
 }
 
+/// @brief Utility function to get all the words present after a certain Trie
+/// Node
+/// @param root
+/// @param suggestions
+/// @param currword
 void getWords(Node* root, vector<string>& suggestions, string currword) {
     if (root->isWord) suggestions.push_back(currword);
 
@@ -46,20 +60,25 @@ void getWords(Node* root, vector<string>& suggestions, string currword) {
     }
 }
 
+/// @brief Function to give autocomplete suggestions when a part of the word is
+/// entered
+/// @param root
+/// @param word
+/// @return Array of the suggestions of autocomplete of the word
 vector<string> autocomplete(Node* root, string& word) {
     vector<string> suggestions;
-    Node* curr = root;
+    Node* currentNode = root;
     string currword;
     for (int i = 0; i < word.size(); i++) {
-        if (curr->dictionary[word[i] - 'a'] == NULL)
+        if (currentNode->dictionary[word[i] - 'a'] == NULL)
             return suggestions;
         else {
             currword.push_back(word[i]);
-            curr = curr->dictionary[word[i] - 'a'];
+            currentNode = currentNode->dictionary[word[i] - 'a'];
         }
     }
 
-    Node* temp = curr;
+    Node* temp = currentNode;
     for (int i = 0; i < 26; i++) {
         if (temp->dictionary[i] == NULL) continue;
 
@@ -71,6 +90,14 @@ vector<string> autocomplete(Node* root, string& word) {
     return suggestions;
 }
 
+/// @brief Utility find auto corrected word by calculating Levenshein Distance
+/// upto 3
+/// @param root
+/// @param c
+/// @param word
+/// @param prevRow
+/// @param ans
+/// @param currword
 void autocorrectHelper(Node* root, char c, string& word, vector<int>& prevRow,
                        vector<string>& ans, string& currword) {
     vector<int> t;
@@ -108,6 +135,11 @@ void autocorrectHelper(Node* root, char c, string& word, vector<int>& prevRow,
     }
 }
 
+/// @brief Function that gets all the suggestions for autocorrect the entered
+/// word
+/// @param root
+/// @param word
+/// @return Array of suggestions for Autocorrect Words
 vector<string> autocorrect(Node* root, string& word) {
     vector<int> t(word.size() + 1);
 
@@ -132,6 +164,8 @@ vector<string> autocorrect(Node* root, string& word) {
     return ans;
 }
 
+/// @brief Driver Code
+/// @return Returns Status of the Program
 int main() {
     int n, q;
     cin >> n >> q;
@@ -140,7 +174,7 @@ int main() {
     for (int i = 0; i < n; i++) {
         string word;
         cin >> word;
-        buildTrie(root, word);
+        addWord(root, word);
     }
 
     while (q--) {
@@ -150,7 +184,7 @@ int main() {
         cin >> word;
 
         if (a == 1) {
-            cout << spell_check(root, word) << endl;
+            cout << spellCheck(root, word) << endl;
         } else if (a == 2) {
             vector<string> suggestions;
             suggestions = autocomplete(root, word);
