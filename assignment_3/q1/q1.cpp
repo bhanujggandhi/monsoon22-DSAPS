@@ -90,7 +90,7 @@ vector<string> autocomplete(Node* root, string& word) {
     return suggestions;
 }
 
-/// @brief Utility find auto corrected word by calculating Levenshein Distance
+/// @brief Utility find auto corrected word by calculating levenshtein distance
 /// upto 3
 /// @param root
 /// @param c
