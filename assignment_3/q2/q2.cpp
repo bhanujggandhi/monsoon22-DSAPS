@@ -1,10 +1,11 @@
 #include <time.h>
 #include <algorithm>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 
 // Size of the smaller file to be created out of a bigger file
-#define CHUNK_SIZE 1e+8
+#define CHUNK_SIZE 100000000
 
 using namespace std;
 
@@ -222,16 +223,22 @@ int main(int argc, char *argv[]) {
     string outputfilename(argv[2]);
     long long totalfiles = dividefiles(inputfilename);
 
-    cout << "Total Number of Integers in a File " << CHUNK_SIZE << endl;
+    cout << "\033[1;36m"
+         << "Number of integers in a temporary file: "
+         << "\033[m" << CHUNK_SIZE << endl;
 
-    cout << "Total Number of Files: " << totalfiles << endl;
+    cout << "\033[1;31m"
+         << "Number of temporary files created: "
+         << "\033[m" << totalfiles << endl;
     mergefiles(totalfiles, outputfilename);
 
     auto end = clock();
 
-    cleanfiles(totalfiles);
     double totaltime = (double)(end - start) / CLOCKS_PER_SEC;
-    cout << totaltime << "s" << endl;
+    cout << "\033[1;32m"
+         << "Total time: "
+         << "\033[m" << fixed << setprecision(2) << totaltime << "s" << endl;
+    cleanfiles(totalfiles);
 
     return 0;
 }
