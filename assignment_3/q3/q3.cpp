@@ -2,12 +2,17 @@
 
 using namespace std;
 
+/// @brief Structure Definition of the Node of the Trie
 struct Node {
     Node* dictionary[26];
     bool isWord;
     int ind;
 };
 
+/// @brief Function to build a trie for the array of words
+/// @param root
+/// @param words
+/// @param n
 void buildTrie(Node* root, string words[], int n) {
     for (int i = 0; i < n; i++) {
         Node* curr = root;
@@ -22,6 +27,16 @@ void buildTrie(Node* root, string words[], int n) {
     }
 }
 
+/// @brief Function to find words by using Backtracking Technique
+/// @param matrix
+/// @param root
+/// @param i
+/// @param j
+/// @param r
+/// @param c
+/// @param words
+/// @param X
+/// @param visited
 void findwords(char** matrix, Node* root, int i, int j, int r, int c,
                string words[], int X, bool** visited) {
 
@@ -44,6 +59,14 @@ void findwords(char** matrix, Node* root, int i, int j, int r, int c,
     visited[i][j] = false;
 }
 
+/// @brief Function to solve the formal problem of finding words in the grid
+/// puzzle
+/// @param matrix
+/// @param root
+/// @param r
+/// @param c
+/// @param X
+/// @param words
 void solve(char** matrix, Node* root, int r, int c, int X, string words[]) {
     bool** visited;
     visited = new bool*[r];
@@ -61,6 +84,8 @@ void solve(char** matrix, Node* root, int r, int c, int X, string words[]) {
     }
 }
 
+/// @brief Driver Code
+/// @return Status of the Program
 int main() {
     int r, c;
     cin >> r >> c;
