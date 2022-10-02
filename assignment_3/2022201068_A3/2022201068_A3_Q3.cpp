@@ -7,6 +7,7 @@ struct Node {
     Node* dictionary[26];
     bool isWord;
     int ind;
+    bool found;
 };
 
 /// @brief Function to build a trie for the array of words
@@ -38,7 +39,7 @@ void buildTrie(Node* root, string words[], int n) {
 /// @param X
 /// @param visited
 void findwords(char** matrix, Node* root, int i, int j, int r, int c,
-               string words[], int X, bool** visited) {
+               string words[], int X, bool** visited, int& count) {
 
     if (i < 0 or j < 0 or i >= r or j >= c or
         root->dictionary[matrix[i][j] - 'a'] == NULL or visited[i][j] == true)
@@ -48,15 +49,17 @@ void findwords(char** matrix, Node* root, int i, int j, int r, int c,
     Node* curr = root->dictionary[currchar - 'a'];
 
     if (curr->isWord == true) {
-        cout << words[curr->ind] << endl;
+        // cout << words[curr->ind] << endl;
+        count++;
         curr->isWord = false;
+        curr->found = true;
     }
 
     visited[i][j] = true;
-    findwords(matrix, curr, i + 1, j, r, c, words, X, visited);
-    findwords(matrix, curr, i - 1, j, r, c, words, X, visited);
-    findwords(matrix, curr, i, j - 1, r, c, words, X, visited);
-    findwords(matrix, curr, i, j + 1, r, c, words, X, visited);
+    findwords(matrix, curr, i + 1, j, r, c, words, X, visited, count);
+    findwords(matrix, curr, i - 1, j, r, c, words, X, visited, count);
+    findwords(matrix, curr, i, j - 1, r, c, words, X, visited, count);
+    findwords(matrix, curr, i, j + 1, r, c, words, X, visited, count);
     visited[i][j] = false;
 }
 
@@ -68,7 +71,8 @@ void findwords(char** matrix, Node* root, int i, int j, int r, int c,
 /// @param c
 /// @param X
 /// @param words
-void solve(char** matrix, Node* root, int r, int c, int X, string words[]) {
+void solve(char** matrix, Node* root, int r, int c, int X, string words[],
+           int& count) {
     bool** visited;
     visited = new bool*[r];
     for (int i = 0; i < r; i++) {
@@ -80,8 +84,24 @@ void solve(char** matrix, Node* root, int r, int c, int X, string words[]) {
 
     for (int i = 0; i < r; i++) {
         for (int j = 0; j < c; j++) {
-            findwords(matrix, root, i, j, r, c, words, X, visited);
+            findwords(matrix, root, i, j, r, c, words, X, visited, count);
         }
+    }
+}
+
+/// @brief Utility function to get all the words present after a certain Trie
+/// Node
+/// @param root
+/// @param currword
+void getWords(Node* root, string currword) {
+    if (root->found) cout << currword << endl;
+
+    for (int i = 0; i < 26; i++) {
+        if (root->dictionary[i] == NULL) continue;
+
+        currword.push_back(i + 'a');
+        getWords(root->dictionary[i], currword);
+        currword.pop_back();
     }
 }
 
@@ -108,7 +128,10 @@ int main() {
 
     Node* root = new Node();
     buildTrie(root, words, X);
-    solve(matrix, root, r, c, X, words);
+    int count = 0;
+    solve(matrix, root, r, c, X, words, count);
+    cout << count << endl;
+    getWords(root, "");
     return 0;
 }
 
