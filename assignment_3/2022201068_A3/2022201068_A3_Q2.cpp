@@ -234,13 +234,14 @@ int main(int argc, char *argv[]) {
          << "\033[m" << totalfiles << endl;
     mergefiles(totalfiles, outputfilename);
 
+    cleanfiles(totalfiles);
+
     auto end = clock();
 
     double totaltime = (double)(end - start) / CLOCKS_PER_SEC;
     cout << "\033[1;32m"
          << "Total time: "
          << "\033[m" << fixed << setprecision(2) << totaltime << "s" << endl;
-    cleanfiles(totalfiles);
 
     return 0;
 }
