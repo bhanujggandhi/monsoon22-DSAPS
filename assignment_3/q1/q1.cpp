@@ -79,6 +79,9 @@ vector<string> autocomplete(Node* root, string& word) {
     }
 
     Node* temp = currentNode;
+
+    if (temp->isWord) suggestions.push_back(currword);
+
     for (int i = 0; i < 26; i++) {
         if (temp->dictionary[i] == NULL) continue;
 
