@@ -5,7 +5,9 @@
 #include <iostream>
 
 // Size of the smaller file to be created out of a bigger file
-#define CHUNK_SIZE 100000000
+#define CHUNK_SIZE 1000000
+// #define CHUNK_SIZE 10000000
+// #define CHUNK_SIZE 100000000
 
 using namespace std;
 
