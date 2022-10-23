@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 
 typedef long long ll;
@@ -7,6 +8,48 @@ typedef long long ll;
 if i->parent then 2i+1, 2i+2 are children
 if i is child then (i-1)/2 is parent
 */
+
+void merge(ll arr[], int l, int m, int r) {
+    int len1 = m - l + 1;
+    int len2 = r - m;
+
+    ll *first = new ll[len1];
+    ll *second = new ll[len2];
+
+    int mainArrayIndex = l;
+    for (int i = 0; i < len1; i++) first[i] = arr[mainArrayIndex++];
+
+    mainArrayIndex = m + 1;
+    for (int i = 0; i < len2; i++) second[i] = arr[mainArrayIndex++];
+
+    int index1 = 0;
+    int index2 = 0;
+    mainArrayIndex = l;
+
+    while (index1 < len1 && index2 < len2) {
+
+        if (first[index1] < second[index2])
+            arr[mainArrayIndex++] = first[index1++];
+        else
+            arr[mainArrayIndex++] = second[index2++];
+    }
+    while (index1 < len1) arr[mainArrayIndex++] = first[index1++];
+    while (index2 < len2) arr[mainArrayIndex++] = second[index2++];
+
+    delete[] first;
+    delete[] second;
+}
+
+void mergeSort(ll arr[], int l, int r) {
+    if (l >= r) return;
+
+    int mid = l + (r - l) / 2;
+    mergeSort(arr, l, mid);
+    mergeSort(arr, mid + 1, r);
+
+    merge(arr, l, mid, r);
+}
+
 struct Pair {
     ll value;
     int ind;
@@ -127,19 +170,24 @@ void solve(ll popularity[], int n, int k) {
         return;
     };
 
+    ll ansarr[k];
+    ll ansind = 0;
+
     // 2. Sort the array
     abssort(popularity, n);
 
     // 3. Heap of Pair
     MaxHeap hp(k);
-    std::cout << maxsum << " ";
+    // std::cout << maxsum << " ";
+    ansarr[ansind++] = maxsum;
     hp.insert(maxsum - abs(popularity[0]), 0);
     int i = 1;
     while (i != k) {
         ll topval = hp.top().value;
         int topind = hp.top().ind;
 
-        std::cout << topval << " ";
+        // std::cout << topval << " ";
+        ansarr[ansind++] = topval;
         i++;
 
         hp.remove();
@@ -149,6 +197,11 @@ void solve(ll popularity[], int n, int k) {
                 topind + 1);
             hp.insert(topval - abs(popularity[topind + 1]), topind + 1);
         }
+    }
+    mergeSort(ansarr, 0, k);
+    std::reverse(ansarr, ansarr + k);
+    for (int i = 0; i < k; i++) {
+        std::cout << ansarr[i] << " ";
     }
 }
 
