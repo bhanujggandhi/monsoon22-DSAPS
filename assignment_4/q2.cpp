@@ -2,6 +2,9 @@
 
 using std::cout, std::endl;
 
+/// @brief Node structure which defines an entity of List stucture
+/// @tparam T1
+/// @tparam T2
 template <class T1, class T2>
 struct Node {
     T1 key;
@@ -17,6 +20,10 @@ struct Node {
     }
 };
 
+/// @brief Linked List implementation which inserts at the front and removes the
+/// desired node
+/// @tparam T1
+/// @tparam T2
 template <class T1, class T2>
 struct List {
     Node<T1, T2> *head;
@@ -55,6 +62,10 @@ struct List {
     }
 };
 
+/// @brief unordered_map class which hashes keys to some bucket. Insert, erase,
+/// find, map implemented
+/// @tparam T1
+/// @tparam T2
 template <class T1, class T2>
 class unordered_map {
    private:
@@ -65,59 +76,14 @@ class unordered_map {
     float load_factor;
 
     /* Methods */
+
+    /// @brief Hash function which maps a certain key to a bucket in the
+    /// unordered_map
+    /// @param key
+    /// @return integer value to map at the bucket[i]
     int hash_function(T1 key) { return key % hash_table_size; }
 
-   public:
-    unordered_map() {
-        hash_table_size = 8;
-        buckets = new List<T1, T2>[hash_table_size];
-        total_elements = 0;
-        load_factor = 1;
-    }
-
-    ~unordered_map() { delete[] buckets; }
-
-    Node<T1, T2> *map(T1 key) {
-        for (auto it = buckets[hash_function(key)].head->next;
-             it != buckets[hash_function(key)].tail; it = it->next) {
-            if (it->key == key) {
-                return it;
-            }
-        }
-        return buckets[hash_function(key)].tail;
-    }
-
-    bool find(T1 key) {
-        for (auto it = buckets[hash_function(key)].head->next;
-             it != buckets[hash_function(key)].tail; it = it->next) {
-            if (it->key == key) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    void insert(T1 key, T2 value) {
-        Node<T1, T2> *it = map(key);
-        if (it != buckets[hash_function(key)].tail) {
-            it->value = value;
-            return;
-        }
-
-        buckets[hash_function(key)].add(new Node<T1, T2>(key, value));
-        total_elements++;
-        rehash();
-    }
-
-    void erase(T1 key) {
-        auto it = map(key);
-
-        if (it != buckets[hash_function(key)].tail) {
-            buckets[hash_function(key)].remove(it);
-            total_elements--;
-        }
-    }
-
+    /// @brief Function to increase the bucket size of the map if full.
     void rehash() {
         float lf = (float)total_elements / hash_table_size;
         if (lf <= load_factor) {
@@ -137,6 +103,70 @@ class unordered_map {
 
         delete[] buckets;
         buckets = new_buckets;
+    }
+
+   public:
+    /// @brief unordered_map intializer
+    unordered_map() {
+        hash_table_size = 8;
+        buckets = new List<T1, T2>[hash_table_size];
+        total_elements = 0;
+        load_factor = 1;
+    }
+
+    ~unordered_map() { delete[] buckets; }
+
+    /// @brief Finds and returns the value mapped to the key provided as param
+    /// @param key
+    /// @return Node pointer if found, else the tail pointer of the list
+    Node<T1, T2> *map(T1 key) {
+        for (auto it = buckets[hash_function(key)].head->next;
+             it != buckets[hash_function(key)].tail; it = it->next) {
+            if (it->key == key) {
+                return it;
+            }
+        }
+        return buckets[hash_function(key)].tail;
+    }
+
+    /// @brief Finds and returns true or false if the key is mapped to some
+    /// value in the map
+    /// @param key
+    /// @return 0 if not found, 1 if found
+    bool find(T1 key) {
+        for (auto it = buckets[hash_function(key)].head->next;
+             it != buckets[hash_function(key)].tail; it = it->next) {
+            if (it->key == key) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// @brief Insert the key, value mapping to the bucket
+    /// @param key
+    /// @param value
+    void insert(T1 key, T2 value) {
+        Node<T1, T2> *it = map(key);
+        if (it != buckets[hash_function(key)].tail) {
+            it->value = value;
+            return;
+        }
+
+        buckets[hash_function(key)].add(new Node<T1, T2>(key, value));
+        total_elements++;
+        rehash();
+    }
+
+    /// @brief Removes the particular key value pair if present in the map
+    /// @param key
+    void erase(T1 key) {
+        auto it = map(key);
+
+        if (it != buckets[hash_function(key)].tail) {
+            buckets[hash_function(key)].remove(it);
+            total_elements--;
+        }
     }
 };
 
