@@ -3,10 +3,61 @@
 
 using std::cout, std::endl;
 
+struct Node {
+    int key;
+    int value;
+    Node *prev;
+    Node *next;
+
+    Node(int _key, int _value) {
+        key = _key;
+        value = _value;
+        prev = NULL;
+        next = NULL;
+    }
+};
+
+struct List {
+    Node *head;
+    Node *tail;
+    int size;
+
+    List() {
+        size = 0;
+        head = new Node(-1, -1);
+        tail = new Node(-1, -1);
+        head->next = tail;
+        tail->prev = head;
+    }
+
+    ~List() {
+        Node *temp;
+        while (head != NULL) {
+            temp = head;
+            delete temp;
+            head = head->next;
+        }
+    }
+
+    void add(Node *data) {
+        head->next->prev = data;
+        data->next = head->next;
+        head->next = data;
+        data->prev = head;
+        this->size++;
+    }
+
+    void remove(Node *data) {
+        data->prev->next = data->next;
+        data->next->prev = data->prev;
+        this->size--;
+    }
+};
+
 class unordered_map {
    private:
     /* Data */
-    std::list<std::pair<int, int>> *buckets;
+    List *buckets;
     int hash_table_size;
     int total_elements;
     float load_factor;
@@ -17,7 +68,7 @@ class unordered_map {
    public:
     unordered_map(/* args */);
     ~unordered_map();
-    std::list<std::pair<int, int>>::iterator map(int key);
+    Node *map(int key);
     bool find(int key);
     void insert(int key, int value);
     void rehash();
@@ -26,27 +77,27 @@ class unordered_map {
 
 unordered_map::unordered_map() {
     hash_table_size = 8;
-    buckets = new std::list<std::pair<int, int>>[hash_table_size];
+    buckets = new List[hash_table_size];
     total_elements = 0;
     load_factor = 1;
 }
 
-unordered_map::~unordered_map() {}
+unordered_map::~unordered_map() { delete[] buckets; }
 
-std::list<std::pair<int, int>>::iterator unordered_map::map(int key) {
-    for (auto it = buckets[hash_function(key)].begin();
-         it != buckets[hash_function(key)].end(); it++) {
-        if (it->first == key) {
+Node *unordered_map::map(int key) {
+    for (auto it = buckets[hash_function(key)].head->next;
+         it != buckets[hash_function(key)].tail; it = it->next) {
+        if (it->key == key) {
             return it;
         }
     }
-    return buckets[hash_function(key)].end();
+    return buckets[hash_function(key)].tail;
 }
 
 bool unordered_map::find(int key) {
-    for (auto it = buckets[hash_function(key)].begin();
-         it != buckets[hash_function(key)].end(); it++) {
-        if (it->first == key) {
+    for (auto it = buckets[hash_function(key)].head->next;
+         it != buckets[hash_function(key)].tail; it = it->next) {
+        if (it->key == key) {
             return true;
         }
     }
@@ -55,12 +106,12 @@ bool unordered_map::find(int key) {
 
 void unordered_map::insert(int key, int value) {
     auto it = map(key);
-    if (it != buckets[hash_function(key)].end()) {
-        it->second = value;
+    if (it != buckets[hash_function(key)].tail) {
+        it->value = value;
         return;
     }
 
-    buckets[hash_function(key)].push_back({key, value});
+    buckets[hash_function(key)].add(new Node(key, value));
     total_elements++;
     rehash();
 }
@@ -68,8 +119,8 @@ void unordered_map::insert(int key, int value) {
 void unordered_map::erase(int key) {
     auto it = map(key);
 
-    if (it != buckets[hash_function(key)].end()) {
-        buckets[hash_function(key)].erase(it);
+    if (it != buckets[hash_function(key)].tail) {
+        buckets[hash_function(key)].remove(it);
         total_elements--;
     }
 }
@@ -82,11 +133,12 @@ void unordered_map::rehash() {
 
     hash_table_size = hash_table_size * 2;
 
-    auto new_buckets = new std::list<std::pair<int, int>>[hash_table_size];
+    auto new_buckets = new List[hash_table_size];
     for (int i = 0; i < hash_table_size / 2; i++) {
-        for (auto it = buckets[i].begin(); it != buckets[i].end(); it++) {
-            new_buckets[hash_function(it->first)].push_back(
-                {it->first, it->second});
+        for (auto it = buckets[i].head->next; it != buckets[i].tail;
+             it = it->next) {
+            new_buckets[hash_function(it->key)].add(
+                new Node(it->key, it->value));
         }
     }
 
@@ -106,16 +158,16 @@ int main() {
     map.insert(7, 2);
     map.insert(9, 2);
     map.insert(31, 2);
-    map.insert(21, 3);
-    map.insert(4, 32);
-    map.insert(94, 31);
-    map.insert(494, 32);
-    map.insert(834, 1);
+    map.insert(15, 9);
+    map.insert(16, 12);
+    map.insert(48, 29);
+    map.insert(64, 29);
+    map.insert(32, 19);
     auto it = map.map(5);
-    cout << it->second << endl;
+    cout << it->value << endl;
     map.erase(5);
     it = map.map(5);
-    cout << it->second << endl;
+    cout << it->value << endl;
 
     cout << map.find(9) << endl;
 
