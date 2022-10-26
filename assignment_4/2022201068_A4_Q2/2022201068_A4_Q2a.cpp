@@ -171,29 +171,29 @@ class unordered_map {
 };
 
 int main() {
-    unordered_map<int, std::string> map;
+    unordered_map<std::string, std::string> map;
 
-    map.insert(1, "hello");
-    map.insert(1, "helo");
-    map.insert(1, "hell");
-    map.insert(2, "hllo");
-    map.insert(3, "hel");
-    map.insert(5, "ello");
-    map.insert(7, "hllo");
-    map.insert(9, "heo");
-    map.insert(31, "ello");
-    map.insert(15, "llo");
-    map.insert(16, "lo");
-    map.insert(48, "o");
-    map.insert(64, "l");
-    map.insert(32, "w");
-    auto it = map.map(32);
+    map.insert("1", "hello");
+    map.insert("1", "helo");
+    map.insert("1", "hell");
+    map.insert("2", "hllo");
+    map.insert("3", "hel");
+    map.insert("5", "ello");
+    map.insert("7", "hllo");
+    map.insert("9", "heo");
+    map.insert("31", "ello");
+    map.insert("15", "llo");
+    map.insert("16", "lo");
+    map.insert("48", "o");
+    map.insert("64", "l");
+    map.insert("32", "w");
+    auto it = map.map("32");
     cout << it->value << endl;
-    map.erase(5);
-    it = map.map(5);
+    map.erase("5");
+    it = map.map("5");
     cout << it->value << endl;
 
-    cout << map.find(32) << endl;
+    cout << map.find("32") << endl;
 
     return 0;
 }
