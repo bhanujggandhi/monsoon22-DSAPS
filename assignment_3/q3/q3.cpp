@@ -94,7 +94,7 @@ void solve(char** matrix, Node* root, int r, int c, int X, string words[],
 /// @param root
 /// @param currword
 void getWords(Node* root, string currword) {
-    if (root->found) cout << currword << endl;
+    if (root->found) cout << currword << " ";
 
     for (int i = 0; i < 26; i++) {
         if (root->dictionary[i] == NULL) continue;
@@ -130,7 +130,7 @@ int main() {
     buildTrie(root, words, X);
     int count = 0;
     solve(matrix, root, r, c, X, words, count);
-    cout << count << endl;
+    // cout << count << endl;
     getWords(root, "");
     return 0;
 }

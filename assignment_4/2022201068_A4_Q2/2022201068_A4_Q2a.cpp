@@ -1,6 +1,6 @@
 #include <iostream>
 
-using std::cout, std::endl;
+using std::cout, std::endl, std::cin;
 
 /// @brief Node structure which defines an entity of List stucture
 /// @tparam T1
@@ -171,29 +171,44 @@ class unordered_map {
 };
 
 int main() {
-    unordered_map<std::string, std::string> map;
+    unordered_map<int, int> map;
+    
+    int q;
+    cin >> q;
+    
+    while(q--)
+    {
+    	int op;
+    	cin >> op;
+    	
+    	if(op == 1)
+    	{
+    		int k, v;
+    		cin >> k >> v;
+    		map.insert(k, v);
+    	}
+    	else if(op == 2)
+    	{
+    		int k;
+    		cin >> k;
+    		map.erase(k);
+    	}
+    	else if(op == 3)
+    	{
+    		int k;
+    		cin >> k;
+    		cout << map.find(k) << endl;
+    	}
+    	else if(op == 4)
+    	{
+    		int k;
+    		cin >> k;
+    		Node<int, int> r = map.map(k);
+    		cout << r->value << endl;
+    	}
+    }
+    
 
-    map.insert("1", "hello");
-    map.insert("1", "helo");
-    map.insert("1", "hell");
-    map.insert("2", "hllo");
-    map.insert("3", "hel");
-    map.insert("5", "ello");
-    map.insert("7", "hllo");
-    map.insert("9", "heo");
-    map.insert("31", "ello");
-    map.insert("15", "llo");
-    map.insert("16", "lo");
-    map.insert("48", "o");
-    map.insert("64", "l");
-    map.insert("32", "w");
-    auto it = map.map("32");
-    cout << it->value << endl;
-    map.erase("5");
-    it = map.map("5");
-    cout << it->value << endl;
-
-    cout << map.find("32") << endl;
 
     return 0;
 }
