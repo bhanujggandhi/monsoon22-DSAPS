@@ -421,11 +421,11 @@ int maxInKWindow(std::vector<int> &lcp, int k) {
 }
 
 int main() {
-    int n, k;
-    cin >> k >> n;
+    int k;
+    cin >> k;
     cin >> T;
     T.push_back('$');
-    n = T.size();
+    int n = T.size();
 
     if (k == 1) {
         cout << n - 1 << "\n";

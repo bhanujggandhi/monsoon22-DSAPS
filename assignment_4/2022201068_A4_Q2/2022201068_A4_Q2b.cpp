@@ -192,9 +192,12 @@ class unordered_map {
 };
 
 int main() {
-    int arr[] = {2, 1, 2, 3, 2, 1, 4, 5};
-    int n = 8;
-    int k = 5;
+    int n, k;
+    std::cin >> n >> k;
+    int arr[n];
+    for (unsigned int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
 
     unordered_map<int, int> mp;
     for (uint i = 0; i < k; i++) {
@@ -208,7 +211,7 @@ int main() {
 
     cout << mp.size() << " ";
 
-    uint i = 1;
+    unsigned int i = 1;
 
     while (i + k - 1 < n) {
         auto prevfreq = mp.map(arr[i - 1]);
