@@ -1,6 +1,8 @@
 #include <iostream>
 
-using std::cout, std::endl, std::cin;
+using std::cin;
+using std::cout;
+using std::endl;
 
 int find_set(int v, int parent[]) {
     if (v == parent[v]) {

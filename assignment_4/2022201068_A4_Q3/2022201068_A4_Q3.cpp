@@ -1,7 +1,9 @@
 #include <iostream>
 #include <vector>
 
-using std::cout, std::endl, std::cin;
+using std::cin;
+using std::cout;
+using std::endl;
 
 struct Node {
     int node;
@@ -143,14 +145,14 @@ void dijkstra(std::vector<List *> &ajdlist, int src, std::vector<int> &ans,
 void nearest_station(std::vector<List *> &ajdlist,
                      std::vector<int> &policestations) {
     MinHeap miniH;
-    std::vector<int> ans(ajdlist.size(), 101);
+    std::vector<int> ans(ajdlist.size(), 1e8 + 7);
     for (uint i = 0; i < policestations.size(); i++) {
         miniH.push(policestations[i], 0);
         ans[policestations[i]] = 0;
     }
 
     for (uint i = 1; i < ans.size(); i++) {
-        if (ans[i] == 101) miniH.push(i, 101);
+        if (ans[i] == 1e8 + 7) miniH.push(i, 1e8 + 7);
     }
 
     Pair src = miniH.top();
@@ -159,7 +161,7 @@ void nearest_station(std::vector<List *> &ajdlist,
     dijkstra(ajdlist, src.node, ans, miniH);
 
     for (uint i = 1; i < ans.size(); i++) {
-        if (ans[i] == 101)
+        if (ans[i] == 1e8 + 7)
             cout << -1 << " ";
         else
             cout << ans[i] << " ";

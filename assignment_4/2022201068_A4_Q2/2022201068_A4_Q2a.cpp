@@ -1,6 +1,8 @@
 #include <iostream>
 
-using std::cout, std::endl, std::cin;
+using std::cin;
+using std::cout;
+using std::endl;
 
 /// @brief Node structure which defines an entity of List stucture
 /// @tparam T1
@@ -81,7 +83,21 @@ class unordered_map {
     /// unordered_map
     /// @param key
     /// @return integer value to map at the bucket[i]
-    int hash_function(T1 key) { return key % hash_table_size; }
+    long long hash_function(int key) { return key % hash_table_size; }
+    long long hash_function(float key) { return (int)key % hash_table_size; }
+    long long hash_function(double key) { return (long long)key % hash_table_size; }
+    long long hash_function(char key) { return key % hash_table_size; }
+    long long hash_function(std::string &key) {
+        int p = 31;
+        int m = 1e9 + 9;
+        long long hash = 0;
+        long long pows = 1;
+        for (size_t i = 0; i < key.size(); i++) {
+            hash = (hash + (key[i] - 'a' + 1) * pows) % m;
+            pows = (pows * p) % m;
+        }
+        return hash % hash_table_size;
+    }
 
     /// @brief Function to increase the bucket size of the map if full.
     void rehash() {
@@ -120,13 +136,14 @@ class unordered_map {
     /// @param key
     /// @return Node pointer if found, else the tail pointer of the list
     Node<T1, T2> *map(T1 key) {
-        for (auto it = buckets[hash_function(key)].head->next;
-             it != buckets[hash_function(key)].tail; it = it->next) {
+        long long ind = hash_function(key);
+        for (auto it = buckets[ind].head->next;
+             it != buckets[ind].tail; it = it->next) {
             if (it->key == key) {
                 return it;
             }
         }
-        return buckets[hash_function(key)].tail;
+        return buckets[ind].tail;
     }
 
     /// @brief Finds and returns true or false if the key is mapped to some
@@ -168,47 +185,42 @@ class unordered_map {
             total_elements--;
         }
     }
+
+    int size() {
+        return total_elements;
+    }
 };
 
 int main() {
-    unordered_map<int, int> map;
-    
+    unordered_map<float, int> map;
+
     int q;
     cin >> q;
-    
-    while(q--)
-    {
-    	int op;
-    	cin >> op;
-    	
-    	if(op == 1)
-    	{
-    		int k, v;
-    		cin >> k >> v;
-    		map.insert(k, v);
-    	}
-    	else if(op == 2)
-    	{
-    		int k;
-    		cin >> k;
-    		map.erase(k);
-    	}
-    	else if(op == 3)
-    	{
-    		int k;
-    		cin >> k;
-    		cout << map.find(k) << endl;
-    	}
-    	else if(op == 4)
-    	{
-    		int k;
-    		cin >> k;
-    		Node<int, int> r = map.map(k);
-    		cout << r->value << endl;
-    	}
-    }
-    
 
+    while (q--) {
+        int op;
+        cin >> op;
+
+        if (op == 1) {
+            float k;
+            int v;
+            cin >> k >> v;
+            map.insert(k, v);
+        } else if (op == 2) {
+            float k;
+            cin >> k;
+            map.erase(k);
+        } else if (op == 3) {
+            float k;
+            cin >> k;
+            cout << map.find(k) << endl;
+        } else if (op == 4) {
+            float k;
+            cin >> k;
+            Node<float, int> *r = map.map(k);
+            cout << r->value << endl;
+        }
+    }
 
     return 0;
 }
