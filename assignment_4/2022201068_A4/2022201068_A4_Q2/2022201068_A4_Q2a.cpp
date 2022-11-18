@@ -93,7 +93,7 @@ class unordered_map {
         long long hash = 0;
         long long pows = 1;
         for (size_t i = 0; i < key.size(); i++) {
-            hash = (hash + ((int)key[i] + 1) * pows) % m;
+            hash = (hash + (key[i] - 'a' + 1) * pows) % m;
             pows = (pows * p) % m;
         }
         return hash % hash_table_size;
@@ -143,9 +143,6 @@ class unordered_map {
                 return it;
             }
         }
-        buckets[hash_function(key)].add(new Node<T1, T1>(key, T1()));
-        total_elements++;
-        rehash();
         return buckets[ind].tail;
     }
 
@@ -160,9 +157,6 @@ class unordered_map {
                 return true;
             }
         }
-        // buckets[hash_function(key)].add(new Node<T1, T1>(key, T1()));
-        // total_elements++;
-        // rehash();
         return false;
     }
 
@@ -198,7 +192,7 @@ class unordered_map {
 };
 
 int main() {
-    unordered_map<std::string, std::string> map;
+    unordered_map<float, int> map;
 
     int q;
     cin >> q;
@@ -208,47 +202,25 @@ int main() {
         cin >> op;
 
         if (op == 1) {
-            std::string k;
-            std::string v;
+            float k;
+            int v;
             cin >> k >> v;
             map.insert(k, v);
         } else if (op == 2) {
-            std::string k;
+            float k;
             cin >> k;
             map.erase(k);
         } else if (op == 3) {
-            std::string k;
+            float k;
             cin >> k;
             cout << map.find(k) << endl;
         } else if (op == 4) {
-            std::string k;
+            float k;
             cin >> k;
-            Node<std::string, std::string> *r = map.map(k);
+            Node<float, int> *r = map.map(k);
             cout << r->value << endl;
         }
     }
 
     return 0;
 }
-
-/*
-9
-2
-2
-1
-1 95
-4
-2
-2
-4
-1
-5 82
-3
-5
-4
-5
-1
-5 10
-4
-4
- */

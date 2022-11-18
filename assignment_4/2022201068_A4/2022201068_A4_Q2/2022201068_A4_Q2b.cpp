@@ -93,7 +93,7 @@ class unordered_map {
         long long hash = 0;
         long long pows = 1;
         for (size_t i = 0; i < key.size(); i++) {
-            hash = (hash + ((int)key[i] + 1) * pows) % m;
+            hash = (hash + (key[i] - 'a' + 1) * pows) % m;
             pows = (pows * p) % m;
         }
         return hash % hash_table_size;
@@ -143,9 +143,6 @@ class unordered_map {
                 return it;
             }
         }
-        buckets[hash_function(key)].add(new Node<T1, T1>(key, T1()));
-        total_elements++;
-        rehash();
         return buckets[ind].tail;
     }
 
@@ -160,9 +157,6 @@ class unordered_map {
                 return true;
             }
         }
-        // buckets[hash_function(key)].add(new Node<T1, T1>(key, T1()));
-        // total_elements++;
-        // rehash();
         return false;
     }
 
@@ -198,57 +192,41 @@ class unordered_map {
 };
 
 int main() {
-    unordered_map<std::string, std::string> map;
+    int n, k;
+    std::cin >> n >> k;
+    int arr[n];
+    for (unsigned int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
 
-    int q;
-    cin >> q;
-
-    while (q--) {
-        int op;
-        cin >> op;
-
-        if (op == 1) {
-            std::string k;
-            std::string v;
-            cin >> k >> v;
-            map.insert(k, v);
-        } else if (op == 2) {
-            std::string k;
-            cin >> k;
-            map.erase(k);
-        } else if (op == 3) {
-            std::string k;
-            cin >> k;
-            cout << map.find(k) << endl;
-        } else if (op == 4) {
-            std::string k;
-            cin >> k;
-            Node<std::string, std::string> *r = map.map(k);
-            cout << r->value << endl;
+    unordered_map<int, int> mp;
+    for (uint i = 0; i < k; i++) {
+        if (mp.find(arr[i]) == 1) {
+            auto nextfreq = mp.map(arr[i]);
+            mp.insert(arr[i], nextfreq->value + 1);
+        } else {
+            mp.insert(arr[i], 1);
         }
     }
 
-    return 0;
-}
+    cout << mp.size() << " ";
 
-/*
-9
-2
-2
-1
-1 95
-4
-2
-2
-4
-1
-5 82
-3
-5
-4
-5
-1
-5 10
-4
-4
- */
+    unsigned int i = 1;
+
+    while (i + k - 1 < n) {
+        auto prevfreq = mp.map(arr[i - 1]);
+        if (prevfreq->value - 1 == 0) {
+            mp.erase(arr[i - 1]);
+        } else {
+            mp.insert(arr[i - 1], prevfreq->value - 1);
+        }
+        if (mp.find(arr[i + k - 1])) {
+            auto nextfreq = mp.map(arr[i + k - 1]);
+            mp.insert(arr[i + k - 1], nextfreq->value + 1);
+        } else {
+            mp.insert(arr[i + k - 1], 1);
+        }
+        cout << mp.size() << " ";
+        i++;
+    }
+}
